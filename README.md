@@ -1,4 +1,4 @@
-# Team Mobile App by Webreinvent
+# Team Mobile App by WebReinvent
 
 ## Prerequisites
 
