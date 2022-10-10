@@ -13,50 +13,44 @@ to change minimum requirement of dart and flutter change the `sdk and flutter` v
 
 ## Setup
 
-run the command: 
+Run the command: 
 ```
 flutter pub get
 ```
 
-- Environments
+## Environments
 
-  - The app can be run in three different environments - Production, Staging/ QA, and Development.
 
-  - To run app in `production` mode use command 
-  ```
-  flutter run --dart-define=environment='production'
-  ```
+### To run app in `production` mode use command 
+```
+flutter run --dart-define=environment='production'
+```
 
-  - To run app in `staging/ QA` mode use command 
-  ```
-  flutter run --dart-define=environment='staging'
-  ```
+### To run app in `staging/ QA` mode use command 
+```
+flutter run --dart-define=environment='stage'
+```
 
-  - To run app in `development` mode use command 
-  ```
-  flutter run --dart-define=environment='development'
-  ```
+### To run app in `develop` mode use command 
+```
+flutter run --dart-define=environment='develop'
+```
 
-  - For Android production build use command
-  ```
-  flutter build apk --dart-define=environment='production'
-  ```
+### For Android production build use command
+```
+flutter build apk --dart-define=environment='production'
+```
 
-  - For iOS production build use command
-  ```
-  flutter build ipa --dart-define=environment='production'
-  ```
+### For iOS production build use command
+```
+flutter build ipa --dart-define=environment='production'
+```
 
 To change environment configuration change constants in `lib/env.dart` file.
-Environment module is made of 2 files, 
-```
-lib/env.dart,
-lib/vaahextendflutter/environment/env_helpers.dart.
-```
 <hr />
 
 ## Packages:
-In `pubspec.yaml` file > Add essential packages in dependencies, and packages that a developer need in dev_dependencies.
+In `pubspec.yaml` file > Add essential packages in `dependencies`, and packages that a developer need in `dev_dependencies`.
 
 To automatically upgrade your package dependencies to the latest versions consider running
 ```
@@ -88,3 +82,9 @@ Android Production
 
 iOS Production
 - universal package: `com.webreinvent.team`
+
+## VaahExtendedFlutter
+
+### Central log library:
+
+Can be used for logging different details. All methods are static thus no instance of Console is required. Console.info() method will print info in blue color font, Console.success() method will print log in green color font, Console.warning() method will print log in yellow color font, and Console.danger() method will print log in red color font. The files reside in `lib/vaahextendflutter/log/` folder.

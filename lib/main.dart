@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'env.dart';
-import 'vaahextendflutter/environment/env_helpers.dart';
+import 'vaahextendflutter/log/console.dart';
 
 void main() {
   String environment = getEnvFromCommandLine();
@@ -11,9 +11,9 @@ void main() {
       environment,
     ),
   );
-  if (envController.config.envType != 'prod') {
-    print('>>>>> ${envController.config.envType}');
-    print(
+  if (envController.config.envType != 'production') {
+    Console.info('>>>>> ${envController.config.envType}');
+    Console.info(
       '>>>>> ${envController.config.version}+${envController.config.build}',
     );
   }
@@ -43,11 +43,11 @@ class TeamHomePage extends StatefulWidget {
 }
 
 class _TeamHomePageState extends State<TeamHomePage> {
-  late EnvController envCtrl;
+  late EnvController envController;
 
   @override
   void initState() {
-    envCtrl = Get.find<EnvController>();
+    envController = Get.find<EnvController>();
     super.initState();
   }
 
@@ -57,7 +57,7 @@ class _TeamHomePageState extends State<TeamHomePage> {
       appBar: AppBar(),
       body: Center(
         child: Text(
-            '${envCtrl.config.envType} ${envCtrl.config.version}+${envCtrl.config.build}'),
+            '${envController.config.envType} ${envController.config.version}+${envController.config.build}'),
       ),
     );
   }
