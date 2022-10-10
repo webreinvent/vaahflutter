@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'vaahextendflutter/environment/controllers/env_controller.dart';
+import 'vaahextendflutter/environment/env_helpers.dart';
 
 void main() {
+  String environment = getEnvFromCommandLine();
+  final EnvController envController = Get.put(
+    EnvController(
+      environment,
+    ),
+  );
+  if (envController.config.envType != 'prod') {
+    print('>>>>>${envController.config.envType}');
+    print('>>>>>${envController.config.version.version}');
+  }
   runApp(const TeamApp());
 }
 
 class TeamApp extends StatelessWidget {
   const TeamApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -28,12 +40,21 @@ class TeamHomePage extends StatefulWidget {
 }
 
 class _TeamHomePageState extends State<TeamHomePage> {
+  late EnvController envCtrl;
+
+  @override
+  void initState() {
+    envCtrl = Get.find<EnvController>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const Center(
-        child: Text('WebReinvent'),
+      body: Center(
+        child: Text(
+            '${envCtrl.config.envType} ${envCtrl.config.version.version}+${envCtrl.config.version.build}'),
       ),
     );
   }
