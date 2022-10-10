@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'vaahextendflutter/environment/controllers/env_controller.dart';
+
+import 'env.dart';
 import 'vaahextendflutter/environment/env_helpers.dart';
 
 void main() {
@@ -11,8 +12,10 @@ void main() {
     ),
   );
   if (envController.config.envType != 'prod') {
-    print('>>>>>${envController.config.envType}');
-    print('>>>>>${envController.config.version.version}');
+    print('>>>>> ${envController.config.envType}');
+    print(
+      '>>>>> ${envController.config.version}+${envController.config.build}',
+    );
   }
   runApp(const TeamApp());
 }
@@ -54,7 +57,7 @@ class _TeamHomePageState extends State<TeamHomePage> {
       appBar: AppBar(),
       body: Center(
         child: Text(
-            '${envCtrl.config.envType} ${envCtrl.config.version.version}+${envCtrl.config.version.build}'),
+            '${envCtrl.config.envType} ${envCtrl.config.version}+${envCtrl.config.build}'),
       ),
     );
   }

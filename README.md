@@ -13,35 +13,60 @@ to change minimum requirement of dart and flutter change the `sdk and flutter` v
 
 ## Setup
 
-run the command: `flutter pub get`
+run the command: 
+```
+flutter pub get
+```
 
 - Environments
 
   - The app can be run in three different environments - Production, Staging/ QA, and Development.
 
-  - To run app in `production` mode use command `flutter run --dart-define=environment='prod'`
+  - To run app in `production` mode use command 
+  ```
+  flutter run --dart-define=environment='production'
+  ```
 
-  - To run app in `staging/ QA` mode use command `flutter run --dart-define=environment='stag'`
+  - To run app in `staging/ QA` mode use command 
+  ```
+  flutter run --dart-define=environment='staging'
+  ```
 
-  - To run app in `development` mode use command `flutter run --dart-define=environment='dev'`
+  - To run app in `development` mode use command 
+  ```
+  flutter run --dart-define=environment='development'
+  ```
 
-  - For Production build(Android) use `flutter build apk --dart-define=environment='prod'`
+  - For Android production build use command
+  ```
+  flutter build apk --dart-define=environment='production'
+  ```
 
-  - For Production build(iOS) use `flutter build ipa --dart-define=environment='prod'`
+  - For iOS production build use command
+  ```
+  flutter build ipa --dart-define=environment='production'
+  ```
 
 To change environment configuration change constants in `lib/env.dart` file.
-Environment module is made of 3 files, 
+Environment module is made of 2 files, 
 ```
 lib/env.dart,
-lib/vaahextendflutter/environment/env_helpers.dart, and
-lib/vaahextendflutter/environment/controllers/env_controller.dart.
+lib/vaahextendflutter/environment/env_helpers.dart.
 ```
 <hr />
 
 ## Packages:
-In pubspec.yaml file > Add essential packages in dependencies, and packages that a developer need in dev_dependencies.
+In `pubspec.yaml` file > Add essential packages in dependencies, and packages that a developer need in dev_dependencies.
 
-To automatically upgrade your package dependencies to the latest versions consider running `flutter pub upgrade --major-versions`. To see which dependencies have newer versions available, run `flutter pub outdated`
+To automatically upgrade your package dependencies to the latest versions consider running
+```
+flutter pub upgrade --major-versions
+```
+
+To see which dependencies have newer versions available, run
+```
+flutter pub outdated
+```
 <hr />
 
 ## Project structure and coding conventions:
@@ -52,8 +77,8 @@ To automatically upgrade your package dependencies to the latest versions consid
 - Variables, constants, parameters naming convention: lowerCamelCase.
 - Method/ functions naming conevntion: lowerCamelCase.
 - Use relative path
-  - ✘ import 'package:demo/home.dart'; -> This should be avoided.
-  - ✔ import './home.dart'; -> Correct way
+  - ✘ `import 'package:demo/home.dart';` -> This should be avoided.
+  - ✔ `import './home.dart';` -> Correct way
   - to fix imports you can use [dart-import](https://marketplace.visualstudio.com/items?itemName=luanpotter.dart-import)
 - Avoid using as instead, use is operator
 - Avoid print()/ debugPrint() calls
