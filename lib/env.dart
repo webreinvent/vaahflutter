@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:team/vaahextendflutter/log/console.dart';
+
+import 'vaahextendflutter/log/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
@@ -9,7 +11,7 @@ import 'package:team/vaahextendflutter/log/console.dart';
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
 const String build = '2022100901'; // build no format 'YYYYMMDDNUMBER'
 
-EnvironmentConfig defaultConfig = EnvironmentConfig(
+EnvironmentConfig defaultConfig = const EnvironmentConfig(
   envType: 'default',
   version: version,
   build: build,
@@ -18,6 +20,8 @@ EnvironmentConfig defaultConfig = EnvironmentConfig(
   analyticsId: '',
   enableConsoleLogs: true,
   enableLocalLogs: true,
+  showEnvAndVersionTag: true,
+  envAndVersionTagColor: Colors.red,
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -38,6 +42,7 @@ Map<String, EnvironmentConfig> envConfigs = {
     envType: 'production',
     enableConsoleLogs: false,
     enableLocalLogs: false,
+    showEnvAndVersionTag: false,
   ),
 };
 
@@ -65,16 +70,18 @@ class EnvController extends GetxController {
 }
 
 class EnvironmentConfig {
-  String envType;
-  String version;
-  String build;
-  String baseUrl;
-  String apiBaseUrl;
-  String analyticsId;
-  bool enableConsoleLogs;
-  bool enableLocalLogs;
+  final String envType;
+  final String version;
+  final String build;
+  final String baseUrl;
+  final String apiBaseUrl;
+  final String analyticsId;
+  final bool enableConsoleLogs;
+  final bool enableLocalLogs;
+  final bool showEnvAndVersionTag;
+  final Color envAndVersionTagColor;
 
-  EnvironmentConfig({
+  const EnvironmentConfig({
     required this.envType,
     required this.version,
     required this.build,
@@ -83,6 +90,8 @@ class EnvironmentConfig {
     required this.analyticsId,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
+    required this.showEnvAndVersionTag,
+    required this.envAndVersionTagColor,
   });
 
   EnvironmentConfig copyWith({
@@ -94,6 +103,8 @@ class EnvironmentConfig {
     String? analyticsId,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
+    bool? showEnvAndVersionTag,
+    Color? envAndVersionTagColor,
   }) {
     return EnvironmentConfig(
       envType: envType ?? this.envType,
@@ -104,6 +115,9 @@ class EnvironmentConfig {
       analyticsId: analyticsId ?? this.analyticsId,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
+      showEnvAndVersionTag: showEnvAndVersionTag ?? this.showEnvAndVersionTag,
+      envAndVersionTagColor:
+          envAndVersionTagColor ?? this.envAndVersionTagColor,
     );
   }
 }

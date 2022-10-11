@@ -93,3 +93,19 @@ iOS Production
 ### Central log library:
 
 Can be used for logging different details. All methods are static thus no instance of Console is required. Console.info() method will print info in blue color font, Console.success() method will print log in green color font, Console.warning() method will print log in yellow color font, and Console.danger() method will print log in red color font. The files reside in `lib/vaahextendflutter/log/` folder.
+
+### Environment and Version Tag
+
+Environment and Version Tag can be seen on every page unless you set `showEnvAndVersionTag` for your Environment configuration in `env.dart` file. You can change color of tag by setting `envAndVersionTagColor` variable for your Environment configuration. 
+
+NOTE: `Remember showEnvAndVersionTag for production should always be false in Environment configuration in `env.dart` file.`
+```dart
+  'production': defaultConfig.copyWith(
+    ...
+    showEnvAndVersionTag: false,
+  ),
+```
+
+NOTE: Whenever you create a new screen/ page, wrap the body with `TagWrapper` class.
+
+You can use alignment and margin properties for achieving desired results using TagWrapper.

@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import 'env.dart';
 import 'vaahextendflutter/log/console.dart';
+import 'vaahextendflutter/base/base_stateful.dart';
+import 'vaahextendflutter/tag/tag.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,9 +57,8 @@ class _TeamHomePageState extends State<TeamHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Text(
-            '${envController.config.envType} ${envController.config.version}+${envController.config.build}'),
+      body: const TagWrapper(
+        child: Text('Webreinvent'),
       ),
     );
   }
