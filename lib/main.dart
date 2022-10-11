@@ -44,7 +44,7 @@ class TeamHomePage extends StatefulWidget {
   State<TeamHomePage> createState() => _TeamHomePageState();
 }
 
-class _TeamHomePageState extends State<TeamHomePage> {
+class _TeamHomePageState extends BaseStateful<TeamHomePage> {
   late EnvController envController;
 
   @override
@@ -55,10 +55,15 @@ class _TeamHomePageState extends State<TeamHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(),
       body: const TagWrapper(
-        child: Text('Webreinvent'),
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.all(10),
+        child: Center(
+          child: Text('Webreinvent'),
+        ),
       ),
     );
   }
