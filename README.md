@@ -8,7 +8,7 @@ Dart and flutter versions: the project requires
   and flutter version >=3.3.4
 ```
 
-to change minimum requirement of dart and flutter change the `sdk and flutter` versions under `environment` in the `pubspec.yaml` file.
+To change minimum requirement of dart and flutter change the `sdk and flutter` versions under `environment` in the `pubspec.yaml` file.
 <hr />
 
 ## Setup
@@ -20,33 +20,38 @@ flutter pub get
 
 ## Environments
 
-
 ### To run app in `production` mode use command 
 ```
-flutter run --dart-define=environment='production'
+flutter run --dart-define="environment=production"
 ```
 
 ### To run app in `staging/ QA` mode use command 
 ```
-flutter run --dart-define=environment='stage'
+flutter run --dart-define="environment=stage"
 ```
 
 ### To run app in `develop` mode use command 
 ```
-flutter run --dart-define=environment='develop'
+flutter run --dart-define="environment=develop"
 ```
 
 ### For Android production build use command
 ```
-flutter build apk --dart-define=environment='production'
+flutter build apk --dart-define="environment=production"
 ```
 
 ### For iOS production build use command
 ```
-flutter build ipa --dart-define=environment='production'
+flutter build ipa --dart-define="environment=production"
 ```
 
-To change environment configuration change constants in `lib/env.dart` file.
+### How to create a new environment:
+
+Go to `lib/env.dart`, find `envConfigs` variable and add configuration for the environment you want to create. example: for `testing` environment add `'testing'` key and value. And in commands pass your environment name
+```
+// for example if environment name is testing then
+flutter run --dart-define="environment=testing"
+```
 <hr />
 
 ## Packages:

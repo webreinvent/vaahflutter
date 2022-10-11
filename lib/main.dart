@@ -5,18 +5,18 @@ import 'env.dart';
 import 'vaahextendflutter/log/console.dart';
 
 void main() {
-  String environment = getEnvFromCommandLine();
+  WidgetsFlutterBinding.ensureInitialized();
+  String environment =
+      const String.fromEnvironment('environment', defaultValue: 'default');
   final EnvController envController = Get.put(
     EnvController(
       environment,
     ),
   );
-  if (envController.config.envType != 'production') {
-    Console.info('>>>>> ${envController.config.envType}');
-    Console.info(
-      '>>>>> ${envController.config.version}+${envController.config.build}',
-    );
-  }
+  Console.info('>>>>> ${envController.config.envType}');
+  Console.info(
+    '>>>>> ${envController.config.version}+${envController.config.build}',
+  );
   runApp(const TeamApp());
 }
 
