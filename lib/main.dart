@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'env.dart';
-import 'vaahextendflutter/log/console.dart';
 import 'vaahextendflutter/base/base_stateful.dart';
-import 'vaahextendflutter/tag/tag.dart';
+import 'vaahextendflutter/helpers/constants.dart';
+import 'vaahextendflutter/log/console.dart';
+import 'vaahextendflutter/tag/tag_panel.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,8 @@ void main() {
   runApp(const TeamApp());
 }
 
+final _navigatorKey = GlobalKey<NavigatorState>();
+
 class TeamApp extends StatelessWidget {
   const TeamApp({super.key});
 
@@ -30,14 +33,30 @@ class TeamApp extends StatelessWidget {
     return MaterialApp(
       title: 'WebReinvent Team',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: kPrimaryColor,
       ),
-      home: const TeamHomePage(),
+      onGenerateInitialRoutes: (String initialRoute) {
+        return [TeamHomePage.route()];
+      },
+      onGenerateRoute: onGenerateRoute,
+      builder: (BuildContext context, Widget? child) {
+        return TagPanelHost(
+          navigatorKey: _navigatorKey,
+          child: child!,
+        );
+      },
     );
   }
 }
 
 class TeamHomePage extends StatefulWidget {
+  static Route<void> route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: '/'),
+      builder: (_) => const TeamHomePage(),
+    );
+  }
+
   const TeamHomePage({super.key});
 
   @override
@@ -58,13 +77,16 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
     super.build(context);
     return Scaffold(
       appBar: AppBar(),
-      body: const TagWrapper(
-        alignment: Alignment.topCenter,
-        margin: EdgeInsets.all(10),
-        child: Center(
-          child: Text('Webreinvent'),
-        ),
+      body: const Center(
+        child: Text('Webreinvent'),
       ),
     );
   }
+}
+
+Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  if (settings.name == '/') {
+    return TeamHomePage.route();
+  }
+  return null;
 }

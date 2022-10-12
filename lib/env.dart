@@ -21,7 +21,7 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   enableConsoleLogs: true,
   enableLocalLogs: true,
   showEnvAndVersionTag: true,
-  envAndVersionTagColor: Colors.red,
+  envAndVersionTagColor: Color(0xCC000000),
 );
 
 // To add new configuration add new key, value pair in envConfigs
