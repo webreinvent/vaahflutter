@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 
 import 'env.dart';
 import 'vaahextendflutter/log/console.dart';
+import 'vaahextendflutter/base/base_stateful.dart';
+import 'vaahextendflutter/tag/tag.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +44,7 @@ class TeamHomePage extends StatefulWidget {
   State<TeamHomePage> createState() => _TeamHomePageState();
 }
 
-class _TeamHomePageState extends State<TeamHomePage> {
+class _TeamHomePageState extends BaseStateful<TeamHomePage> {
   late EnvController envController;
 
   @override
@@ -53,11 +55,15 @@ class _TeamHomePageState extends State<TeamHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Text(
-            '${envController.config.envType} ${envController.config.version}+${envController.config.build}'),
+      body: const TagWrapper(
+        alignment: Alignment.topCenter,
+        margin: EdgeInsets.all(10),
+        child: Center(
+          child: Text('Webreinvent'),
+        ),
       ),
     );
   }
