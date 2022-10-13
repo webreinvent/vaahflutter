@@ -1,3 +1,12 @@
+// *****************************************
+// Dev helper panel that comes from bottom
+// example: https://img-v4.getdemo.dev/screenshot/qemu-system-x86_64_9g9eFWHZK5.mp4
+
+// If you change any code in this file you'll probably have to restart the app
+// HotReload won't work because most of the variables are constants and are
+// assigned with some values when material app is build.
+// *****************************************
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -5,13 +14,8 @@ import '../../env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 
-const double constHandleWidth = 22.0;
-const double constHandleHeight = 106.0;
-
-typedef TagPanelBuilder = Widget Function(
-  BuildContext context,
-  EdgeInsets padding,
-);
+const double constHandleWidth = 180.0; // tag handle width
+const double constHandleHeight = 28.0; // tag handle height
 
 @immutable
 class TagPanelHost extends StatefulWidget {
@@ -36,25 +40,30 @@ class TagPanelHostState extends State<TagPanelHost>
     with SingleTickerProviderStateMixin {
   final _drawerKey = GlobalKey();
   final _focusScopeNode = FocusScopeNode();
-  final _handleWidth = constHandleWidth;
-
+  final _handleHeight = constHandleHeight;
   late AnimationController _controller;
+
+  // To determine whether to show tag or not deending on env variable
   EnvController? envController;
   bool showEnvAndVersionTag = false;
 
   @override
   void initState() {
     super.initState();
+    // check if envController Exists in app or not
     bool envControllerExists = Get.isRegistered<EnvController>();
     if (envControllerExists) {
+      // get env controller and set variable showEnvAndVersionTag
       envController = Get.find<EnvController>();
       showEnvAndVersionTag =
           envController?.config.showEnvAndVersionTag ?? false;
     }
+    // initialise AnimationController
     _controller = AnimationController(
       duration: duration250milli,
       vsync: this,
     );
+    // addStatusListener to focus and unfocus the panel shown
     _controller.addStatusListener(
       (AnimationStatus status) {
         if (status == AnimationStatus.dismissed) {
@@ -66,10 +75,13 @@ class TagPanelHostState extends State<TagPanelHost>
 
   NavigatorState get navigator => widget.navigatorKey.currentState!;
 
+  // will open panel
   void open() => _controller.fling(velocity: 1.0);
 
+  // will close panel
   void close() => _controller.fling(velocity: -1.0);
 
+  // will open/ close panel based on if panel is half open or close
   void toggle() {
     if (_controller.value > 0.5) {
       close();
@@ -83,26 +95,26 @@ class TagPanelHostState extends State<TagPanelHost>
     return showEnvAndVersionTag
         ? LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
-              final width = constraints.maxWidth;
-              final minFactor = (_handleWidth / width);
+              final height = constraints.maxHeight;
+              final minFactor = (_handleHeight / height);
               return Stack(
                 fit: StackFit.expand,
                 children: [
                   widget.child,
                   GestureDetector(
-                    onHorizontalDragDown: (DragDownDetails details) {
+                    onVerticalDragDown: (DragDownDetails details) {
                       _controller.stop();
                     },
-                    onHorizontalDragUpdate: (DragUpdateDetails details) {
-                      _controller.value += (-details.primaryDelta! / width);
+                    onVerticalDragUpdate: (DragUpdateDetails details) {
+                      _controller.value += (-details.primaryDelta! / height);
                     },
-                    onHorizontalDragEnd: (DragEndDetails details) {
+                    onVerticalDragEnd: (DragEndDetails details) {
                       if (_controller.isDismissed) {
                         return;
                       }
                       if (details.primaryVelocity!.abs() >= 365.0) {
                         final visualVelocity =
-                            -details.primaryVelocity! / width;
+                            -details.primaryVelocity! / height;
                         _controller.fling(velocity: visualVelocity);
                       } else if (_controller.value < 0.5) {
                         close();
@@ -110,7 +122,7 @@ class TagPanelHostState extends State<TagPanelHost>
                         open();
                       }
                     },
-                    onHorizontalDragCancel: () {
+                    onVerticalDragCancel: () {
                       if (_controller.isDismissed || _controller.isAnimating) {
                         return;
                       }
@@ -123,13 +135,13 @@ class TagPanelHostState extends State<TagPanelHost>
                     excludeFromSemantics: true,
                     child: RepaintBoundary(
                       child: Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.bottomCenter,
                         child: AnimatedBuilder(
                           animation: _controller,
                           builder: (BuildContext context, Widget? child) {
                             return Align(
-                              alignment: Alignment.centerLeft,
-                              widthFactor: _controller.value + minFactor,
+                              alignment: Alignment.topCenter,
+                              heightFactor: _controller.value + minFactor,
                               child: child,
                             );
                           },
@@ -138,7 +150,7 @@ class TagPanelHostState extends State<TagPanelHost>
                               key: _drawerKey,
                               node: _focusScopeNode,
                               child: _EnvPanel(
-                                handleWidth: _handleWidth,
+                                handleHeight: _handleHeight,
                                 onHandlePressed: toggle,
                                 config: envController!.config,
                                 child: Builder(
@@ -148,9 +160,10 @@ class TagPanelHostState extends State<TagPanelHost>
                                       padding: EdgeInsets.only(
                                         top:
                                             MediaQuery.of(context).padding.top +
-                                                kDeafaultPadding,
+                                                kDeafaultPadding +
+                                                _handleHeight,
                                         bottom: kDeafaultPadding,
-                                        left: _handleWidth + kDeafaultPadding,
+                                        left: kDeafaultPadding,
                                         right: kDeafaultPadding,
                                       ),
                                       children: [
@@ -217,13 +230,13 @@ class TagPanelHostState extends State<TagPanelHost>
 class _EnvPanel extends StatelessWidget {
   const _EnvPanel({
     Key? key,
-    required this.handleWidth,
+    required this.handleHeight,
     required this.onHandlePressed,
     required this.config,
     required this.child,
   }) : super(key: key);
 
-  final double handleWidth;
+  final double handleHeight;
   final VoidCallback onHandlePressed;
   final EnvironmentConfig config;
   final Widget child;
@@ -257,25 +270,23 @@ class _EnvPanel extends StatelessWidget {
             ),
             RepaintBoundary(
               child: Align(
-                alignment: Alignment.centerLeft,
+                alignment: Alignment.topCenter,
                 child: InkResponse(
                   onTap: onHandlePressed,
-                  radius: constHandleHeight / 1.25,
+                  radius: constHandleWidth / 1.25,
                   child: RotatedBox(
-                    quarterTurns: 1,
+                    quarterTurns: 0,
                     child: SizedBox(
-                      width: constHandleHeight,
-                      height: handleWidth,
+                      width: constHandleWidth,
+                      height: handleHeight,
                       child: FittedBox(
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 4,
-                            bottom: 4,
-                            left: 4,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 2,
                           ),
                           child: Text(
-                            '${config.envType} ${config.version}',
-                            style: TextStyles.regular8,
+                            '${config.envType} ${config.version}+${config.build}',
                           ),
                         ),
                       ),
@@ -294,8 +305,9 @@ class _EnvPanel extends StatelessWidget {
 class _PanelBorder extends ShapeBorder {
   const _PanelBorder();
 
-  static const double handleWidth = constHandleWidth + 4;
-  static const double handleHeight = constHandleHeight;
+  static const double handleWidth = constHandleWidth;
+  static const double handleHeight = constHandleHeight +
+      4; // if you want a small width line visible with tag remove + 4
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
@@ -310,38 +322,59 @@ class _PanelBorder extends ShapeBorder {
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    const borderRadius = BorderRadius.all(Radius.circular(handleWidth / 2));
-    final height = ((rect.height - handleHeight) / 2);
-    final top = rect.top + height;
-    final bottom = rect.bottom - height;
+    const borderRadius = BorderRadius.all(Radius.circular(handleHeight / 2));
+
+    final width = ((rect.width - handleWidth) / 2);
+    final leftend = rect.left + width;
+    final rightend = rect.right - width;
     return Path.combine(
       PathOperation.union,
       Path.combine(
         PathOperation.difference,
-        Path()..addRect(rect),
         Path()
-          ..addRRect(borderRadius.toRRect(
-            Rect.fromLTRB(
-              -handleWidth,
-              -handleWidth,
-              handleWidth - 4.0,
-              top,
+          ..addRect(
+            rect,
+          ),
+        Path()
+          ..addRRect(
+            borderRadius.toRRect(
+              Rect.fromLTRB(
+                rect.left - handleWidth,
+                -handleHeight,
+                leftend,
+                handleHeight - 4.0,
+              ),
             ),
-          ))
-          ..addRRect(borderRadius.toRRect(
-            Rect.fromLTRB(
-              -handleWidth,
-              bottom,
-              handleWidth - 4.0,
-              rect.bottom + handleWidth,
+          )
+          ..addRRect(
+            borderRadius.toRRect(
+              Rect.fromLTRB(
+                rightend,
+                -handleHeight,
+                rect.right + handleHeight,
+                handleHeight - 4.0,
+              ),
             ),
-          ))
-          ..addRect(Rect.fromLTWH(0, top, handleWidth / 2, handleHeight)),
+          )
+          ..addRect(
+            Rect.fromLTWH(
+              leftend,
+              0,
+              handleWidth,
+              handleHeight / 2,
+            ),
+          ),
       ),
       Path()
         ..addRRect(
-          borderRadius
-              .toRRect(Rect.fromLTWH(0, top, handleWidth, handleHeight)),
+          borderRadius.toRRect(
+            Rect.fromLTWH(
+              leftend,
+              0,
+              handleWidth,
+              handleHeight,
+            ),
+          ),
         ),
     );
   }
