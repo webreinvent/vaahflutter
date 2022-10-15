@@ -1,16 +1,20 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' as getx;
+import '../api.dart';
 
 import '../../../log/console.dart';
 import '../models/api_response.dart';
-import 'demo_api.dart';
 
 class DemoController extends getx.GetxController {
-  Future<void> getDemoURL() async {
+  Future<void> getDemoURL(BuildContext context) async {
     // Call API
-    DemoApi api = DemoApi();
-    final Response<dynamic> result =
-        await api.getError().timeout(const Duration(seconds: 180));
+    Api api = Api();
+    final Response? result = await api.ajax(
+      context: context,
+      url: '/error?code=401',
+      // skipOnError: false,
+    );
     Console.info(
       result.toString(),
     );

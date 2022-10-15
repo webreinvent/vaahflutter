@@ -17,6 +17,7 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   build: build,
   baseUrl: '',
   apiBaseUrl: 'https://xrestapi.herokuapp.com',
+  timeoutLimit: 180,
   analyticsId: '',
   enableConsoleLogs: true,
   enableLocalLogs: true,
@@ -76,6 +77,7 @@ class EnvironmentConfig {
   final String build;
   final String baseUrl;
   final String apiBaseUrl;
+  final int timeoutLimit; // in seconds
   final String analyticsId;
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
@@ -89,6 +91,7 @@ class EnvironmentConfig {
     required this.build,
     required this.baseUrl,
     required this.apiBaseUrl,
+    required this.timeoutLimit,
     required this.analyticsId,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
@@ -103,6 +106,7 @@ class EnvironmentConfig {
     String? build,
     String? baseUrl,
     String? apiBaseUrl,
+    int? timeoutLimit,
     String? analyticsId,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
@@ -116,6 +120,7 @@ class EnvironmentConfig {
       build: build ?? this.build,
       baseUrl: baseUrl ?? this.baseUrl,
       apiBaseUrl: apiBaseUrl ?? this.apiBaseUrl,
+      timeoutLimit: timeoutLimit ?? this.timeoutLimit,
       analyticsId: analyticsId ?? this.analyticsId,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
