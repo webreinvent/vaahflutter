@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart' as getx;
-import '../../../log/console.dart';
 
+import '../../../log/console.dart';
 import '../models/api_response.dart';
 import 'demo_api.dart';
 

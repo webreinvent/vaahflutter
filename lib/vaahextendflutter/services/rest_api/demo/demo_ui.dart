@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../base/base_stateful.dart';
 import '../../../log/console.dart';
 import '../api_error.dart';
-import 'demo_controller.dart';
 import '../models/api_error_type.dart';
+import 'demo_controller.dart';
 
 class DemoUI extends StatefulWidget {
   const DemoUI({super.key});
@@ -20,8 +21,10 @@ class _DemoUIState extends BaseStateful<DemoUI> with ApiError {
     if (errorType.message.isNotEmpty) {
       Console.danger('>>>>> code: ${errorType.code}');
       Console.danger('>>>>> message: ${errorType.message}');
-
-      await _showMyDialog();
+      await _showErrorDialog(
+        title: 'Error',
+        content: errorType.message,
+      );
     }
     if (errorType.code == ApiErrorCode.unauthorized) {
       // TODO: Logout
@@ -54,38 +57,38 @@ class _DemoUIState extends BaseStateful<DemoUI> with ApiError {
           // AppLoadingProvider.hide(context);
         }
       },
+      skipOnError: false,
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container();
   }
 
-  Future<void> _showMyDialog() async {
-    Console.danger('>>>>> dialogue');
-
+  Future<void> _showErrorDialog({
+    required String title,
+    required String content,
+    List<Widget>? actions,
+  }) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('AlertDialog Title'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: const <Widget>[
-                Text('This is a demo alert dialog.'),
-                Text('Would you like to approve of this message?'),
-              ],
-            ),
-          ),
+          title: Text(title),
+          content: Text(content),
           actions: <Widget>[
-            TextButton(
-              child: const Text('Approve'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            if (actions == null || actions.isNotEmpty)
+              TextButton(
+                child: const Text('Okay'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            else
+              ...actions,
           ],
         );
       },

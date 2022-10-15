@@ -6,7 +6,6 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:get/get.dart' as getx;
 import 'package:path_provider/path_provider.dart';
-import '../../log/console.dart';
 
 import '../../../env.dart';
 import 'models/token.dart';
@@ -110,29 +109,29 @@ class Api {
         try {
           // By pass dio header error code to get response content
           // Try to return response
-          if (response != null) {
-            final Response<T> res = Response<T>(
-              data: response.data as T,
-              headers: response.headers,
-              requestOptions: response.requestOptions,
-              isRedirect: response.isRedirect,
-              statusCode: response.statusCode,
-              statusMessage: response.statusMessage,
-              redirects: response.redirects,
-              extra: response.extra,
-            );
+          if (response == null) {
             throw DioError(
               requestOptions: error.requestOptions,
-              response: res,
+              response: error.response,
               type: error.type,
-              error: res.statusMessage,
+              error: response?.statusMessage,
             );
           }
+          final Response<T> res = Response<T>(
+            data: response.data as T,
+            headers: response.headers,
+            requestOptions: response.requestOptions,
+            isRedirect: response.isRedirect,
+            statusCode: response.statusCode,
+            statusMessage: response.statusMessage,
+            redirects: response.redirects,
+            extra: response.extra,
+          );
           throw DioError(
             requestOptions: error.requestOptions,
-            response: error.response,
+            response: res,
             type: error.type,
-            error: response?.statusMessage,
+            error: res.statusMessage,
           );
         } catch (e) {
           rethrow;
