@@ -16,10 +16,11 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   version: version,
   build: build,
   baseUrl: '',
-  apiBaseUrl: '',
+  apiBaseUrl: 'https://xrestapi.herokuapp.com',
   analyticsId: '',
   enableConsoleLogs: true,
   enableLocalLogs: true,
+  enableApiLogs: true,
   showEnvAndVersionTag: true,
   envAndVersionTagColor: Colors.red,
 );
@@ -78,6 +79,7 @@ class EnvironmentConfig {
   final String analyticsId;
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
+  final bool enableApiLogs;
   final bool showEnvAndVersionTag;
   final Color envAndVersionTagColor;
 
@@ -90,6 +92,7 @@ class EnvironmentConfig {
     required this.analyticsId,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
+    required this.enableApiLogs,
     required this.showEnvAndVersionTag,
     required this.envAndVersionTagColor,
   });
@@ -103,6 +106,7 @@ class EnvironmentConfig {
     String? analyticsId,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
+    bool? enableApiLogs,
     bool? showEnvAndVersionTag,
     Color? envAndVersionTagColor,
   }) {
@@ -115,6 +119,7 @@ class EnvironmentConfig {
       analyticsId: analyticsId ?? this.analyticsId,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
+      enableApiLogs: enableApiLogs ?? this.enableApiLogs,
       showEnvAndVersionTag: showEnvAndVersionTag ?? this.showEnvAndVersionTag,
       envAndVersionTagColor:
           envAndVersionTagColor ?? this.envAndVersionTagColor,

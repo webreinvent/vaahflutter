@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/screen_util.dart';
 
 abstract class BaseStateless extends StatelessWidget with DynamicSize {

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'env.dart';
-import 'vaahextendflutter/log/console.dart';
 import 'vaahextendflutter/base/base_stateful.dart';
+import 'vaahextendflutter/log/console.dart';
+import 'vaahextendflutter/services/rest_api/demo/demo_ui.dart';
 import 'vaahextendflutter/tag/tag.dart';
 
 void main() {
@@ -48,9 +49,9 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
   late EnvController envController;
 
   @override
-  void initState() {
+  void afterFirstBuild(BuildContext context) {
     envController = Get.find<EnvController>();
-    super.initState();
+    super.afterFirstBuild(context);
   }
 
   @override
@@ -62,7 +63,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
         alignment: Alignment.topCenter,
         margin: EdgeInsets.all(10),
         child: Center(
-          child: Text('Webreinvent'),
+          child: DemoUI(),
         ),
       ),
     );
