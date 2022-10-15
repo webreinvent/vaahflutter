@@ -169,17 +169,17 @@ class TagPanelHostState extends State<TagPanelHost>
                                       children: [
                                         SelectableText(
                                           envController!.config.envType,
-                                          style: TextStyles.regular6,
+                                          style: TextStyles.regular3,
                                         ),
                                         verticalMargin4,
                                         SelectableText(
                                           'Version: ${envController!.config.version}',
-                                          style: TextStyles.regular6,
+                                          style: TextStyles.regular3,
                                         ),
                                         verticalMargin4,
                                         SelectableText(
                                           'Build: ${envController!.config.build}',
-                                          style: TextStyles.regular6,
+                                          style: TextStyles.regular3,
                                         ),
                                         verticalMargin16,
                                         SelectableText(
