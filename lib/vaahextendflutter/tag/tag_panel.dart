@@ -183,7 +183,7 @@ class TagPanelHostState extends State<TagPanelHost>
                                         ),
                                         verticalMargin16,
                                         SelectableText(
-                                          'Base URL: ${envController!.config.baseUrl}',
+                                          'Backend URL: ${envController!.config.backendUrl}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
@@ -193,7 +193,7 @@ class TagPanelHostState extends State<TagPanelHost>
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'Analytics Id: ${envController!.config.analyticsId}',
+                                          'Firebase Id: ${envController!.config.firebaseId}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
