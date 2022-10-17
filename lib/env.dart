@@ -15,13 +15,14 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   envType: 'default',
   version: version,
   build: build,
-  baseUrl: '',
-  apiBaseUrl: '',
-  analyticsId: '',
+  backendUrl: '', // base url or backend url
+  apiUrl: '', // api base url
+  firebaseId: '', // firebase id
   enableConsoleLogs: true,
   enableLocalLogs: true,
   showEnvAndVersionTag: true,
-  envAndVersionTagColor: Colors.red,
+  envAndVersionTagColor: Color(
+      0xAA000000), // first 2 digit after 0x represents the opacity where CC being max and 00 being min
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -73,9 +74,9 @@ class EnvironmentConfig {
   final String envType;
   final String version;
   final String build;
-  final String baseUrl;
-  final String apiBaseUrl;
-  final String analyticsId;
+  final String backendUrl;
+  final String apiUrl;
+  final String firebaseId;
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
   final bool showEnvAndVersionTag;
@@ -85,9 +86,9 @@ class EnvironmentConfig {
     required this.envType,
     required this.version,
     required this.build,
-    required this.baseUrl,
-    required this.apiBaseUrl,
-    required this.analyticsId,
+    required this.backendUrl,
+    required this.apiUrl,
+    required this.firebaseId,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
     required this.showEnvAndVersionTag,
@@ -98,9 +99,9 @@ class EnvironmentConfig {
     String? envType,
     String? version,
     String? build,
-    String? baseUrl,
-    String? apiBaseUrl,
-    String? analyticsId,
+    String? backendUrl,
+    String? apiUrl,
+    String? firebaseId,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
     bool? showEnvAndVersionTag,
@@ -110,9 +111,9 @@ class EnvironmentConfig {
       envType: envType ?? this.envType,
       version: version ?? this.version,
       build: build ?? this.build,
-      baseUrl: baseUrl ?? this.baseUrl,
-      apiBaseUrl: apiBaseUrl ?? this.apiBaseUrl,
-      analyticsId: analyticsId ?? this.analyticsId,
+      backendUrl: backendUrl ?? this.backendUrl,
+      apiUrl: apiUrl ?? this.apiUrl,
+      firebaseId: firebaseId ?? this.firebaseId,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       showEnvAndVersionTag: showEnvAndVersionTag ?? this.showEnvAndVersionTag,
