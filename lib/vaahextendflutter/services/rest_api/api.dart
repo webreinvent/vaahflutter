@@ -7,13 +7,16 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' as getx;
 import 'package:path_provider/path_provider.dart';
-import 'models/api_error_type.dart';
 
+import '../../log/console.dart';
+import 'models/api_response_type.dart';
+import 'models/api_error_type.dart';
 import '../../../env.dart';
 
 enum RequestType { get, post, put, patch, delete }
 
 class Api {
+  // To check  env variables logs enabled, apiUrl and timeout limit for requests
   late EnvController envController;
 
   // Get base url by env
@@ -34,16 +37,17 @@ class Api {
     return Options(headers: header, contentType: contentType);
   }
 
-  Future<Response?> ajax<T>({
-    required BuildContext context,
+  // return type of ajax is ApiResponseType? so if there is error
+  // then null will be returned otherwise ApiResponseType object
+  Future<ApiResponseType?> ajax<T>({
     required String url,
+    RequestType requestType = RequestType.get,
     Map<String, dynamic>? data,
     Map<String, dynamic>? queryParameters,
-    RequestType requestType = RequestType.get,
-    bool skipOnError = true, // if true then error dialogue won't be
     bool showSuccessDialogue =
         false, // if false on success nothing will be shown
     bool showErrorDialogue = true, // if false on error nothing will be shown
+    bool skipOnError = true, // if true then error dialogue will be dismissible
     Function?
         customSuccessDialogue, // if passed will be showed this instead of default
     Function?
@@ -59,103 +63,26 @@ class Api {
       if (onStart != null) {
         await onStart();
       }
-      Response? response;
-      final Options options = await _getOptions();
-      switch (requestType) {
-        case RequestType.get:
-          response = await dio
-              .get<dynamic>(
-                '$apiBaseUrl$url',
-                queryParameters: queryParameters,
-                options: options,
-              )
-              .timeout(
-                Duration(
-                  seconds:
-                      customTimeoutLimit ?? envController.config.timeoutLimit,
-                ),
-              );
-          break;
 
-        case RequestType.post:
-          if (data == null) 'invalid data'; //TODO:
-          response = await dio
-              .post<dynamic>(
-                '$apiBaseUrl$url',
-                data: data,
-                queryParameters: queryParameters,
-                options: options,
-              )
-              .timeout(
-                Duration(
-                  seconds:
-                      customTimeoutLimit ?? envController.config.timeoutLimit,
-                ),
-              );
-          break;
-
-        case RequestType.put:
-          if (data == null) 'invalid data'; //TODO:
-          response = await dio
-              .put<dynamic>(
-                '$apiBaseUrl$url',
-                data: data,
-                queryParameters: queryParameters,
-                options: options,
-              )
-              .timeout(
-                Duration(
-                  seconds:
-                      customTimeoutLimit ?? envController.config.timeoutLimit,
-                ),
-              );
-          break;
-
-        case RequestType.patch:
-          if (data == null) 'invalid data'; //TODO:
-          response = await dio
-              .patch<dynamic>(
-                '$apiBaseUrl$url',
-                data: data,
-                queryParameters: queryParameters,
-                options: options,
-              )
-              .timeout(
-                Duration(
-                  seconds:
-                      customTimeoutLimit ?? envController.config.timeoutLimit,
-                ),
-              );
-          break;
-
-        case RequestType.delete:
-          if (data == null) 'invalid data'; //TODO:
-          response = await dio
-              .delete<dynamic>(
-                '$apiBaseUrl$url',
-                data: data,
-                queryParameters: queryParameters,
-                options: options,
-              )
-              .timeout(
-                Duration(
-                  seconds:
-                      customTimeoutLimit ?? envController.config.timeoutLimit,
-                ),
-              );
-          break;
-
-        default:
-          // TODO: Invalid request type, try again
-          break;
-      }
+      Response<dynamic>? response = await handleRequest(
+        requestType: requestType,
+        url: url,
+        data: data,
+        skipOnError: skipOnError,
+        queryParameters: queryParameters,
+        customTimeoutLimit: customTimeoutLimit,
+      );
 
       // On completed, use for hide loading
       if (onCompleted != null) {
         await onCompleted(true, response);
       }
-      return response;
-      // TODO:
+
+      return handleResponse(
+        response,
+        showSuccessDialogue,
+        customSuccessDialogue,
+      );
     } catch (error) {
       // In case error:
       // On completed, use for hide loading
@@ -168,78 +95,13 @@ class Api {
         await onError(error);
       }
 
-      if (error is DioError && error.type == DioErrorType.response) {
-        final Response<dynamic>? response = error.response;
-        try {
-          // By pass dio header error code to get response content
-          // Try to return response
-          if (response == null) {
-            throw DioError(
-              requestOptions: error.requestOptions,
-              response: error.response,
-              type: error.type,
-              error: response?.statusMessage,
-            );
-          }
-          final Response<T> res = Response<T>(
-            data: response.data as T,
-            headers: response.headers,
-            requestOptions: response.requestOptions,
-            isRedirect: response.isRedirect,
-            statusCode: response.statusCode,
-            statusMessage: response.statusMessage,
-            redirects: response.redirects,
-            extra: response.extra,
-          );
-          throw DioError(
-            requestOptions: error.requestOptions,
-            response: res,
-            type: error.type,
-            error: res.statusMessage,
-          );
-        } catch (e) {
-          if (error.type == DioErrorType.response) {
-            ApiErrorCode errorCode = ApiErrorCode.unknown;
-            String message = error.message;
-            if (error.response?.statusCode == 401) {
-              errorCode = ApiErrorCode.unauthorized;
-            }
-            if (error.response?.data != null) {
-              try {
-                final Map<String, dynamic> response =
-                    error.response?.data as Map<String, dynamic>;
-                message = response['error'] ?? '';
-              } catch (e) {
-                // ignore parsing error
-              }
-            }
-            ApiErrorType apiErrorType =
-                ApiErrorType(code: errorCode, message: message);
-            if (apiErrorType.code == ApiErrorCode.unauthorized) {
-              // TODO: Logout
-            }
-            if (showErrorDialogue) {
-              if (customErrorDialogue != null) {
-                mainErrorDialogue(
-                  skipOnError: skipOnError,
-                  errorDialogue: () => customErrorDialogue(),
-                );
-              } else {
-                mainErrorDialogue(
-                  skipOnError: skipOnError,
-                  errorDialogue: () => defaultErrorDialogue(
-                    context: context,
-                    title: 'Error',
-                    content: apiErrorType.message,
-                  ),
-                );
-              }
-            }
-          } else {
-            rethrow;
-          }
-        }
-      }
+      // Here response error means server sends error response. eg 401: unauthorised
+      handleResponseError(
+        error,
+        showErrorDialogue,
+        customErrorDialogue,
+        skipOnError,
+      );
     } finally {
       /// Call finally function
       if (onFinally != null) {
@@ -247,48 +109,6 @@ class Api {
       }
     }
     return null;
-  }
-
-  mainErrorDialogue(
-      {required bool skipOnError, required Function() errorDialogue}) async {
-    if (skipOnError) {
-      await errorDialogue();
-    } else {
-      await errorDialogue();
-      mainErrorDialogue(
-        skipOnError: skipOnError,
-        errorDialogue: () => errorDialogue,
-      );
-    }
-  }
-
-  defaultErrorDialogue({
-    required BuildContext context,
-    required String title,
-    required String content,
-    List<Widget>? actions,
-  }) {
-    return showCupertinoDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return CupertinoAlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            if (actions == null || actions.isNotEmpty)
-              CupertinoButton(
-                child: const Text('Okay'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            else
-              ...actions,
-          ],
-        );
-      },
-    );
   }
 
   Future<void> _initApi() async {
@@ -347,6 +167,375 @@ class Api {
           ),
         );
       },
+    );
+  }
+
+  Future<Response<dynamic>?> handleRequest({
+    required RequestType requestType,
+    required String url,
+    required Map<String, dynamic>? data,
+    required Map<String, dynamic>? queryParameters,
+    required int? customTimeoutLimit,
+    required bool skipOnError,
+  }) async {
+    Response? response;
+    final Options options = await _getOptions();
+    switch (requestType) {
+      case RequestType.get:
+        response = await dio
+            .get<dynamic>(
+              '$apiBaseUrl$url',
+              queryParameters: queryParameters,
+              options: options,
+            )
+            .timeout(
+              Duration(
+                seconds:
+                    customTimeoutLimit ?? envController.config.timeoutLimit,
+              ),
+            );
+        break;
+
+      case RequestType.post:
+        if (data == null) {
+          mainDialogue(
+            skip: skipOnError,
+            dialogue: () => defaultErrorDialogue(
+              title: 'Error',
+              content: ['Invalid data!'],
+            ),
+          );
+          break;
+        }
+        response = await dio
+            .post<dynamic>(
+              '$apiBaseUrl$url',
+              data: data,
+              queryParameters: queryParameters,
+              options: options,
+            )
+            .timeout(
+              Duration(
+                seconds:
+                    customTimeoutLimit ?? envController.config.timeoutLimit,
+              ),
+            );
+        break;
+
+      case RequestType.put:
+        if (data == null) {
+          mainDialogue(
+            skip: skipOnError,
+            dialogue: () => defaultErrorDialogue(
+              title: 'Error',
+              content: ['Invalid data!'],
+            ),
+          );
+          break;
+        }
+        response = await dio
+            .put<dynamic>(
+              '$apiBaseUrl$url',
+              data: data,
+              queryParameters: queryParameters,
+              options: options,
+            )
+            .timeout(
+              Duration(
+                seconds:
+                    customTimeoutLimit ?? envController.config.timeoutLimit,
+              ),
+            );
+        break;
+
+      case RequestType.patch:
+        if (data == null) {
+          mainDialogue(
+            skip: skipOnError,
+            dialogue: () => defaultErrorDialogue(
+              title: 'Error',
+              content: ['Invalid data!'],
+            ),
+          );
+          break;
+        }
+        response = await dio
+            .patch<dynamic>(
+              '$apiBaseUrl$url',
+              data: data,
+              queryParameters: queryParameters,
+              options: options,
+            )
+            .timeout(
+              Duration(
+                seconds:
+                    customTimeoutLimit ?? envController.config.timeoutLimit,
+              ),
+            );
+        break;
+
+      case RequestType.delete:
+        if (data == null) {
+          mainDialogue(
+            skip: skipOnError,
+            dialogue: () => defaultErrorDialogue(
+              title: 'Error',
+              content: ['Invalid data!'],
+            ),
+          );
+          break;
+        }
+        response = await dio
+            .delete<dynamic>(
+              '$apiBaseUrl$url',
+              data: data,
+              queryParameters: queryParameters,
+              options: options,
+            )
+            .timeout(
+              Duration(
+                seconds:
+                    customTimeoutLimit ?? envController.config.timeoutLimit,
+              ),
+            );
+        break;
+
+      default:
+        mainDialogue(
+          skip: skipOnError,
+          dialogue: () => defaultErrorDialogue(
+            title: 'Error',
+            content: ['Invalid request type!'],
+          ),
+        );
+        break;
+    }
+    return response;
+  }
+
+  ApiResponseType handleResponse(
+    Response<dynamic>? response,
+    bool showSuccessDialogue,
+    Function? customSuccessDialogue,
+  ) {
+    if (response != null && response.data != null) {
+      try {
+        final Map<String, dynamic> formatedResponse =
+            response.data as Map<String, dynamic>;
+        dynamic responseSuccess = formatedResponse['success'];
+        if (responseSuccess == null) {
+          Console.warning('response doesn\'t contain success key.');
+        }
+        dynamic responseData = formatedResponse['data'];
+        if (responseData == null) {
+          Console.warning('response doesn\'t contain data key.');
+        }
+        List<String>? responseMessages = formatedResponse['messages'];
+        if (responseMessages == null) {
+          Console.warning('response doesn\'t contain messages key.');
+        }
+        String? responseHint = formatedResponse['hint'];
+        if (responseHint == null) {
+          Console.warning('response doesn\'t contain hint key.');
+        }
+        if (showSuccessDialogue) {
+          if (customSuccessDialogue != null) {
+            mainDialogue(
+              skip: true,
+              dialogue: () => customSuccessDialogue(),
+            );
+          } else {
+            mainDialogue(
+              skip: true,
+              dialogue: () => defaultSuccessDialogue(
+                title: 'Success',
+                content: responseMessages,
+                hint: responseHint,
+              ),
+            );
+          }
+        }
+        return ApiResponseType(
+          success: responseSuccess,
+          data: responseData,
+          messages: responseMessages,
+          hint: responseHint,
+        );
+      } catch (e) {
+        throw Exception(
+          'Unable to parse response.',
+        );
+      }
+    }
+    throw Exception('response from server is null or response.data is null');
+  }
+
+  void handleResponseError(
+    Object error,
+    bool showErrorDialogue,
+    Function? customErrorDialogue,
+    bool skipOnError,
+  ) {
+    // Handle response error from server only, otherwise rethrow.
+    if (error is DioError && error.type == DioErrorType.response) {
+      final Response<dynamic>? response = error.response;
+      try {
+        // By pass dio header error code to get response content
+        // Try to return response
+        if (response == null) {
+          throw DioError(
+            requestOptions: error.requestOptions,
+            response: error.response,
+            type: error.type,
+            error: response?.statusMessage,
+          );
+        }
+        final Response res = Response(
+          data: response.data,
+          headers: response.headers,
+          requestOptions: response.requestOptions,
+          isRedirect: response.isRedirect,
+          statusCode: response.statusCode,
+          statusMessage: response.statusMessage,
+          redirects: response.redirects,
+          extra: response.extra,
+        );
+        throw DioError(
+          requestOptions: error.requestOptions,
+          response: res,
+          type: error.type,
+          error: res.statusMessage,
+        );
+      } catch (e) {
+        if (error.type == DioErrorType.response) {
+          ApiErrorCode errorCode = ApiErrorCode.unknown;
+          List<String> errors = [error.message];
+          String? debug;
+          if (error.response?.statusCode == 401) {
+            errorCode = ApiErrorCode.unauthorized;
+          }
+          if (error.response?.data != null) {
+            try {
+              final Map<String, dynamic> response =
+                  error.response?.data as Map<String, dynamic>;
+              errors = response['errors'] ?? [];
+              if (errors.isEmpty) {
+                Console.warning('response doesn\'t contain errors key.');
+              }
+              debug = response['debug'];
+              if (debug == null) {
+                Console.warning('response doesn\'t contain debug key.');
+              }
+            } catch (e) {
+              throw Exception(
+                'Unable to parse error response.',
+              );
+            }
+          }
+          ApiErrorType apiErrorType =
+              ApiErrorType(code: errorCode, errors: errors, debug: debug);
+          if (apiErrorType.code == ApiErrorCode.unauthorized) {
+            Console.danger('Error type: unauthorized');
+            // TODO: Logout
+            // Logout user from controller and then send them to login screen
+            // after that show the error dialogue
+          }
+          if (showErrorDialogue) {
+            if (customErrorDialogue != null) {
+              mainDialogue(
+                skip: skipOnError,
+                dialogue: () => customErrorDialogue(),
+              );
+              return;
+            }
+            mainDialogue(
+              skip: skipOnError,
+              dialogue: () => defaultErrorDialogue(
+                title: 'Error',
+                content: apiErrorType.errors,
+              ),
+            );
+          }
+          return;
+        }
+        Console.danger(error.toString());
+        rethrow;
+      }
+    }
+  }
+
+  void mainDialogue({required bool skip, required Function() dialogue}) async {
+    if (!skip) {
+      await dialogue();
+      mainDialogue(
+        skip: skip,
+        dialogue: () => dialogue,
+      );
+      return;
+    }
+    await dialogue();
+    return;
+  }
+
+  defaultSuccessDialogue({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) {
+    return getx.Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (content != null) Text(content.join(' ')),
+              // TODO: replace with const margin
+              const SizedBox(height: 12),
+              if (hint != null) Text(hint),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          if (actions == null || actions.isNotEmpty)
+            CupertinoButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                getx.Get.back();
+              },
+            )
+          else
+            ...actions,
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  defaultErrorDialogue({
+    required String title,
+    required List<String> content,
+    List<Widget>? actions,
+  }) {
+    return getx.Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content.join(' ')),
+        actions: <Widget>[
+          if (actions == null || actions.isNotEmpty)
+            CupertinoButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                getx.Get.back();
+              },
+            )
+          else
+            ...actions,
+        ],
+      ),
+      barrierDismissible: false,
     );
   }
 }

@@ -28,7 +28,7 @@ class TeamApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'WebReinvent Team',
       theme: ThemeData(
         primarySwatch: Colors.blue,
