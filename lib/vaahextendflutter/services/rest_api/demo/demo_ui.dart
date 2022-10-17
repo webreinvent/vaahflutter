@@ -12,24 +12,49 @@ class DemoUI extends StatefulWidget {
 }
 
 class _DemoUIState extends BaseStateful<DemoUI> {
+  bool _isLoading = false;
   DemoController? _controller;
+
   @override
-  void afterFirstBuild(BuildContext context) {
+  void afterFirstBuild(BuildContext context) async {
+    super.afterFirstBuild(context);
     Get.put(DemoController());
     _controller = Get.find<DemoController>();
-    load();
-    super.afterFirstBuild(context);
+    await load();
   }
 
   Future<void> load({
     bool showLoading = true,
   }) async {
-    await _controller!.getDemoURL(context);
+    setState(() {
+      _isLoading = true;
+    });
+    await _controller!.getDemoURL();
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container();
+    return SizedBox(
+      height: 40,
+      width: 150,
+      child: ElevatedButton(
+        onPressed: () => load(),
+        child: _isLoading
+            ? const Center(
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            : const Text('Request'),
+      ),
+    );
   }
 }

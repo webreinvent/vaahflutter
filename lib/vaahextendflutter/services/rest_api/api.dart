@@ -55,7 +55,7 @@ class Api {
     int? customTimeoutLimit,
     Future<void> Function()? onStart,
     Future<void> Function(dynamic error)? onError,
-    Future<void> Function(bool status, Response<dynamic>? res)? onCompleted,
+    Future<void> Function(bool status, ApiResponseType? res)? onCompleted,
     Future<void> Function()? onFinally,
   }) async {
     try {
@@ -72,17 +72,20 @@ class Api {
         queryParameters: queryParameters,
         customTimeoutLimit: customTimeoutLimit,
       );
+      Console.danger('>>> $response');
 
-      // On completed, use for hide loading
-      if (onCompleted != null) {
-        await onCompleted(true, response);
-      }
-
-      return handleResponse(
+      ApiResponseType apiResponseType = handleResponse(
         response,
         showSuccessDialogue,
         customSuccessDialogue,
       );
+
+      // On completed, use for hide loading
+      if (onCompleted != null) {
+        await onCompleted(true, apiResponseType);
+      }
+
+      return apiResponseType;
     } catch (error) {
       // In case error:
       // On completed, use for hide loading
@@ -94,21 +97,33 @@ class Api {
       if (onError != null) {
         await onError(error);
       }
-
+      // All errors other than dio error eg. typeError
+      if (error is! DioError) {
+        rethrow;
+      }
+      // Timeout Error
+      else if (error.type == DioErrorType.sendTimeout ||
+          error.type == DioErrorType.receiveTimeout) {
+        handleTimeoutError(error, skipOnError);
+        return null;
+      }
       // Here response error means server sends error response. eg 401: unauthorised
-      handleResponseError(
-        error,
-        showErrorDialogue,
-        customErrorDialogue,
-        skipOnError,
-      );
+      else if (error.type == DioErrorType.response) {
+        handleResponseError(
+          error,
+          showErrorDialogue,
+          customErrorDialogue,
+          skipOnError,
+        );
+        return null;
+      }
+      rethrow;
     } finally {
-      /// Call finally function
+      // Call finally function
       if (onFinally != null) {
         await onFinally();
       }
     }
-    return null;
   }
 
   Future<void> _initApi() async {
@@ -127,47 +142,6 @@ class Api {
         ),
       );
     }
-    getApplicationDocumentsDirectory().then(
-      (Directory appDocDir) async {
-        final String appDocPath = appDocDir.path;
-        final String cookiePath = '$appDocPath/cookies';
-        final Directory dir = Directory(cookiePath);
-        await dir.create();
-        cookieJar = PersistCookieJar(
-          storage: FileStorage(cookiePath),
-        );
-        dio.interceptors.add(
-          CookieManager(cookieJar),
-        );
-        dio.interceptors.add(
-          InterceptorsWrapper(
-            onResponse: (Response<dynamic> response, handler) async {
-              final String urlPath = response.requestOptions.path;
-              final List<Cookie> cookies =
-                  await cookieJar.loadForRequest(Uri.parse(urlPath));
-              final String? xsrfToken = cookies
-                  .firstWhereOrNull(
-                    (Cookie c) => c.name == 'XSRF-TOKEN',
-                  )
-                  ?.value;
-              // Set dio auth header token once time
-              if (xsrfToken != null) {
-                // The XSRF-TOKEN got from cookie requires decoded before add to header
-                dio.options.headers['X-XSRF-TOKEN'] =
-                    Uri.decodeComponent(xsrfToken);
-                String cookieStr = '';
-                for (int i = 0; i < cookies.length; i++) {
-                  final Cookie c = cookies[i];
-                  cookieStr += '${c.name}=${c.value}; ';
-                }
-                dio.options.headers['Cookie'] = cookieStr;
-              }
-              return;
-            },
-          ),
-        );
-      },
-    );
   }
 
   Future<Response<dynamic>?> handleRequest({
@@ -180,20 +154,17 @@ class Api {
   }) async {
     Response? response;
     final Options options = await _getOptions();
+    options.sendTimeout =
+        customTimeoutLimit ?? envController.config.timeoutLimit;
+    options.receiveTimeout =
+        customTimeoutLimit ?? envController.config.timeoutLimit;
     switch (requestType) {
       case RequestType.get:
-        response = await dio
-            .get<dynamic>(
-              '$apiBaseUrl$url',
-              queryParameters: queryParameters,
-              options: options,
-            )
-            .timeout(
-              Duration(
-                seconds:
-                    customTimeoutLimit ?? envController.config.timeoutLimit,
-              ),
-            );
+        response = await dio.get<dynamic>(
+          '$apiBaseUrl$url',
+          queryParameters: queryParameters,
+          options: options,
+        );
         break;
 
       case RequestType.post:
@@ -207,19 +178,12 @@ class Api {
           );
           break;
         }
-        response = await dio
-            .post<dynamic>(
-              '$apiBaseUrl$url',
-              data: data,
-              queryParameters: queryParameters,
-              options: options,
-            )
-            .timeout(
-              Duration(
-                seconds:
-                    customTimeoutLimit ?? envController.config.timeoutLimit,
-              ),
-            );
+        response = await dio.post<dynamic>(
+          '$apiBaseUrl$url',
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+        );
         break;
 
       case RequestType.put:
@@ -233,19 +197,12 @@ class Api {
           );
           break;
         }
-        response = await dio
-            .put<dynamic>(
-              '$apiBaseUrl$url',
-              data: data,
-              queryParameters: queryParameters,
-              options: options,
-            )
-            .timeout(
-              Duration(
-                seconds:
-                    customTimeoutLimit ?? envController.config.timeoutLimit,
-              ),
-            );
+        response = await dio.put<dynamic>(
+          '$apiBaseUrl$url',
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+        );
         break;
 
       case RequestType.patch:
@@ -259,19 +216,12 @@ class Api {
           );
           break;
         }
-        response = await dio
-            .patch<dynamic>(
-              '$apiBaseUrl$url',
-              data: data,
-              queryParameters: queryParameters,
-              options: options,
-            )
-            .timeout(
-              Duration(
-                seconds:
-                    customTimeoutLimit ?? envController.config.timeoutLimit,
-              ),
-            );
+        response = await dio.patch<dynamic>(
+          '$apiBaseUrl$url',
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+        );
         break;
 
       case RequestType.delete:
@@ -285,19 +235,12 @@ class Api {
           );
           break;
         }
-        response = await dio
-            .delete<dynamic>(
-              '$apiBaseUrl$url',
-              data: data,
-              queryParameters: queryParameters,
-              options: options,
-            )
-            .timeout(
-              Duration(
-                seconds:
-                    customTimeoutLimit ?? envController.config.timeoutLimit,
-              ),
-            );
+        response = await dio.delete<dynamic>(
+          '$apiBaseUrl$url',
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+        );
         break;
 
       default:
@@ -322,7 +265,7 @@ class Api {
       try {
         final Map<String, dynamic> formatedResponse =
             response.data as Map<String, dynamic>;
-        dynamic responseSuccess = formatedResponse['success'];
+        bool? responseSuccess = formatedResponse['success'];
         if (responseSuccess == null) {
           Console.warning('response doesn\'t contain success key.');
         }
@@ -356,18 +299,27 @@ class Api {
           }
         }
         return ApiResponseType(
-          success: responseSuccess,
+          success: responseSuccess ?? true,
           data: responseData,
           messages: responseMessages,
           hint: responseHint,
         );
       } catch (e) {
-        throw Exception(
-          'Unable to parse response.',
-        );
+        rethrow;
       }
     }
     throw Exception('response from server is null or response.data is null');
+  }
+
+  void handleTimeoutError(DioError error, bool skipOnError) {
+    Console.danger(error.toString());
+    mainDialogue(
+      skip: skipOnError,
+      dialogue: () => defaultErrorDialogue(
+        title: 'Error',
+        content: ['Check your internet connection!'],
+      ),
+    );
   }
 
   void handleResponseError(
@@ -376,7 +328,6 @@ class Api {
     Function? customErrorDialogue,
     bool skipOnError,
   ) {
-    // Handle response error from server only, otherwise rethrow.
     if (error is DioError && error.type == DioErrorType.response) {
       final Response<dynamic>? response = error.response;
       try {
@@ -493,7 +444,7 @@ class Api {
             children: [
               if (content != null) Text(content.join(' ')),
               // TODO: replace with const margin
-              const SizedBox(height: 12),
+              if (content != null) const SizedBox(height: 12),
               if (hint != null) Text(hint),
             ],
           ),
