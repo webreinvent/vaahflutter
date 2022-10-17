@@ -16,7 +16,7 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   version: version,
   build: build,
   backendUrl: '', // base url or backend url
-  apiBaseUrl: '', // api base url
+  apiUrl: '', // api base url
   firebaseId: '', // firebase id
   enableConsoleLogs: true,
   enableLocalLogs: true,
@@ -75,7 +75,7 @@ class EnvironmentConfig {
   final String version;
   final String build;
   final String backendUrl;
-  final String apiBaseUrl;
+  final String apiUrl;
   final String firebaseId;
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
@@ -87,7 +87,7 @@ class EnvironmentConfig {
     required this.version,
     required this.build,
     required this.backendUrl,
-    required this.apiBaseUrl,
+    required this.apiUrl,
     required this.firebaseId,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
@@ -100,7 +100,7 @@ class EnvironmentConfig {
     String? version,
     String? build,
     String? backendUrl,
-    String? apiBaseUrl,
+    String? apiUrl,
     String? firebaseId,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
@@ -112,7 +112,7 @@ class EnvironmentConfig {
       version: version ?? this.version,
       build: build ?? this.build,
       backendUrl: backendUrl ?? this.backendUrl,
-      apiBaseUrl: apiBaseUrl ?? this.apiBaseUrl,
+      apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,

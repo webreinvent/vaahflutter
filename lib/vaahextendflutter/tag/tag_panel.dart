@@ -188,7 +188,7 @@ class TagPanelHostState extends State<TagPanelHost>
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'API Base URL: ${envController!.config.apiBaseUrl}',
+                                          'API URL: ${envController!.config.apiUrl}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
