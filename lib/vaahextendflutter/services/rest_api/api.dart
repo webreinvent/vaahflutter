@@ -5,15 +5,16 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 import 'package:path_provider/path_provider.dart';
 
 import '../../log/console.dart';
-import 'models/api_response_type.dart';
 import 'models/api_error_type.dart';
 import '../../../env.dart';
 
-enum RequestType { get, post, put, patch, delete }
+// alertType : 'dialog', 'toast',
 
 class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
@@ -39,23 +40,20 @@ class Api {
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
-  Future<ApiResponseType?> ajax<T>({
+  Future<void> ajax<T>({
     required String url,
-    RequestType requestType = RequestType.get,
-    Map<String, dynamic>? data,
-    Map<String, dynamic>? queryParameters,
-    bool showSuccessDialogue =
-        false, // if false on success nothing will be shown
-    bool showErrorDialogue = true, // if false on error nothing will be shown
-    bool skipOnError = true, // if true then error dialogue will be dismissible
-    Function?
-        customSuccessDialogue, // if passed will be showed this instead of default
-    Function?
-        customErrorDialogue, // if passed will be showed this instead of default
+    Future<void> Function(dynamic data, Response<dynamic>? res)? callback,
+    String method = 'get',
+    Map<String, dynamic>? params, // data passed in post, put, etc. request
+    Map<String, dynamic>? query,
+    List<Map<String, String>>? headers,
+    bool showAlert = true, // if false on success/ error, nothing will be shown
+    String alertType = 'toast',
+    bool skipOnError = true, // if true then error dialog will be dismissible
     int? customTimeoutLimit,
     Future<void> Function()? onStart,
+    Future<void> Function()? onCompleted,
     Future<void> Function(dynamic error)? onError,
-    Future<void> Function(bool status, ApiResponseType? res)? onCompleted,
     Future<void> Function()? onFinally,
   }) async {
     try {
@@ -65,57 +63,77 @@ class Api {
       }
 
       Response<dynamic>? response = await handleRequest(
-        requestType: requestType,
         url: url,
-        data: data,
+        method: method,
+        query: query,
+        params: params,
+        headers: headers,
         skipOnError: skipOnError,
-        queryParameters: queryParameters,
         customTimeoutLimit: customTimeoutLimit,
+        showAlert: showAlert,
+        alertType: alertType,
       );
-      Console.danger('>>> $response');
 
-      ApiResponseType apiResponseType = handleResponse(
+      dynamic responseData = handleResponse(
         response,
-        showSuccessDialogue,
-        customSuccessDialogue,
+        showAlert,
+        alertType,
       );
 
       // On completed, use for hide loading
       if (onCompleted != null) {
-        await onCompleted(true, apiResponseType);
+        await onCompleted();
       }
 
-      return apiResponseType;
+      if (callback != null) {
+        await callback(responseData, response);
+      }
+
+      return;
     } catch (error) {
-      // In case error:
       // On completed, use for hide loading
       if (onCompleted != null) {
-        await onCompleted(false, null);
+        await onCompleted();
       }
 
       // On inline error
       if (onError != null) {
         await onError(error);
       }
+
       // All errors other than dio error eg. typeError
       if (error is! DioError) {
+        if (callback != null) {
+          await callback(null, null);
+        }
         rethrow;
       }
+
       // Timeout Error
       else if (error.type == DioErrorType.sendTimeout ||
           error.type == DioErrorType.receiveTimeout) {
-        handleTimeoutError(error, skipOnError);
-        return null;
+        handleTimeoutError(error, skipOnError, showAlert, alertType);
+        if (callback != null) {
+          await callback(null, null);
+        }
+        return;
       }
+
       // Here response error means server sends error response. eg 401: unauthorised
       else if (error.type == DioErrorType.response) {
         handleResponseError(
           error,
-          showErrorDialogue,
-          customErrorDialogue,
           skipOnError,
+          showAlert,
+          alertType,
         );
-        return null;
+        if (callback != null) {
+          await callback(null, null);
+        }
+        return;
+      }
+      if (callback != null) {
+        await callback(null, null);
       }
       rethrow;
     } finally {
@@ -145,12 +163,15 @@ class Api {
   }
 
   Future<Response<dynamic>?> handleRequest({
-    required RequestType requestType,
+    required String method,
     required String url,
-    required Map<String, dynamic>? data,
-    required Map<String, dynamic>? queryParameters,
+    required Map<String, dynamic>? query,
+    required Map<String, dynamic>? params,
+    required List<Map<String, String>>? headers,
     required int? customTimeoutLimit,
     required bool skipOnError,
+    required bool showAlert,
+    required String alertType,
   }) async {
     Response? response;
     final Options options = await _getOptions();
@@ -158,117 +179,93 @@ class Api {
         customTimeoutLimit ?? envController.config.timeoutLimit;
     options.receiveTimeout =
         customTimeoutLimit ?? envController.config.timeoutLimit;
-    switch (requestType) {
-      case RequestType.get:
+    if (headers != null && headers.isNotEmpty) {
+      if (options.headers != null) {
+        for (Map<String, String> element in headers) {
+          options.headers?.addAll(element);
+        }
+      } else {
+        final Map<String, String> customHeader = <String, String>{};
+        for (Map<String, String> element in headers) {
+          customHeader.addAll(element);
+        }
+        options.headers = customHeader;
+      }
+    }
+    switch (method) {
+      case 'get':
         response = await dio.get<dynamic>(
           '$apiBaseUrl$url',
-          queryParameters: queryParameters,
+          queryParameters: query,
           options: options,
         );
         break;
 
-      case RequestType.post:
-        if (data == null) {
-          mainDialogue(
-            skip: skipOnError,
-            dialogue: () => defaultErrorDialogue(
-              title: 'Error',
-              content: ['Invalid data!'],
-            ),
-          );
-          break;
-        }
+      case 'post':
         response = await dio.post<dynamic>(
           '$apiBaseUrl$url',
-          data: data,
-          queryParameters: queryParameters,
+          data: params,
+          queryParameters: query,
           options: options,
         );
         break;
 
-      case RequestType.put:
-        if (data == null) {
-          mainDialogue(
-            skip: skipOnError,
-            dialogue: () => defaultErrorDialogue(
-              title: 'Error',
-              content: ['Invalid data!'],
-            ),
-          );
-          break;
-        }
+      case 'put':
         response = await dio.put<dynamic>(
           '$apiBaseUrl$url',
-          data: data,
-          queryParameters: queryParameters,
+          data: params,
+          queryParameters: query,
           options: options,
         );
         break;
 
-      case RequestType.patch:
-        if (data == null) {
-          mainDialogue(
-            skip: skipOnError,
-            dialogue: () => defaultErrorDialogue(
-              title: 'Error',
-              content: ['Invalid data!'],
-            ),
-          );
-          break;
-        }
+      case 'patch':
         response = await dio.patch<dynamic>(
           '$apiBaseUrl$url',
-          data: data,
-          queryParameters: queryParameters,
+          data: params,
+          queryParameters: query,
           options: options,
         );
         break;
 
-      case RequestType.delete:
-        if (data == null) {
-          mainDialogue(
-            skip: skipOnError,
-            dialogue: () => defaultErrorDialogue(
-              title: 'Error',
-              content: ['Invalid data!'],
-            ),
-          );
-          break;
-        }
+      case 'delete':
         response = await dio.delete<dynamic>(
           '$apiBaseUrl$url',
-          data: data,
-          queryParameters: queryParameters,
+          data: params,
+          queryParameters: query,
           options: options,
         );
         break;
 
       default:
-        mainDialogue(
-          skip: skipOnError,
-          dialogue: () => defaultErrorDialogue(
-            title: 'Error',
-            content: ['Invalid request type!'],
-          ),
-        );
-        break;
+        if (showAlert) {
+          if (alertType == 'dialog') {
+            showDialog(
+              skip: skipOnError,
+              dialog: () => defaultErrorDialog(
+                title: 'Error',
+                content: ['Invalid request type!'],
+              ),
+            );
+            break;
+          } else {
+            showToast(content: 'Invalid request type!', toastType: 'failure');
+            break;
+          }
+        }
     }
     return response;
   }
 
-  ApiResponseType handleResponse(
+  dynamic handleResponse(
     Response<dynamic>? response,
-    bool showSuccessDialogue,
-    Function? customSuccessDialogue,
+    bool showAlert,
+    String alertType,
   ) {
     if (response != null && response.data != null) {
       try {
         final Map<String, dynamic> formatedResponse =
             response.data as Map<String, dynamic>;
-        bool? responseSuccess = formatedResponse['success'];
-        if (responseSuccess == null) {
-          Console.warning('response doesn\'t contain success key.');
-        }
         dynamic responseData = formatedResponse['data'];
         if (responseData == null) {
           Console.warning('response doesn\'t contain data key.');
@@ -281,29 +278,24 @@ class Api {
         if (responseHint == null) {
           Console.warning('response doesn\'t contain hint key.');
         }
-        if (showSuccessDialogue) {
-          if (customSuccessDialogue != null) {
-            mainDialogue(
+        if (showAlert) {
+          if (alertType == 'dialog') {
+            showDialog(
               skip: true,
-              dialogue: () => customSuccessDialogue(),
-            );
-          } else {
-            mainDialogue(
-              skip: true,
-              dialogue: () => defaultSuccessDialogue(
+              dialog: () => defaultSuccessDialog(
                 title: 'Success',
                 content: responseMessages,
                 hint: responseHint,
               ),
             );
+          } else {
+            showToast(
+              content: responseMessages?.join('') ?? 'Successful',
+              toastType: 'success',
+            );
           }
         }
-        return ApiResponseType(
-          success: responseSuccess ?? true,
-          data: responseData,
-          messages: responseMessages,
-          hint: responseHint,
-        );
+        return responseData;
       } catch (e) {
         rethrow;
       }
@@ -311,22 +303,36 @@ class Api {
     throw Exception('response from server is null or response.data is null');
   }
 
-  void handleTimeoutError(DioError error, bool skipOnError) {
+  void handleTimeoutError(
+    DioError error,
+    bool skipOnError,
+    showAlert,
+    alertType,
+  ) {
     Console.danger(error.toString());
-    mainDialogue(
-      skip: skipOnError,
-      dialogue: () => defaultErrorDialogue(
-        title: 'Error',
-        content: ['Check your internet connection!'],
-      ),
-    );
+    if (showAlert) {
+      if (alertType == 'dialog') {
+        showDialog(
+          skip: skipOnError,
+          dialog: () => defaultErrorDialog(
+            title: 'Error',
+            content: ['Check your internet connection!'],
+          ),
+        );
+      } else {
+        showToast(
+          content: 'Check your internet connection!',
+          toastType: 'failure',
+        );
+      }
+    }
   }
 
   void handleResponseError(
     Object error,
-    bool showErrorDialogue,
-    Function? customErrorDialogue,
     bool skipOnError,
+    bool showAlert,
+    String alertType,
   ) {
     if (error is DioError && error.type == DioErrorType.response) {
       final Response<dynamic>? response = error.response;
@@ -389,23 +395,25 @@ class Api {
             Console.danger('Error type: unauthorized');
             // TODO: Logout
             // Logout user from controller and then send them to login screen
-            // after that show the error dialogue
+            // after that show the error dialog
           }
-          if (showErrorDialogue) {
-            if (customErrorDialogue != null) {
-              mainDialogue(
+          if (showAlert) {
+            if (alertType == 'dialog') {
+              showDialog(
                 skip: skipOnError,
-                dialogue: () => customErrorDialogue(),
+                dialog: () => defaultErrorDialog(
+                  title: 'Error',
+                  content: apiErrorType.errors,
+                ),
               );
-              return;
+            } else {
+              showToast(
+                content: apiErrorType.errors.isEmpty
+                    ? 'Error'
+                    : apiErrorType.errors.join(' '),
+                toastType: 'failure',
+              );
             }
-            mainDialogue(
-              skip: skipOnError,
-              dialogue: () => defaultErrorDialogue(
-                title: 'Error',
-                content: apiErrorType.errors,
-              ),
-            );
           }
           return;
         }
@@ -415,20 +423,51 @@ class Api {
     }
   }
 
-  void mainDialogue({required bool skip, required Function() dialogue}) async {
+  void showToast({
+    required String content,
+    toastType = 'default',
+  }) async {
+    switch (toastType) {
+      case 'success':
+        defaultToast(content, Colors.green);
+        break;
+      case 'failure':
+        defaultToast(content, Colors.red);
+        break;
+      default:
+        defaultToast(content, Colors.white);
+        break;
+    }
+  }
+
+  void defaultToast(String content, Color color) {
+    Fluttertoast.showToast(
+      msg: content,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: color.withOpacity(0.5),
+      textColor: Colors.black,
+      fontSize: 16.0,
+    );
+  }
+
+  void showDialog({
+    required bool skip,
+    required Function() dialog,
+  }) async {
     if (!skip) {
-      await dialogue();
-      mainDialogue(
+      await dialog();
+      showDialog(
         skip: skip,
-        dialogue: () => dialogue,
+        dialog: () => dialog,
       );
       return;
     }
-    await dialogue();
+    await dialog();
     return;
   }
 
-  defaultSuccessDialogue({
+  defaultSuccessDialog({
     required String title,
     List<String>? content,
     String? hint,
@@ -465,7 +504,7 @@ class Api {
     );
   }
 
-  defaultErrorDialogue({
+  defaultErrorDialog({
     required String title,
     required List<String> content,
     List<Widget>? actions,

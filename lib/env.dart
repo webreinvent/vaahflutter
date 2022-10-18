@@ -16,7 +16,7 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   version: version,
   build: build,
   baseUrl: '',
-  apiBaseUrl: 'https://reqres.in',
+  apiBaseUrl: 'https://xrestapi.herokuapp.com',
   timeoutLimit: 60 * 1000, // 60 seconds
   analyticsId: '',
   enableConsoleLogs: true,

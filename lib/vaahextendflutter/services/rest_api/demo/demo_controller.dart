@@ -1,8 +1,7 @@
 import 'package:get/get.dart' as getx;
+import 'package:team/vaahextendflutter/log/console.dart';
 
-import '../../../log/console.dart';
 import '../api.dart';
-import '../models/api_response_type.dart';
 
 class DemoController extends getx.GetxController {
   // Call API
@@ -10,10 +9,17 @@ class DemoController extends getx.GetxController {
 
   Future<void> getDemoURL() async {
     await api.ajax(
-      url: '/api/users',
-      requestType: RequestType.post,
+      url: '/error',
+      callback: getDemoURLAfter,
+      query: {'code': 401},
+      showAlert: false,
+      alertType: 'dialog',
     );
   }
 
-  Future<void> getDemoURLAfter(suceess, resp) async {}
+  Future<void> getDemoURLAfter(dynamic data, dynamic resp) async {
+    if (data != null) {
+      Console.info(data.toString());
+    }
+  }
 }
