@@ -7,7 +7,7 @@ class ApiErrorType {
 
   const ApiErrorType({
     this.code = ApiErrorCode.unknown,
-    this.errors = const ['Unknown'],
+    this.errors = const [],
     this.debug,
   });
 

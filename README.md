@@ -20,7 +20,7 @@ flutter pub get
 
 ## Environments
 
-### To run app in `production` mode use command 
+### To run app in `production` mode use command
 ```
 flutter run --dart-define="environment=production"
 ```
@@ -47,7 +47,7 @@ flutter build ipa --dart-define="environment=production"
 
 ### How to create a new environment:
 
-Go to `lib/env.dart`, find `envConfigs` variable and add configuration for the environment you want to create. example: for `testing` environment add `'testing'` key and value. And in commands pass your environment name
+Go to `lib/env.dart`, find `envConfigs` variable and add configuration for the environment you want to create. Example: for `testing` environment add `'testing'` key and value. And in commands pass your environment name
 ```
 // for example if environment name is testing then
 flutter run --dart-define="environment=testing"
@@ -72,12 +72,12 @@ flutter pub outdated
 - 2 spaces for indentation
 - test files have `_test.ext` suffix in the file name > example `widget_test.dart`
 - Libraries, packages, directories, and source files name convention: snake_case(lowercase_with_underscores).
-- Classes, enums, typedefs, and extensions naming conevntion: UpperCamelCase.
+- Classes, Enums, Typedefs, and extensions naming convention: UpperCamelCase.
 - Variables, constants, parameters naming convention: lowerCamelCase.
-- Method/ functions naming conevntion: lowerCamelCase.
+- Method/ functions naming convention: lowerCamelCase.
 - Use relative path
-  - ✘ `import 'package:demo/home.dart';` -> This should be avoided.
-  - ✔ `import './home.dart';` -> Correct way
+  - ✘ `import 'package:demo/home.dart';` → This should be avoided.
+  - ✔ `import './home.dart';` → Correct way
   - to fix imports you can use [dart-import](https://marketplace.visualstudio.com/items?itemName=luanpotter.dart-import)
 - Avoid using as instead, use is operator
 - Avoid print()/ debugPrint() calls
