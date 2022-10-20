@@ -1,59 +1,94 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 class Helpers {
-  Helpers() {
-    showErrorDialog = null;
-    showErrorToast = null;
-    showSuccessDialog = null;
-    showSuccessToast = _showSuccessToast;
+  
+  static logout() {
+    // Navigate using getx
   }
 
-  Function({
-    required String title,
-    List<String>? content,
-    List<Function>? actions,
-  })? showErrorDialog;
 
-  Function({required String content})? showErrorToast;
-
-  Function({
-    required String title,
-    List<String>? content,
-    List<Function>? actions,
-  })? showSuccessDialog;
-
-  Function({required String content})? showSuccessToast;
-}
-
-void _showSuccessToast({required String content}) {
-  _showToast(content: content, toastType: 'success');
-}
-
-void _showToast({
-  required String content,
-  String? toastType = 'default',
-}) {
-  switch (toastType) {
-    case 'success':
-      _defaultToast(content, Colors.green);
-      break;
-    case 'failure':
-      _defaultToast(content, Colors.red);
-      break;
-    default:
-      _defaultToast(content, Colors.white);
-      break;
+  // ignore: unused_element
+  static _toast({required String content, Color color = Colors.white}) {
+    Fluttertoast.showToast(
+      msg: content,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: color.withOpacity(0.5),
+      textColor: color,
+      fontSize: 16.0,
+    );
   }
-}
 
-void _defaultToast(String content, Color color) {
-  Fluttertoast.showToast(
-    msg: content,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-    backgroundColor: color.withOpacity(0.5),
-    textColor: Colors.black,
-    fontSize: 16.0,
-  );
+  // ignore: unused_element
+  static _dialog({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) {
+    return Get.dialog(
+      CupertinoAlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (content != null && content.isNotEmpty)
+                Text(content.join('\n')),
+              // TODO: replace with const margin
+              if (content != null && content.isNotEmpty)
+                const SizedBox(height: 8),
+              if (hint != null && hint.trim().isNotEmpty) Text(hint),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          if (actions == null || actions.isNotEmpty)
+            CupertinoButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Get.back();
+              },
+            )
+          else
+            ...actions,
+        ],
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  static showErrorToast({required String content}) {
+    _toast(content: content, color: Colors.red);
+  }
+
+  // static const showErrorToast = null;
+
+  static showSuccessToast({required String content}) {
+    _toast(content: content, color: Colors.green);
+  }
+
+  // static const showSuccessToast = null;
+
+  // static showErrorDialog({
+  //   required String title,
+  //   List<String>? content,
+  //   String? hint,
+  //   List<Function>? actions,
+  // }) {}
+
+  static const showErrorDialog = null;
+
+  // static showSuccessDialog({
+  //   required String title,
+  //   List<String>? content,
+  //   String? hint,
+  //   List<Function>? actions,
+  // }) {}
+
+  static const showSuccessDialog = null;
 }

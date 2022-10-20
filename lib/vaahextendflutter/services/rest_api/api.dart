@@ -8,26 +8,21 @@ import 'package:get/get.dart' as getx;
 
 import '../../../env.dart';
 import '../../log/console.dart';
-import '../helpers.dart';
-import 'models/api_error_type.dart';
+import '../Helpers.dart';
 
 // alertType : 'dialog', 'toast',
 
+
 class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
-  late EnvController envController;
-  Helpers helpers = Helpers();
+  static late final EnvController _envController;
 
   // Get base url by env
-  late final String apiBaseUrl;
-  final Dio dio = Dio();
-
-  Api() {
-    _initApi();
-  }
+  static late final String _apiBaseUrl;
+  static final Dio _dio = Dio();
 
   // Get request header options
-  Future<Options> _getOptions(
+  static Future<Options> _getOptions(
       {String contentType = Headers.jsonContentType}) async {
     final Map<String, String> header = <String, String>{};
     header.addAll(<String, String>{'Accept': 'application/json'});
@@ -37,7 +32,7 @@ class Api {
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
-  Future<void> ajax<T>({
+  static Future<void> ajax<T>({
     required String url,
     Future<void> Function(dynamic data, Response<dynamic>? res)? callback,
     String method = 'get',
@@ -61,7 +56,7 @@ class Api {
         await onStart();
       }
 
-      Response<dynamic>? response = await handleRequest(
+      Response<dynamic>? response = await _handleRequest(
         url: url,
         method: method,
         query: query,
@@ -72,7 +67,7 @@ class Api {
         alertType: alertType,
       );
 
-      dynamic responseData = await handleResponse(
+      dynamic responseData = await _handleResponse(
         response,
         showAlert,
         alertType,
@@ -110,7 +105,7 @@ class Api {
       // Timeout Error
       else if (error.type == DioErrorType.sendTimeout ||
           error.type == DioErrorType.receiveTimeout) {
-        await handleTimeoutError(
+        await _handleTimeoutError(
           error,
           showAlert,
           alertType,
@@ -123,7 +118,7 @@ class Api {
 
       // Here response error means server sends error response. eg 401: unauthorised
       else if (error.type == DioErrorType.response) {
-        await handleResponseError(
+        await _handleResponseError(
           error,
           showAlert,
           alertType,
@@ -146,16 +141,16 @@ class Api {
     }
   }
 
-  Future<void> _initApi() async {
+  static Future<void> initApi() async {
     bool envControllerExists = getx.Get.isRegistered<EnvController>();
     if (!envControllerExists) {
       throw Exception('envController does not exist in app');
     }
     // get env controller and set variable showEnvAndVersionTag
-    envController = getx.Get.find<EnvController>();
-    apiBaseUrl = envController.config.apiBaseUrl;
-    if (envController.config.enableApiLogs) {
-      dio.interceptors.add(
+    _envController = getx.Get.find<EnvController>();
+    _apiBaseUrl = _envController.config.apiBaseUrl;
+    if (_envController.config.enableApiLogs) {
+      _dio.interceptors.add(
         LogInterceptor(
           responseBody: true,
           requestBody: true,
@@ -164,7 +159,7 @@ class Api {
     }
   }
 
-  Future<Response<dynamic>?> handleRequest({
+  static Future<Response<dynamic>?> _handleRequest({
     required String method,
     required String url,
     required Map<String, dynamic>? query,
@@ -177,9 +172,9 @@ class Api {
     Response? response;
     final Options options = await _getOptions();
     options.sendTimeout =
-        customTimeoutLimit ?? envController.config.timeoutLimit;
+        customTimeoutLimit ?? _envController.config.timeoutLimit;
     options.receiveTimeout =
-        customTimeoutLimit ?? envController.config.timeoutLimit;
+        customTimeoutLimit ?? _envController.config.timeoutLimit;
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
@@ -195,16 +190,16 @@ class Api {
     }
     switch (method) {
       case 'get':
-        response = await dio.get<dynamic>(
-          '$apiBaseUrl$url',
+        response = await _dio.get<dynamic>(
+          '$_apiBaseUrl$url',
           queryParameters: query,
           options: options,
         );
         break;
 
       case 'post':
-        response = await dio.post<dynamic>(
-          '$apiBaseUrl$url',
+        response = await _dio.post<dynamic>(
+          '$_apiBaseUrl$url',
           data: params,
           queryParameters: query,
           options: options,
@@ -212,8 +207,8 @@ class Api {
         break;
 
       case 'put':
-        response = await dio.put<dynamic>(
-          '$apiBaseUrl$url',
+        response = await _dio.put<dynamic>(
+          '$_apiBaseUrl$url',
           data: params,
           queryParameters: query,
           options: options,
@@ -221,8 +216,8 @@ class Api {
         break;
 
       case 'patch':
-        response = await dio.patch<dynamic>(
-          '$apiBaseUrl$url',
+        response = await _dio.patch<dynamic>(
+          '$_apiBaseUrl$url',
           data: params,
           queryParameters: query,
           options: options,
@@ -230,8 +225,8 @@ class Api {
         break;
 
       case 'delete':
-        response = await dio.delete<dynamic>(
-          '$apiBaseUrl$url',
+        response = await _dio.delete<dynamic>(
+          '$_apiBaseUrl$url',
           data: params,
           queryParameters: query,
           options: options,
@@ -241,24 +236,26 @@ class Api {
       default:
         if (showAlert) {
           if (alertType == 'dialog') {
-            if (helpers.showErrorDialog != null) {
-              await helpers.showErrorDialog!(
+            // ignore: unnecessary_null_comparison
+            if (Helpers.showErrorDialog != null) {
+              await Helpers.showErrorDialog(
                 title: 'Error',
                 content: ['Invalid request type!'],
               );
               break;
             }
-            showDialog(
+            _showDialog(
               title: 'Error',
               content: ['Invalid request type!'],
             );
             break;
           } else {
-            if (helpers.showErrorToast != null) {
-              await helpers.showErrorToast!(content: 'Invalid request type!');
+            // ignore: unnecessary_null_comparison
+            if (Helpers.showErrorToast != null) {
+              await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            showToast(content: 'Invalid request type!', toastType: 'failure');
+            _showToast(content: 'Invalid request type!', color: Colors.red);
             break;
           }
         }
@@ -266,7 +263,7 @@ class Api {
     return response;
   }
 
-  Future<dynamic> handleResponse(
+ static Future<dynamic> _handleResponse(
     Response<dynamic>? response,
     bool showAlert,
     String alertType,
@@ -289,26 +286,28 @@ class Api {
         }
         if (showAlert) {
           if (alertType == 'dialog') {
-            if (helpers.showSuccessDialog != null) {
-              await helpers.showSuccessDialog!(
+            // ignore: unnecessary_null_comparison
+            if (Helpers.showSuccessDialog != null) {
+              await Helpers.showSuccessDialog(
                 title: 'Success',
                 content: responseMessages,
               );
             } else {
-              showDialog(
+              _showDialog(
                 title: 'Success',
                 content: responseMessages,
               );
             }
           } else {
-            if (helpers.showSuccessToast != null) {
-              await helpers.showSuccessToast!(
-                content: responseMessages?.join(' ') ?? 'Successful',
+            // ignore: unnecessary_null_comparison
+            if (Helpers.showSuccessToast != null) {
+              await Helpers.showSuccessToast(
+                content: responseMessages?.join('\n') ?? 'Successful',
               );
             } else {
-              showToast(
-                content: responseMessages?.join(' ') ?? 'Successful',
-                toastType: 'success',
+              _showToast(
+                content: responseMessages?.join('\n') ?? 'Successful',
+                color: Colors.green,
               );
             }
           }
@@ -321,7 +320,7 @@ class Api {
     throw Exception('response from server is null or response.data is null');
   }
 
-  Future<void> handleTimeoutError(
+ static Future<void> _handleTimeoutError(
     DioError error,
     bool showAlert,
     String alertType,
@@ -329,33 +328,35 @@ class Api {
     Console.danger(error.toString());
     if (showAlert) {
       if (alertType == 'dialog') {
-        if (helpers.showErrorDialog != null) {
-          await helpers.showErrorDialog!(
+        // ignore: unnecessary_null_comparison
+        if (Helpers.showErrorDialog != null) {
+          await Helpers.showErrorDialog(
             title: 'Error',
             content: ['Check your internet connection!'],
           );
           return;
         }
-        showDialog(
+        _showDialog(
           title: 'Error',
           content: ['Check your internet connection!'],
         );
       } else {
-        if (helpers.showErrorToast != null) {
-          await helpers.showErrorToast!(
+        // ignore: unnecessary_null_comparison
+        if (Helpers.showErrorToast != null) {
+          await Helpers.showErrorToast(
             content: 'Check your internet connection!',
           );
           return;
         }
-        showToast(
+        _showToast(
           content: 'Check your internet connection!',
-          toastType: 'failure',
+          color: Colors.green,
         );
       }
     }
   }
 
-  Future<void> handleResponseError(
+  static Future<void> _handleResponseError(
     Object error,
     bool showAlert,
     String alertType,
@@ -391,11 +392,11 @@ class Api {
         );
       } catch (e) {
         if (error.type == DioErrorType.response) {
-          ApiErrorCode errorCode = ApiErrorCode.unknown;
+          String errorCode = 'unknown';
           List<String> errors = [error.message];
           String? debug;
           if (error.response?.statusCode == 401) {
-            errorCode = ApiErrorCode.unauthorized;
+            errorCode = 'unauthorized';
           }
           if (error.response?.data != null) {
             try {
@@ -415,42 +416,40 @@ class Api {
               );
             }
           }
-          ApiErrorType apiErrorType =
-              ApiErrorType(code: errorCode, errors: errors, debug: debug);
-          if (apiErrorType.code == ApiErrorCode.unauthorized) {
+          if (errorCode == 'unauthorized') {
             Console.danger('Error type: unauthorized');
-            // TODO: Logout
-            // Logout user from controller and then send them to login screen
-            // after that show the error dialog
+            Helpers.logout();
           }
           if (showAlert) {
             if (alertType == 'dialog') {
-              if (helpers.showErrorDialog != null) {
-                await helpers.showErrorDialog!(
+              // ignore: unnecessary_null_comparison
+              if (Helpers.showErrorDialog != null) {
+                await Helpers.showErrorDialog(
                   title: 'Error',
-                  content: apiErrorType.errors,
+                  content: errors,
                 );
                 return;
               }
-              Console.danger(apiErrorType.errors.toString());
-              showDialog(
+              Console.danger(errors.toString());
+              _showDialog(
                 title: 'Error',
-                content: apiErrorType.errors,
+                content: errors,
               );
             } else {
-              if (helpers.showErrorToast != null) {
-                await helpers.showErrorToast!(
-                  content: apiErrorType.errors.isEmpty
+              // ignore: unnecessary_null_comparison
+              if (Helpers.showErrorToast != null) {
+                await Helpers.showErrorToast(
+                  content: errors.isEmpty
                       ? 'Error'
-                      : apiErrorType.errors.join(' '),
+                      : errors.join('\n'),
                 );
                 return;
               }
-              showToast(
-                content: apiErrorType.errors.isEmpty
+              _showToast(
+                content: errors.isEmpty
                     ? 'Error'
-                    : apiErrorType.errors.join(' '),
-                toastType: 'failure',
+                    : errors.join('\n'),
+                    color: Colors.green,
               );
             }
           }
@@ -462,24 +461,10 @@ class Api {
     }
   }
 
-  void showToast({
+  static void _showToast({
     required String content,
-    toastType = 'default',
+    Color color = Colors.white,
   }) {
-    switch (toastType) {
-      case 'success':
-        defaultToast(content, Colors.green);
-        break;
-      case 'failure':
-        defaultToast(content, Colors.red);
-        break;
-      default:
-        defaultToast(content, Colors.white);
-        break;
-    }
-  }
-
-  void defaultToast(String content, Color color) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
@@ -490,7 +475,7 @@ class Api {
     );
   }
 
-  showDialog({
+  static _showDialog({
     required String title,
     List<String>? content,
     String? hint,
@@ -505,7 +490,7 @@ class Api {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (content != null && content.isNotEmpty)
-                Text(content.join(' ')),
+                Text(content.join('\n')),
               // TODO: replace with const margin
               if (content != null && content.isNotEmpty)
                 const SizedBox(height: 12),

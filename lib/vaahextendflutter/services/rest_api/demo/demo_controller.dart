@@ -6,12 +6,10 @@ import '../../../log/console.dart';
 import '../api.dart';
 
 class DemoController extends getx.GetxController {
-  // Call API
-  Api api = Api();
-
   Future<void> getDemoURL() async {
-    await api.ajax(
-      url: '/error',
+    await Api.ajax(
+      url: '/search',
+      query: {'code': 401},
       callback: getDemoURLAfter,
     );
   }

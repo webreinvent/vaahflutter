@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:team/vaahextendflutter/services/rest_api/api.dart';
 
 import 'env.dart';
 import 'vaahextendflutter/base/base_stateful.dart';
@@ -7,7 +8,7 @@ import 'vaahextendflutter/log/console.dart';
 import 'vaahextendflutter/services/rest_api/demo/demo_ui.dart';
 import 'vaahextendflutter/tag/tag.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   String environment =
       const String.fromEnvironment('environment', defaultValue: 'default');
@@ -20,6 +21,7 @@ void main() {
   Console.info(
     '>>>>> ${envController.config.version}+${envController.config.build}',
   );
+  await Api.initApi();
   runApp(const TeamApp());
 }
 
