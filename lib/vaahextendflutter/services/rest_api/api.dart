@@ -1,26 +1,26 @@
 import 'dart:async';
 
-import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
-import '../../log/console.dart';
-import 'models/api_error_type.dart';
 import '../../../env.dart';
+import '../../log/console.dart';
+import '../helpers.dart';
+import 'models/api_error_type.dart';
 
 // alertType : 'dialog', 'toast',
 
 class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
   late EnvController envController;
+  Helpers helpers = Helpers();
 
   // Get base url by env
   late final String apiBaseUrl;
   final Dio dio = Dio();
-  late PersistCookieJar cookieJar;
 
   Api() {
     _initApi();
@@ -50,10 +50,6 @@ class Api {
     bool showAlert =
         true, // if set false then on success or error, nothing will be shown
     String alertType = 'toast', // 'toast' and 'dialog' are valid values
-    Future<void> Function()? showSuccessToast,
-    Future<void> Function()? showErrorToast,
-    Future<void> Function()? showSuccessDialog,
-    Future<void> Function()? showErrorDialog,
     Future<void> Function()? onStart,
     Future<void> Function()? onCompleted,
     Future<void> Function(dynamic error)? onError,
@@ -74,16 +70,12 @@ class Api {
         customTimeoutLimit: customTimeoutLimit,
         showAlert: showAlert,
         alertType: alertType,
-        showErrorDialog: showErrorDialog,
-        showErrorToast: showErrorToast,
       );
 
       dynamic responseData = await handleResponse(
         response,
         showAlert,
         alertType,
-        showSuccessDialog,
-        showSuccessToast,
       );
 
       // On completed, use for hide loading
@@ -122,8 +114,6 @@ class Api {
           error,
           showAlert,
           alertType,
-          showErrorToast,
-          showErrorDialog,
         );
         if (callback != null) {
           await callback(null, null);
@@ -137,14 +127,13 @@ class Api {
           error,
           showAlert,
           alertType,
-          showErrorToast,
-          showErrorDialog,
         );
         if (callback != null) {
           await callback(null, null);
         }
         return;
       }
+
       if (callback != null) {
         await callback(null, null);
       }
@@ -184,8 +173,6 @@ class Api {
     required int? customTimeoutLimit,
     required bool showAlert,
     required String alertType,
-    required Future<void> Function()? showErrorDialog,
-    required Future<void> Function()? showErrorToast,
   }) async {
     Response? response;
     final Options options = await _getOptions();
@@ -254,8 +241,11 @@ class Api {
       default:
         if (showAlert) {
           if (alertType == 'dialog') {
-            if (showErrorDialog != null) {
-              await showErrorDialog();
+            if (helpers.showErrorDialog != null) {
+              await helpers.showErrorDialog!(
+                title: 'Error',
+                content: ['Invalid request type!'],
+              );
               break;
             }
             showDialog(
@@ -264,8 +254,8 @@ class Api {
             );
             break;
           } else {
-            if (showErrorToast != null) {
-              await showErrorToast();
+            if (helpers.showErrorToast != null) {
+              await helpers.showErrorToast!(content: 'Invalid request type!');
               break;
             }
             showToast(content: 'Invalid request type!', toastType: 'failure');
@@ -280,8 +270,6 @@ class Api {
     Response<dynamic>? response,
     bool showAlert,
     String alertType,
-    Future<void> Function()? showSuccessDialog,
-    Future<void> Function()? showSuccessToast,
   ) async {
     if (response != null && response.data != null) {
       try {
@@ -301,8 +289,11 @@ class Api {
         }
         if (showAlert) {
           if (alertType == 'dialog') {
-            if (showSuccessDialog != null) {
-              await showSuccessDialog();
+            if (helpers.showSuccessDialog != null) {
+              await helpers.showSuccessDialog!(
+                title: 'Success',
+                content: responseMessages,
+              );
             } else {
               showDialog(
                 title: 'Success',
@@ -310,8 +301,10 @@ class Api {
               );
             }
           } else {
-            if (showSuccessToast != null) {
-              await showSuccessToast();
+            if (helpers.showSuccessToast != null) {
+              await helpers.showSuccessToast!(
+                content: responseMessages?.join(' ') ?? 'Successful',
+              );
             } else {
               showToast(
                 content: responseMessages?.join(' ') ?? 'Successful',
@@ -332,14 +325,15 @@ class Api {
     DioError error,
     bool showAlert,
     String alertType,
-    Future<void> Function()? showErrorToast,
-    Future<void> Function()? showErrorDialog,
   ) async {
     Console.danger(error.toString());
     if (showAlert) {
       if (alertType == 'dialog') {
-        if (showErrorDialog != null) {
-          await showErrorDialog();
+        if (helpers.showErrorDialog != null) {
+          await helpers.showErrorDialog!(
+            title: 'Error',
+            content: ['Check your internet connection!'],
+          );
           return;
         }
         showDialog(
@@ -347,8 +341,10 @@ class Api {
           content: ['Check your internet connection!'],
         );
       } else {
-        if (showErrorToast != null) {
-          await showErrorToast();
+        if (helpers.showErrorToast != null) {
+          await helpers.showErrorToast!(
+            content: 'Check your internet connection!',
+          );
           return;
         }
         showToast(
@@ -363,8 +359,6 @@ class Api {
     Object error,
     bool showAlert,
     String alertType,
-    Future<void> Function()? showErrorToast,
-    Future<void> Function()? showErrorDialog,
   ) async {
     if (error is DioError && error.type == DioErrorType.response) {
       final Response<dynamic>? response = error.response;
@@ -431,8 +425,11 @@ class Api {
           }
           if (showAlert) {
             if (alertType == 'dialog') {
-              if (showErrorDialog != null) {
-                await showErrorDialog();
+              if (helpers.showErrorDialog != null) {
+                await helpers.showErrorDialog!(
+                  title: 'Error',
+                  content: apiErrorType.errors,
+                );
                 return;
               }
               Console.danger(apiErrorType.errors.toString());
@@ -441,8 +438,12 @@ class Api {
                 content: apiErrorType.errors,
               );
             } else {
-              if (showErrorToast != null) {
-                await showErrorToast();
+              if (helpers.showErrorToast != null) {
+                await helpers.showErrorToast!(
+                  content: apiErrorType.errors.isEmpty
+                      ? 'Error'
+                      : apiErrorType.errors.join(' '),
+                );
                 return;
               }
               showToast(
@@ -503,9 +504,11 @@ class Api {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (content != null && content.isNotEmpty) Text(content.join(' ')),
+              if (content != null && content.isNotEmpty)
+                Text(content.join(' ')),
               // TODO: replace with const margin
-              if (content != null && content.isNotEmpty) const SizedBox(height: 12),
+              if (content != null && content.isNotEmpty)
+                const SizedBox(height: 12),
               if (hint != null && hint.trim().isNotEmpty) Text(hint),
             ],
           ),

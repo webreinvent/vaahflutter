@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart' as getx;
-import 'package:team/vaahextendflutter/log/console.dart';
+import '../../../log/console.dart';
 
 import '../api.dart';
 
@@ -11,7 +11,7 @@ class DemoController extends getx.GetxController {
 
   Future<void> getDemoURL() async {
     await api.ajax(
-      url: '/search',
+      url: '/error',
       callback: getDemoURLAfter,
     );
   }
