@@ -1,17 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../env.dart';
+
 class Helpers {
-  
   static logout() {
     // Navigate using getx
   }
 
-
   // ignore: unused_element
-  static _toast({required String content, Color color = Colors.white}) {
+  static _toast({required String content, Color color = kWhiteColor}) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
@@ -28,31 +27,65 @@ class Helpers {
     List<String>? content,
     String? hint,
     List<Widget>? actions,
+    Color color = kWhiteColor,
   }) {
     return Get.dialog(
-      CupertinoAlertDialog(
-        title: Text(title),
+      AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(
+            // TODO: define const
+            Radius.circular(16.0),
+          ),
+        ),
+        contentPadding: EdgeInsets.zero,
+        title: Center(child: Text(title)),
         content: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (content != null && content.isNotEmpty)
-                Text(content.join('\n')),
               // TODO: replace with const margin
               if (content != null && content.isNotEmpty)
+                const SizedBox(height: 12),
+              if (content != null && content.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    content.join('\n'),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              if ((content != null && content.isNotEmpty) || (hint != null && hint.trim().isNotEmpty))
                 const SizedBox(height: 8),
-              if (hint != null && hint.trim().isNotEmpty) Text(hint),
+              if (hint != null && hint.trim().isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Text(
+                    hint,
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+              if (hint != null && hint.trim().isNotEmpty)
+                const SizedBox(height: 8),
             ],
           ),
         ),
         actions: <Widget>[
           if (actions == null || actions.isNotEmpty)
-            CupertinoButton(
-              child: const Text('Okay'),
-              onPressed: () {
-                Get.back();
-              },
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: color),
+                child: Text(
+                  'Ok',
+                  style: TextStyle(
+                    color: color == kWhiteColor ? kBlackColor : kWhiteColor,
+                  ),
+                ),
+                onPressed: () {
+                  Get.back();
+                },
+              ),
             )
           else
             ...actions,
@@ -63,32 +96,40 @@ class Helpers {
   }
 
   static showErrorToast({required String content}) {
-    _toast(content: content, color: Colors.red);
+    _toast(content: content, color: kDangerColor);
   }
-
-  // static const showErrorToast = null;
 
   static showSuccessToast({required String content}) {
-    _toast(content: content, color: Colors.green);
+    _toast(content: content, color: kSuccessColor);
   }
 
-  // static const showSuccessToast = null;
+  static showErrorDialog({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) {
+    _dialog(
+      title: title,
+      content: content,
+      hint: hint,
+      actions: actions,
+      color: kDangerColor,
+    );
+  }
 
-  // static showErrorDialog({
-  //   required String title,
-  //   List<String>? content,
-  //   String? hint,
-  //   List<Function>? actions,
-  // }) {}
-
-  static const showErrorDialog = null;
-
-  // static showSuccessDialog({
-  //   required String title,
-  //   List<String>? content,
-  //   String? hint,
-  //   List<Function>? actions,
-  // }) {}
-
-  static const showSuccessDialog = null;
+  static showSuccessDialog({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) {
+    _dialog(
+      title: title,
+      content: content,
+      hint: hint,
+      actions: actions,
+      color: kSuccessColor,
+    );
+  }
 }

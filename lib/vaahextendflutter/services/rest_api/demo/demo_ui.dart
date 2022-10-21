@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../env.dart';
 import '../../../base/base_stateful.dart';
 import 'demo_controller.dart';
 
@@ -49,7 +50,7 @@ class _DemoUIState extends BaseStateful<DemoUI> {
                   height: 20,
                   width: 20,
                   child: CircularProgressIndicator(
-                    color: Colors.white,
+                    color: kWhiteColor,
                   ),
                 ),
               )

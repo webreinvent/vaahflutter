@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:get/get.dart' as getx;
-import '../../../log/console.dart';
 
+import '../../../log/console.dart';
 import '../api.dart';
 
 class DemoController extends getx.GetxController {
@@ -11,6 +11,7 @@ class DemoController extends getx.GetxController {
       url: '/search',
       query: {'code': 401},
       callback: getDemoURLAfter,
+      alertType: 'dialog'
     );
   }
 

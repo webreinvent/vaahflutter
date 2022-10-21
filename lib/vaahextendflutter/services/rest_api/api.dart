@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
@@ -11,7 +10,6 @@ import '../../log/console.dart';
 import '../Helpers.dart';
 
 // alertType : 'dialog', 'toast',
-
 
 class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
@@ -241,12 +239,15 @@ class Api {
               await Helpers.showErrorDialog(
                 title: 'Error',
                 content: ['Invalid request type!'],
+                hint:
+                    "get, post, put, patch, delete request types are allowed.",
               );
               break;
             }
             _showDialog(
               title: 'Error',
               content: ['Invalid request type!'],
+              hint: "get, post, put, patch, delete request types are allowed.",
             );
             break;
           } else {
@@ -255,7 +256,7 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'Invalid request type!', color: Colors.red);
+            _showToast(content: 'Invalid request type!', color: kDangerColor);
             break;
           }
         }
@@ -263,7 +264,7 @@ class Api {
     return response;
   }
 
- static Future<dynamic> _handleResponse(
+  static Future<dynamic> _handleResponse(
     Response<dynamic>? response,
     bool showAlert,
     String alertType,
@@ -276,11 +277,15 @@ class Api {
         if (responseData == null) {
           Console.warning('response doesn\'t contain data key.');
         }
-        List<String>? responseMessages = formatedResponse['messages'];
-        if (responseMessages == null) {
+        List<String>? responseMessages;
+        if (formatedResponse['messages'] == null) {
           Console.warning('response doesn\'t contain messages key.');
+        } else {
+          responseMessages = (formatedResponse['messages'] as List<dynamic>)
+              .map((e) => e.toString())
+              .toList();
         }
-        String? responseHint = formatedResponse['hint'];
+        String? responseHint = formatedResponse['hint'] as String?;
         if (responseHint == null) {
           Console.warning('response doesn\'t contain hint key.');
         }
@@ -291,11 +296,13 @@ class Api {
               await Helpers.showSuccessDialog(
                 title: 'Success',
                 content: responseMessages,
+                hint: responseHint,
               );
             } else {
               _showDialog(
                 title: 'Success',
                 content: responseMessages,
+                hint: responseHint,
               );
             }
           } else {
@@ -307,7 +314,7 @@ class Api {
             } else {
               _showToast(
                 content: responseMessages?.join('\n') ?? 'Successful',
-                color: Colors.green,
+                color: kSuccessColor,
               );
             }
           }
@@ -320,7 +327,7 @@ class Api {
     throw Exception('response from server is null or response.data is null');
   }
 
- static Future<void> _handleTimeoutError(
+  static Future<void> _handleTimeoutError(
     DioError error,
     bool showAlert,
     String alertType,
@@ -350,7 +357,7 @@ class Api {
         }
         _showToast(
           content: 'Check your internet connection!',
-          color: Colors.green,
+          color: kSuccessColor,
         );
       }
     }
@@ -400,13 +407,19 @@ class Api {
           }
           if (error.response?.data != null) {
             try {
+              Console.danger('${error.response}');
               final Map<String, dynamic> response =
                   error.response?.data as Map<String, dynamic>;
-              errors = response['errors'] ?? [];
+              Console.danger('$response');
+              if (response['errors'] != null) {
+                errors = (response['errors'] as List<dynamic>)
+                    .map((e) => e.toString())
+                    .toList();
+              }
               if (errors.isEmpty) {
                 Console.warning('response doesn\'t contain errors key.');
               }
-              debug = response['debug'];
+              debug = response['debug'] as String?;
               if (debug == null) {
                 Console.warning('response doesn\'t contain debug key.');
               }
@@ -427,6 +440,7 @@ class Api {
                 await Helpers.showErrorDialog(
                   title: 'Error',
                   content: errors,
+                  hint: debug,
                 );
                 return;
               }
@@ -434,22 +448,19 @@ class Api {
               _showDialog(
                 title: 'Error',
                 content: errors,
+                hint: debug,
               );
             } else {
               // ignore: unnecessary_null_comparison
               if (Helpers.showErrorToast != null) {
                 await Helpers.showErrorToast(
-                  content: errors.isEmpty
-                      ? 'Error'
-                      : errors.join('\n'),
+                  content: errors.isEmpty ? 'Error' : errors.join('\n'),
                 );
                 return;
               }
               _showToast(
-                content: errors.isEmpty
-                    ? 'Error'
-                    : errors.join('\n'),
-                    color: Colors.green,
+                content: errors.isEmpty ? 'Error' : errors.join('\n'),
+                color: kSuccessColor,
               );
             }
           }
@@ -463,14 +474,14 @@ class Api {
 
   static void _showToast({
     required String content,
-    Color color = Colors.white,
+    Color color = kWhiteColor,
   }) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: Colors.black,
+      textColor: color == kWhiteColor ? kBlackColor : kWhiteColor,
       fontSize: 16.0,
     );
   }
@@ -501,7 +512,7 @@ class Api {
         actions: <Widget>[
           if (actions == null || actions.isNotEmpty)
             CupertinoButton(
-              child: const Text('Okay'),
+              child: const Text('Ok'),
               onPressed: () {
                 getx.Get.back();
               },

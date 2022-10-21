@@ -34,7 +34,7 @@ class TagWrapper extends StatelessWidget {
                 child: Container(
                   margin: margin,
                   child: tagWidget(
-                    color: Colors.red,
+                    color: kDangerColor,
                     envType: envController!.config.envType,
                     version: envController.config.version,
                     build: envController.config.build,
@@ -57,7 +57,7 @@ Widget tagWidget({
     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
     decoration: BoxDecoration(
       border: Border.all(
-        color: Colors.red,
+        color: kDangerColor,
         width: 2,
       ),
       borderRadius: BorderRadius.circular(20),
