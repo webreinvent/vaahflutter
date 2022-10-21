@@ -90,13 +90,13 @@ iOS Production
 
 ## VaahExtendedFlutter
 
-### Central log library:
+### → Central log library:
 
 Can be used for logging different details. All methods are static thus no instance of Console is required. Console.info() method will print info in blue color font, Console.success() method will print log in green color font, Console.warning() method will print log in yellow color font, and Console.danger() method will print log in red color font. The files reside in `lib/vaahextendflutter/log/` folder.
 
-### Environment and Version Tag
+### → Environment and Version Tag Panel
 
-Environment and Version Tag can be seen on every page unless you set `showEnvAndVersionTag` for your Environment configuration in `env.dart` file. You can change color of tag by setting `envAndVersionTagColor` variable for your Environment configuration. 
+Environment and Version Tag can be seen on every page unless you set `showEnvAndVersionTag` to `false` for your Environment configuration in `env.dart` file. You can change color of tag by setting `envAndVersionTagColor` variable for your Environment configuration. 
 
 NOTE: `Remember showEnvAndVersionTag for production should always be false in Environment configuration in `env.dart` file.`
 ```dart
@@ -106,6 +106,60 @@ NOTE: `Remember showEnvAndVersionTag for production should always be false in En
   ),
 ```
 
-NOTE: Whenever you create a new screen/ page, wrap the body with `TagWrapper` class.
+#### NOTE: You have to write below code in MaterialApp, and that will show tag panel on each screen. You don't have to wrap any other screen/ widget, or you don't have to extend any screen/ any widget with TagPanelHost.
 
-You can use alignment and margin properties for achieving desired results using TagWrapper.
+In file cotaining material app paste this code after imports
+```dart
+final _navigatorKey = GlobalKey<NavigatorState>();
+```
+ In material app paste this code and panel will be visible on all pages.
+```dart
+builder: (BuildContext context, Widget? child) {
+  return TagPanelHost(
+    navigatorKey: _navigatorKey,
+    child: child!,
+  );
+},
+```
+This panel uses EnvController, thus dependens on env.dart file.
+
+### → Dynamic fontsize, dynamic width, dynamic height depending on device size
+
+To use it directly by importing `screen_util.dart` check Usage: comment in `screen_util.dart` file. 
+
+Or for feasibility extend your Statelesswidgets with BaseStateless
+```dart
+class DemoPage extends BaseStateful {
+}
+```
+
+And Statefull widgets with BaseStateful widgets
+```dart
+class _DemoPageState extends BaseStateful<DemoPage> {
+...
+}
+```
+After that you can use dynamic size in that extended widget.
+```dart
+SizedBox(
+  width: 300.wExt, // or swExt
+  height: 200.hExt, // or shExt
+  child: Text(
+    'demo',
+    style: TextStyle(
+      fontSize: 20.spExt,
+    ),
+  ),
+);
+```
+
+### → Base widgets
+`vaahextendflutter/base` folder contains all the base classes/ widgets.
+
+BaseStateless and BaseStateful are used when dev wants to init/ add dependencies in many screens and don't want to write same logic in every file, so they write the logic in base files only. eg. internet connectivity checker, dynamic size dependency, etc.
+
+so base class implements those logics and other classes can extend the base classes.
+
+### → Helpers
+Most common constants and styles used in whole app.
+

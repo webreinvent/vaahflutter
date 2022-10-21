@@ -6,9 +6,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 //   @override
 //   Widget build(BuildContext context) {
 //     initDynamicSize(context);
-//     return Container();
+//     return SizedBox(
+//       width: 300.wExt, // or swExt
+//       height: 200.hExt, // or shExt
+//       child: Text(
+//         'demo',
+//         style: TextStyle(
+//           fontSize: 20.spExt,
+//         ),
+//       ),
+//     );
 //   }
 // }
+
+// ApplySize:
+// SizedBox(
+//   width: 300.wExt, // or swExt
+//   height: 200.hExt, // or shExt
+//   child: Text(
+//     'demo',
+//     style: TextStyle(
+//       fontSize: 20.spExt,
+//     ),
+//   ),
+// );
 
 mixin DynamicSize {
   // check for logical size of the device https://www.ios-resolution.com/
