@@ -6,7 +6,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
 import '../../../env.dart';
-import '../helpers/console.dart';
+import '../../theme.dart';
+import '../helpers/console_log_helper.dart';
+import '../helpers/constant_helpers.dart';
 import '../helpers/helpers.dart';
 
 // alertType : 'dialog', 'toast',
@@ -146,7 +148,7 @@ class Api {
     }
     // get env controller and set variable showEnvAndVersionTag
     _envController = getx.Get.find<EnvController>();
-    _apiBaseUrl = _envController.config.apiBaseUrl;
+    _apiBaseUrl = _envController.config.apiUrl;
     if (_envController.config.enableApiLogs) {
       _dio.interceptors.add(
         LogInterceptor(
@@ -256,7 +258,7 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'Invalid request type!', color: dangerColor);
+            _showToast(content: 'ERR: Invalid request type!', color: AppTheme.dangerColor);
             break;
           }
         }
@@ -314,7 +316,7 @@ class Api {
             } else {
               _showToast(
                 content: responseMessages?.join('\n') ?? 'Successful',
-                color: successColor,
+                color: AppTheme.successColor,
               );
             }
           }
@@ -351,13 +353,13 @@ class Api {
         // ignore: unnecessary_null_comparison
         if (Helpers.showErrorToast != null) {
           await Helpers.showErrorToast(
-            content: 'Check your internet connection!',
+            content: 'ERR: Check your internet connection!',
           );
           return;
         }
         _showToast(
-          content: 'Check your internet connection!',
-          color: successColor,
+          content: 'ERR: Check your internet connection!',
+          color: AppTheme.successColor,
         );
       }
     }
@@ -454,13 +456,13 @@ class Api {
               // ignore: unnecessary_null_comparison
               if (Helpers.showErrorToast != null) {
                 await Helpers.showErrorToast(
-                  content: errors.isEmpty ? 'Error' : errors.join('\n'),
+                  content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
                 );
                 return;
               }
               _showToast(
-                content: errors.isEmpty ? 'Error' : errors.join('\n'),
-                color: successColor,
+                content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
+                color: AppTheme.successColor,
               );
             }
           }
@@ -474,14 +476,14 @@ class Api {
 
   static void _showToast({
     required String content,
-    Color color = whiteColor,
+    Color color = AppTheme.whiteColor,
   }) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: color == whiteColor ? blackColor : whiteColor,
+      textColor: color == AppTheme.whiteColor ? AppTheme.blackColor : AppTheme.whiteColor,
       fontSize: 16.0,
     );
   }
@@ -502,9 +504,8 @@ class Api {
             children: [
               if (content != null && content.isNotEmpty)
                 Text(content.join('\n')),
-              // TODO: replace with const margin
               if (content != null && content.isNotEmpty)
-                const SizedBox(height: 12),
+                verticalMargin12,
               if (hint != null && hint.trim().isNotEmpty) Text(hint),
             ],
           ),

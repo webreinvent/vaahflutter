@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../services/screen_util.dart';
+
+import 'screen_helper.dart';
 
 class TextStyles {
   const TextStyles._();

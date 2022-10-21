@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 import '../env.dart';
-import '../vaahextendflutter/helpers/console.dart';
+import '../vaahextendflutter/helpers/console_log_helper.dart';
 import '../vaahextendflutter/services/api.dart';
 
 class BaseController extends GetxController {
@@ -13,9 +13,9 @@ class BaseController extends GetxController {
         environment,
       ),
     );
-    Console.info('>>>>> ${envController.config.envType}');
+    Console.info('Env Type: ${envController.config.envType}');
     Console.info(
-      '>>>>> ${envController.config.version}+${envController.config.build}',
+      'Version: ${envController.config.version}+${envController.config.build}',
     );
     await Api.initApi();
   }

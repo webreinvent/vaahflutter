@@ -69,6 +69,9 @@ flutter pub outdated
 <hr />
 
 ## Project structure and coding conventions:
+
+### [Official dart conventions](https://dart.dev/guides/language/effective-dart/style)
+
 - 2 spaces for indentation
 - test files have `_test.ext` suffix in the file name > example `widget_test.dart`
 - Libraries, packages, directories, and source files name convention: snake_case(lowercase_with_underscores).
@@ -88,7 +91,7 @@ Android Production
 iOS Production
 - universal package: `com.webreinvent.team`
 
-## VaahExtendedFlutter
+## VaahExtendFlutter
 
 ### → Central log library:
 
@@ -108,7 +111,7 @@ NOTE: `Remember showEnvAndVersionTag for production should always be false in En
 
 #### NOTE: You have to write below code in MaterialApp, and that will show tag panel on each screen. You don't have to wrap any other screen/ widget, or you don't have to extend any screen/ any widget with TagPanelHost.
 
-In file cotaining material app paste this code after imports
+In file containing material app paste this code after imports
 ```dart
 final _navigatorKey = GlobalKey<NavigatorState>();
 ```
@@ -121,9 +124,9 @@ builder: (BuildContext context, Widget? child) {
   );
 },
 ```
-This panel uses EnvController, thus dependens on env.dart file.
+This panel uses EnvController, thus depends on env.dart file.
 
-### → Dynamic fontsize, dynamic width, dynamic height depending on device size
+### → Dynamic font size, dynamic width, dynamic height depending on device size
 
 To use it directly by importing `screen_util.dart` check Usage: comment in `screen_util.dart` file. 
 
@@ -156,9 +159,9 @@ SizedBox(
 ### → Base widgets
 `vaahextendflutter/base` folder contains all the base classes/ widgets.
 
-BaseStateless and BaseStateful are used when dev wants to init/ add dependencies in many screens and don't want to write same logic in every file, so they write the logic in base files only. eg. internet connectivity checker, dynamic size dependency, etc.
+BaseStateless and BaseStateful are used when dev wants to init/ add dependencies in many screens and don't want to write same logic in every file, so they write the logic in base files only. e.g. internet connectivity checker, dynamic size dependency, etc.
 
-so base class implements those logics and other classes can extend the base classes.
+So base class implements those logics and other classes can extend the base classes.
 
 ### → Helpers
 Most common constants and styles used in whole app.

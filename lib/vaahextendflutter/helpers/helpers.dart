@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import '../../env.dart';
+import '../../theme.dart';
+import 'constant_helpers.dart';
 
 class Helpers {
   static logout() {
@@ -10,13 +11,13 @@ class Helpers {
   }
 
   // ignore: unused_element
-  static _toast({required String content, Color color = whiteColor}) {
+  static _toast({required String content}) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: color.withOpacity(0.4),
-      textColor: color,
+      backgroundColor: AppTheme.whiteColor,
+      textColor: AppTheme.blackColor,
       fontSize: 16.0,
     );
   }
@@ -27,14 +28,13 @@ class Helpers {
     List<String>? content,
     String? hint,
     List<Widget>? actions,
-    Color color = whiteColor,
+    Color color = AppTheme.whiteColor,
   }) {
     return Get.dialog(
       AlertDialog(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            // TODO: define const
-            Radius.circular(16.0),
+            Radius.circular(deafaultPadding),
           ),
         ),
         contentPadding: EdgeInsets.zero,
@@ -45,29 +45,29 @@ class Helpers {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // TODO: replace with const margin
               if (content != null && content.isNotEmpty)
-                const SizedBox(height: 12),
+                verticalMargin12,
               if (content != null && content.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: horizontalPadding8,
                   child: Text(
                     content.join('\n'),
                     textAlign: TextAlign.center,
                   ),
                 ),
-              if ((content != null && content.isNotEmpty) || (hint != null && hint.trim().isNotEmpty))
-                const SizedBox(height: 8),
+              if ((content != null && content.isNotEmpty) ||
+                  (hint != null && hint.trim().isNotEmpty))
+                verticalMargin8,
               if (hint != null && hint.trim().isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: horizontalPadding8,
                   child: Text(
                     hint,
                     textAlign: TextAlign.center,
                   ),
                 ),
               if (hint != null && hint.trim().isNotEmpty)
-                const SizedBox(height: 8),
+                verticalMargin8
             ],
           ),
         ),
@@ -79,7 +79,7 @@ class Helpers {
                 child: Text(
                   'Ok',
                   style: TextStyle(
-                    color: color == whiteColor ? blackColor : whiteColor,
+                    color: color == AppTheme.whiteColor ? AppTheme.blackColor : AppTheme.whiteColor,
                   ),
                 ),
                 onPressed: () {
@@ -96,11 +96,11 @@ class Helpers {
   }
 
   static showErrorToast({required String content}) {
-    _toast(content: content, color: dangerColor);
+    _toast(content: content);
   }
 
   static showSuccessToast({required String content}) {
-    _toast(content: content, color: successColor);
+    _toast(content: content);
   }
 
   static showErrorDialog({
@@ -114,7 +114,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: dangerColor,
+      color: AppTheme.dangerColor,
     );
   }
 
@@ -129,7 +129,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: successColor,
+      color: AppTheme.successColor,
     );
   }
 }
