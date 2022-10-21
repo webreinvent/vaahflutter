@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'controllers/base_controller.dart';
 import 'env.dart';
 import 'vaahextendflutter/base/base_stateful.dart';
-import 'vaahextendflutter/services/rest_api/demo/demo_ui.dart';
 import 'vaahextendflutter/tag/tag.dart';
+import 'view/widgets/demo/demo_ui.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +22,7 @@ class TeamApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'WebReinvent Team',
       theme: ThemeData(
-        primarySwatch: kPrimaryColor,
+        primarySwatch: primaryColor,
       ),
       home: const TeamHomePage(),
     );
@@ -49,7 +49,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: kWarningColor,
+      backgroundColor: dangerColor,
       appBar: AppBar(),
       body: const TagWrapper(
         alignment: Alignment.topCenter,

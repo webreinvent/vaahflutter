@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/screen_util.dart';
+import '../helpers/screen_helpers.dart';
 
 abstract class BaseStateful<T extends StatefulWidget> extends State<T>
     with DynamicSize {

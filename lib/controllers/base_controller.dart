@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 import '../env.dart';
-import '../vaahextendflutter/log/console.dart';
-import '../vaahextendflutter/services/rest_api/api.dart';
+import '../vaahextendflutter/helpers/console.dart';
+import '../vaahextendflutter/services/api.dart';
 
 class BaseController extends GetxController {
   Future<void> init() async {

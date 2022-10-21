@@ -10,12 +10,12 @@ class Helpers {
   }
 
   // ignore: unused_element
-  static _toast({required String content, Color color = kWhiteColor}) {
+  static _toast({required String content, Color color = whiteColor}) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: color.withOpacity(0.5),
+      backgroundColor: color.withOpacity(0.4),
       textColor: color,
       fontSize: 16.0,
     );
@@ -27,7 +27,7 @@ class Helpers {
     List<String>? content,
     String? hint,
     List<Widget>? actions,
-    Color color = kWhiteColor,
+    Color color = whiteColor,
   }) {
     return Get.dialog(
       AlertDialog(
@@ -53,7 +53,7 @@ class Helpers {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     content.join('\n'),
-                    textAlign: TextAlign.justify,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               if ((content != null && content.isNotEmpty) || (hint != null && hint.trim().isNotEmpty))
@@ -63,7 +63,7 @@ class Helpers {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     hint,
-                    textAlign: TextAlign.justify,
+                    textAlign: TextAlign.center,
                   ),
                 ),
               if (hint != null && hint.trim().isNotEmpty)
@@ -79,7 +79,7 @@ class Helpers {
                 child: Text(
                   'Ok',
                   style: TextStyle(
-                    color: color == kWhiteColor ? kBlackColor : kWhiteColor,
+                    color: color == whiteColor ? blackColor : whiteColor,
                   ),
                 ),
                 onPressed: () {
@@ -96,11 +96,11 @@ class Helpers {
   }
 
   static showErrorToast({required String content}) {
-    _toast(content: content, color: kDangerColor);
+    _toast(content: content, color: dangerColor);
   }
 
   static showSuccessToast({required String content}) {
-    _toast(content: content, color: kSuccessColor);
+    _toast(content: content, color: successColor);
   }
 
   static showErrorDialog({
@@ -114,7 +114,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: kDangerColor,
+      color: dangerColor,
     );
   }
 
@@ -129,7 +129,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: kSuccessColor,
+      color: successColor,
     );
   }
 }

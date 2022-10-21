@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'vaahextendflutter/log/console.dart';
+import 'vaahextendflutter/helpers/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
@@ -16,14 +16,14 @@ EnvironmentConfig defaultConfig = const EnvironmentConfig(
   version: version,
   build: build,
   baseUrl: '',
-  apiBaseUrl: 'http://192.168.1.12:5000',
+  apiBaseUrl: 'https://apivoid.herokuapp.com',
   timeoutLimit: 60 * 1000, // 60 seconds
   analyticsId: '',
   enableConsoleLogs: true,
   enableLocalLogs: true,
   enableApiLogs: true,
   showEnvAndVersionTag: true,
-  envAndVersionTagColor: kDangerColor,
+  envAndVersionTagColor: dangerColor,
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -132,7 +132,7 @@ class EnvironmentConfig {
   }
 }
 
-const MaterialColor kPrimaryColor = MaterialColor(
+const MaterialColor primaryColor = MaterialColor(
   0xFF3366FF,
   <int, Color>{
     50: Color(0xFFD6E4FF),
@@ -148,7 +148,7 @@ const MaterialColor kPrimaryColor = MaterialColor(
   },
 );
 
-const MaterialColor kSuccessColor = MaterialColor(
+const MaterialColor successColor = MaterialColor(
   0xFF4FB52D,
   <int, Color>{
     50: Color(0xFFE9FBD5),
@@ -164,7 +164,7 @@ const MaterialColor kSuccessColor = MaterialColor(
   },
 );
 
-const MaterialColor kInfoColor = MaterialColor(
+const MaterialColor infoColor = MaterialColor(
   0xFF4CA8FF,
   <int, Color>{
     50: Color(0xFFDBF4FF),
@@ -180,7 +180,7 @@ const MaterialColor kInfoColor = MaterialColor(
   },
 );
 
-const MaterialColor kWarningColor = MaterialColor(
+const MaterialColor warningColor = MaterialColor(
   0xFFFFBF00,
   <int, Color>{
     50: Color(0xFFFFF7CC),
@@ -196,7 +196,7 @@ const MaterialColor kWarningColor = MaterialColor(
   },
 );
 
-const MaterialColor kDangerColor = MaterialColor(
+const MaterialColor dangerColor = MaterialColor(
   0xFFFF382D,
   <int, Color>{
     50: Color(0xFFFFE5D5),
@@ -214,7 +214,7 @@ const MaterialColor kDangerColor = MaterialColor(
 
 
 
-const MaterialColor kWhiteColor = MaterialColor(
+const MaterialColor whiteColor = MaterialColor(
   0xFFFFFFFF,
   <int, Color>{
     50: Color(0xFFFFFFFF),
@@ -230,7 +230,7 @@ const MaterialColor kWhiteColor = MaterialColor(
   },
 );
 
-const MaterialColor kBlackColor = MaterialColor(
+const MaterialColor blackColor = MaterialColor(
   0xFF000000,
   <int, Color>{
     50: Color(0xFFF2F2F2),

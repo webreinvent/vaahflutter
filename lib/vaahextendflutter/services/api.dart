@@ -6,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
 import '../../../env.dart';
-import '../../log/console.dart';
-import '../Helpers.dart';
+import '../helpers/console.dart';
+import '../helpers/helpers.dart';
 
 // alertType : 'dialog', 'toast',
 
@@ -256,7 +256,7 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'Invalid request type!', color: kDangerColor);
+            _showToast(content: 'Invalid request type!', color: dangerColor);
             break;
           }
         }
@@ -314,7 +314,7 @@ class Api {
             } else {
               _showToast(
                 content: responseMessages?.join('\n') ?? 'Successful',
-                color: kSuccessColor,
+                color: successColor,
               );
             }
           }
@@ -357,7 +357,7 @@ class Api {
         }
         _showToast(
           content: 'Check your internet connection!',
-          color: kSuccessColor,
+          color: successColor,
         );
       }
     }
@@ -460,7 +460,7 @@ class Api {
               }
               _showToast(
                 content: errors.isEmpty ? 'Error' : errors.join('\n'),
-                color: kSuccessColor,
+                color: successColor,
               );
             }
           }
@@ -474,14 +474,14 @@ class Api {
 
   static void _showToast({
     required String content,
-    Color color = kWhiteColor,
+    Color color = whiteColor,
   }) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: color == kWhiteColor ? kBlackColor : kWhiteColor,
+      textColor: color == whiteColor ? blackColor : whiteColor,
       fontSize: 16.0,
     );
   }

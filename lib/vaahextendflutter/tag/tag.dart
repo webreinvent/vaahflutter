@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../env.dart';
-import '../services/screen_util.dart';
+import '../helpers/screen_helpers.dart';
 
 class TagWrapper extends StatelessWidget {
   final Widget child;
@@ -34,7 +34,7 @@ class TagWrapper extends StatelessWidget {
                 child: Container(
                   margin: margin,
                   child: tagWidget(
-                    color: kDangerColor,
+                    color: dangerColor,
                     envType: envController!.config.envType,
                     version: envController.config.version,
                     build: envController.config.build,
@@ -57,7 +57,7 @@ Widget tagWidget({
     padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
     decoration: BoxDecoration(
       border: Border.all(
-        color: kDangerColor,
+        color: dangerColor,
         width: 2,
       ),
       borderRadius: BorderRadius.circular(20),
