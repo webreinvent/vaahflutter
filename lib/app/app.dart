@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../routes/routes.dart';
+import '../theme.dart';
 import '../vaahextendflutter/tag/tag_panel.dart';
 import '../view/pages/home/home.dart';
-import '../theme.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -17,7 +17,7 @@ class TeamApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'WebReinvent Team',
       theme: ThemeData(
-        primarySwatch: AppTheme.primaryColor,
+        primarySwatch: AppTheme.colors['primary'],
       ),
       onGenerateInitialRoutes: (String initialRoute) {
         return [TeamHomePage.route()];

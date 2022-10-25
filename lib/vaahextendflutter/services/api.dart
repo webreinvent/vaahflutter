@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
@@ -258,7 +259,7 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'ERR: Invalid request type!', color: AppTheme.dangerColor);
+            _showToast(content: 'ERR: Invalid request type!', color: AppTheme.colors['danger']!,);
             break;
           }
         }
@@ -316,7 +317,7 @@ class Api {
             } else {
               _showToast(
                 content: responseMessages?.join('\n') ?? 'Successful',
-                color: AppTheme.successColor,
+                color: AppTheme.colors['success']!,
               );
             }
           }
@@ -359,7 +360,7 @@ class Api {
         }
         _showToast(
           content: 'ERR: Check your internet connection!',
-          color: AppTheme.successColor,
+          color: AppTheme.colors['success']!,
         );
       }
     }
@@ -462,7 +463,7 @@ class Api {
               }
               _showToast(
                 content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
-                color: AppTheme.successColor,
+                color: AppTheme.colors['success']!,
               );
             }
           }
@@ -476,14 +477,14 @@ class Api {
 
   static void _showToast({
     required String content,
-    Color color = AppTheme.whiteColor,
+    Color color = Colors.white,
   }) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: color == AppTheme.whiteColor ? AppTheme.blackColor : AppTheme.whiteColor,
+      textColor: color == AppTheme.colors['white'] ? AppTheme.colors['black'] : AppTheme.colors['whiteColor'],
       fontSize: 16.0,
     );
   }

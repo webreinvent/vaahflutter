@@ -16,8 +16,8 @@ class Helpers {
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
-      backgroundColor: AppTheme.whiteColor,
-      textColor: AppTheme.blackColor,
+      backgroundColor: AppTheme.colors['white'],
+      textColor: AppTheme.colors['black'],
       fontSize: 16.0,
     );
   }
@@ -28,7 +28,7 @@ class Helpers {
     List<String>? content,
     String? hint,
     List<Widget>? actions,
-    Color color = AppTheme.whiteColor,
+    Color color = Colors.white,
   }) {
     return Get.dialog(
       AlertDialog(
@@ -79,7 +79,7 @@ class Helpers {
                 child: Text(
                   'Ok',
                   style: TextStyle(
-                    color: color == AppTheme.whiteColor ? AppTheme.blackColor : AppTheme.whiteColor,
+                    color: color == AppTheme.colors['white'] ? AppTheme.colors['black'] : AppTheme.colors['white'],
                   ),
                 ),
                 onPressed: () {
@@ -114,7 +114,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: AppTheme.dangerColor,
+      color: AppTheme.colors['danger']!,
     );
   }
 
@@ -129,7 +129,7 @@ class Helpers {
       content: content,
       hint: hint,
       actions: actions,
-      color: AppTheme.successColor,
+      color: AppTheme.colors['success']!,
     );
   }
 }

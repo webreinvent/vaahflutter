@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 
-class BaseThemeNew {
+class BaseTheme {
   static const Map<String, MaterialColor> colors = {
-    'primaryColor': _primaryColor,
-    'infoColor': _infoColor,
+    'primary': _primary,
+    'info': _info,
+    'success': _success,
+    'warning': _warning,
+    'danger': _danger,
+    'white': _white,
+    'black': _black,
   };
 }
 
-class BaseTheme {
-  static const MaterialColor primaryColor = _primaryColor;
-  static const MaterialColor infoColor = _infoColor;
-  static const MaterialColor successColor = _successColor;
-  static const MaterialColor warningColor = _warningColor;
-  static const MaterialColor dangerColor = _dangerColor;
-  static const MaterialColor whiteColor = _whiteColor;
-  static const MaterialColor blackColor = _blackColor;
-}
-
-const MaterialColor _primaryColor = MaterialColor(
+const MaterialColor _primary = MaterialColor(
   0xFF3366FF,
   <int, Color>{
     50: Color(0xFFD6E4FF),
@@ -33,7 +28,7 @@ const MaterialColor _primaryColor = MaterialColor(
   },
 );
 
-const MaterialColor _successColor = MaterialColor(
+const MaterialColor _success = MaterialColor(
   0xFF4FB52D,
   <int, Color>{
     50: Color(0xFFE9FBD5),
@@ -49,7 +44,7 @@ const MaterialColor _successColor = MaterialColor(
   },
 );
 
-const MaterialColor _infoColor = MaterialColor(
+const MaterialColor _info = MaterialColor(
   0xFF4CA8FF,
   <int, Color>{
     50: Color(0xFFDBF4FF),
@@ -65,7 +60,7 @@ const MaterialColor _infoColor = MaterialColor(
   },
 );
 
-const MaterialColor _warningColor = MaterialColor(
+const MaterialColor _warning = MaterialColor(
   0xFFFFBF00,
   <int, Color>{
     50: Color(0xFFFFF7CC),
@@ -81,7 +76,7 @@ const MaterialColor _warningColor = MaterialColor(
   },
 );
 
-const MaterialColor _dangerColor = MaterialColor(
+const MaterialColor _danger = MaterialColor(
   0xFFFF382D,
   <int, Color>{
     50: Color(0xFFFFE5D5),
@@ -97,7 +92,7 @@ const MaterialColor _dangerColor = MaterialColor(
   },
 );
 
-const MaterialColor _whiteColor = MaterialColor(
+const MaterialColor _white = MaterialColor(
   0xFFFFFFFF,
   <int, Color>{
     50: Color(0xFFFFFFFF),
@@ -113,7 +108,7 @@ const MaterialColor _whiteColor = MaterialColor(
   },
 );
 
-const MaterialColor _blackColor = MaterialColor(
+const MaterialColor _black = MaterialColor(
   0xFF000000,
   <int, Color>{
     50: Color(0xFFF2F2F2),

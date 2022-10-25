@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../env.dart';
+import '../theme.dart';
 import '../vaahextendflutter/helpers/console_log_helper.dart';
 import '../vaahextendflutter/services/api.dart';
 
@@ -18,5 +19,6 @@ class BaseController extends GetxController {
       'Version: ${envController.config.version}+${envController.config.build}',
     );
     await Api.initApi();
+    AppTheme.init();
   }
 }

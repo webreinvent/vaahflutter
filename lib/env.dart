@@ -12,7 +12,7 @@ import 'vaahextendflutter/helpers/console_log_helper.dart';
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
 const String build = '2022100901'; // build no format 'YYYYMMDDNUMBER'
 
-EnvironmentConfig defaultConfig = EnvironmentConfig(
+final EnvironmentConfig defaultConfig = EnvironmentConfig(
   envType: 'default',
   version: version,
   build: build,
@@ -24,7 +24,7 @@ EnvironmentConfig defaultConfig = EnvironmentConfig(
   enableLocalLogs: true,
   enableApiLogs: true,
   showEnvAndVersionTag: true,
-  envAndVersionTagColor: AppTheme.blackColor.withOpacity(0.7),
+  envAndVersionTagColor: AppTheme.colors['black']!.withOpacity(0.7),
 );
 
 // To add new configuration add new key, value pair in envConfigs

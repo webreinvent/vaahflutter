@@ -3,44 +3,26 @@ import 'package:flutter/material.dart';
 import 'vaahextendflutter/base/base_theme.dart';
 
 class AppTheme {
-  static const MaterialColor primaryColor = BaseTheme.primaryColor;
-  static const MaterialColor infoColor = BaseTheme.infoColor;
-  static const MaterialColor successColor = BaseTheme.successColor;
-  static const MaterialColor warningColor = BaseTheme.warningColor;
-  static const MaterialColor dangerColor = BaseTheme.dangerColor;
-  static const MaterialColor whiteColor = BaseTheme.whiteColor;
-  static const MaterialColor blackColor = BaseTheme.blackColor;
+  static final Map<String, MaterialColor> colors = Map.of(BaseTheme.colors);
+
+  static void init() {
+    colors['primary'] = newPrimaryColor;
+    colors['secondary'] = newPrimaryColor;
+  }
 }
 
-// extends, implements, with
-
-// class AppThemeNew {
-//   static Map<String, MaterialColor>? colors;
-
-//   static init() {
-//     Map<String, MaterialColor> tempColors = BaseThemeNew.colors;
-//     if (tempColors.containsKey('newPrimaryColor')) {
-//       tempColors.update('newPrimaryColor', (value) => newPrimaryColor);
-//     } else {
-//       Map<String, MaterialColor> color = {'newPrimaryColor': newPrimaryColor};
-//       tempColors.addAll(color);
-//     }
-//     colors = tempColors;
-//   }
-// }
-
-// const MaterialColor newPrimaryColor = MaterialColor(
-//   0xFF4FB52D,
-//   <int, Color>{
-//     50: Color(0xFFE9FBD5),
-//     100: Color(0xFFE9FBD5),
-//     200: Color(0xFFCFF7AD),
-//     300: Color(0xFFA8E87F),
-//     400: Color(0xFF81D25B),
-//     500: Color(0xFF4FB52D),
-//     600: Color(0xFF369B20),
-//     700: Color(0xFF228216),
-//     800: Color(0xFF11680E),
-//     900: Color(0xFF08560B),
-//   },
-// );
+const MaterialColor newPrimaryColor = MaterialColor(
+  0xFFFF1F6A,
+  <int, Color>{
+    50: Color(0xFFFFD4D2),
+    100: Color(0xFFFFD4D2),
+    200: Color(0xFFFFA5A8),
+    300: Color(0xFFFF788B),
+    400: Color(0xFFFF577E),
+    500: Color(0xFFFF1F6A),
+    600: Color(0xFFDB166B),
+    700: Color(0xFFB70F68),
+    800: Color(0xFF930960),
+    900: Color(0xFF7A055A),
+  },
+);
