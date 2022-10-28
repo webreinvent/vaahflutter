@@ -7,7 +7,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
 import '../../../env.dart';
+<<<<<<< Updated upstream
 import '../../theme.dart';
+=======
+import '../../app_theme.dart';
+>>>>>>> Stashed changes
 import '../helpers/console_log_helper.dart';
 import '../helpers/constant_helpers.dart';
 import '../helpers/helpers.dart';

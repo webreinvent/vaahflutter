@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+<<<<<<< Updated upstream
 import '../../theme.dart';
+=======
+import '../../app_theme.dart';
+>>>>>>> Stashed changes
 import 'constant_helpers.dart';
 
 class Helpers {

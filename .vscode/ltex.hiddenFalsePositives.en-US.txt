@@ -1,0 +1,1 @@
+{"rule":"LC_AFTER_PERIOD","sentence":"^\\QThis panel uses EnvController, thus depends on env.dart file.\\E$"}
