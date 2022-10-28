@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/screen_util.dart';
+import '../helpers/responsive.dart';
 
 abstract class BaseStateless extends StatelessWidget with DynamicSize {
   const BaseStateless({super.key});

@@ -6,16 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 //   @override
 //   Widget build(BuildContext context) {
 //     initDynamicSize(context);
-//     return SizedBox(
-//       width: 300.wExt, // or swExt
-//       height: 200.hExt, // or shExt
-//       child: Text(
-//         'demo',
-//         style: TextStyle(
-//           fontSize: 20.spExt,
-//         ),
-//       ),
-//     );
+//     return SizedBox();
 //   }
 // }
 

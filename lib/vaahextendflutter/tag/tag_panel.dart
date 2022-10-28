@@ -160,11 +160,11 @@ class TagPanelHostState extends State<TagPanelHost>
                                       padding: EdgeInsets.only(
                                         top:
                                             MediaQuery.of(context).padding.top +
-                                                kDeafaultPadding +
+                                                deafaultPadding +
                                                 _handleHeight,
-                                        bottom: kDeafaultPadding,
-                                        left: kDeafaultPadding,
-                                        right: kDeafaultPadding,
+                                        bottom: deafaultPadding,
+                                        left: deafaultPadding,
+                                        right: deafaultPadding,
                                       ),
                                       children: [
                                         SelectableText(

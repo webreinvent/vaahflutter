@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-const double kDeafaultPadding = 16.0;
-const double kDeafaultMargin = 16.0;
-
-const MaterialColor kPrimaryColor = Colors.amber;
-const MaterialColor kSecondaryColor = Colors.amber;
+const double deafaultPadding = 16.0;
+const double deafaultMargin = 16.0;
 
 // Common Widgets
 const emptyWidget = SizedBox();
