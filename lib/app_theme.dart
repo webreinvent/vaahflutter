@@ -6,12 +6,16 @@ class AppTheme {
   static final Map<String, MaterialColor> colors = Map.of(BaseTheme.colors);
 
   static void init() {
-    colors['primary'] = newPrimaryColor;
-    colors['secondary'] = newPrimaryColor;
+    // colors['primary'] = pink;
+    // colors['secondary'] = gray;
   }
 }
 
-const MaterialColor newPrimaryColor = MaterialColor(
+
+
+// To define new color developer should visit https://colors.eva.design/
+
+const MaterialColor pink = MaterialColor(
   0xFFFF1F6A,
   <int, Color>{
     50: Color(0xFFFFD4D2),

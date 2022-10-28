@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import '../../theme.dart';
+import '../../app_theme.dart';
 import 'constant_helpers.dart';
 
 class Helpers {

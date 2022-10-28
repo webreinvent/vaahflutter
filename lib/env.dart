@@ -1,9 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'theme.dart';
+import 'app_theme.dart';
 import 'vaahextendflutter/helpers/console_log_helper.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
@@ -13,6 +14,8 @@ const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
 const String build = '2022100901'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
+  appTitle: 'WebReinvent Team',
+  appTitleShort: 'Team',
   envType: 'default',
   version: version,
   build: build,
@@ -73,6 +76,8 @@ class EnvController extends GetxController {
 }
 
 class EnvironmentConfig {
+  final String appTitle;
+  final String appTitleShort;
   final String envType;
   final String version;
   final String build;
@@ -87,6 +92,8 @@ class EnvironmentConfig {
   final Color envAndVersionTagColor;
 
   const EnvironmentConfig({
+    required this.appTitle,
+    required this.appTitleShort,
     required this.envType,
     required this.version,
     required this.build,
@@ -101,7 +108,14 @@ class EnvironmentConfig {
     required this.envAndVersionTagColor,
   });
 
+  static EnvironmentConfig getEnvConfig() {
+    EnvController envController = Get.find<EnvController>();
+    return envController.config;
+  }
+
   EnvironmentConfig copyWith({
+    String? appTitle,
+    String? appTitleShort,
     String? envType,
     String? version,
     String? build,
@@ -116,6 +130,8 @@ class EnvironmentConfig {
     Color? envAndVersionTagColor,
   }) {
     return EnvironmentConfig(
+      appTitle: appTitle ?? this.appTitle,
+      appTitleShort: appTitleShort ?? this.appTitleShort,
       envType: envType ?? this.envType,
       version: version ?? this.version,
       build: build ?? this.build,
@@ -127,8 +143,7 @@ class EnvironmentConfig {
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       enableApiLogs: enableApiLogs ?? this.enableApiLogs,
       showEnvAndVersionTag: showEnvAndVersionTag ?? this.showEnvAndVersionTag,
-      envAndVersionTagColor:
-          envAndVersionTagColor ?? this.envAndVersionTagColor,
+      envAndVersionTagColor: envAndVersionTagColor ?? this.envAndVersionTagColor,
     );
   }
 }

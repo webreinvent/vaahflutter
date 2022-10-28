@@ -1,21 +1,22 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'env.dart';
 
-import '../routes/routes.dart';
-import '../theme.dart';
-import '../vaahextendflutter/tag/tag_panel.dart';
-import '../view/pages/home/home.dart';
+import 'routes/routes.dart';
+import 'app_theme.dart';
+import 'vaahextendflutter/tag/tag_panel.dart';
+import 'view/pages/home/home.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
-class TeamApp extends StatelessWidget {
-  const TeamApp({super.key});
+class AppConfig extends StatelessWidget {
+  const AppConfig({super.key});
 
   @override
   Widget build(BuildContext context) {
+    EnvironmentConfig env = EnvironmentConfig.getEnvConfig();
     return GetMaterialApp(
-      title: 'WebReinvent Team',
+      title: env.appTitle,
       theme: ThemeData(
         primarySwatch: AppTheme.colors['primary'],
       ),

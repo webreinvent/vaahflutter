@@ -7,7 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
 import '../../../env.dart';
-import '../../theme.dart';
+import '../../app_theme.dart';
 import '../helpers/console_log_helper.dart';
 import '../helpers/constant_helpers.dart';
 import '../helpers/helpers.dart';
