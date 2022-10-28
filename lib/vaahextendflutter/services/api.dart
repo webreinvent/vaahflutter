@@ -31,6 +31,28 @@ class Api {
     return Options(headers: header, contentType: contentType);
   }
 
+  static dynamic parseResponse(dynamic data) {
+    if (data is List) {
+      List<Map<String, dynamic>> parsedData = [];
+      for (var e in data) {
+        parsedData.add(parseResponse(e));
+      }
+      return parsedData;
+    } else if (data is Map) {
+      Map<String, dynamic> parsedData = {};
+      data.forEach(
+        (key, value) {
+          dynamic parsedvalue = parseResponse(value);
+          parsedData.addAll({
+            key.toUpperCase(): parsedvalue,
+          });
+        },
+      );
+      return parsedData;
+    }
+    return data;
+  }
+
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
   static Future<void> ajax<T>({
@@ -80,7 +102,12 @@ class Api {
       }
 
       if (callback != null) {
-        await callback(responseData, response);
+        dynamic newdata = parseResponse({
+          'property_a': 'Data_a',
+          'property_b': [{'Data_Key_b': 'Data_b'}],
+          'property_c': {'Data_Key_c': 'Data_c'}
+        });
+        await callback(newdata, response);
       }
 
       return;
@@ -259,7 +286,10 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'ERR: Invalid request type!', color: AppTheme.colors['danger']!,);
+            _showToast(
+              content: 'ERR: Invalid request type!',
+              color: AppTheme.colors['danger']!,
+            );
             break;
           }
         }
@@ -457,7 +487,8 @@ class Api {
               // ignore: unnecessary_null_comparison
               if (Helpers.showErrorToast != null) {
                 await Helpers.showErrorToast(
-                  content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
+                  content:
+                      errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
                 );
                 return;
               }
@@ -484,7 +515,9 @@ class Api {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: color == AppTheme.colors['white'] ? AppTheme.colors['black'] : AppTheme.colors['whiteColor'],
+      textColor: color == AppTheme.colors['white']
+          ? AppTheme.colors['black']
+          : AppTheme.colors['whiteColor'],
       fontSize: 16.0,
     );
   }
@@ -505,8 +538,7 @@ class Api {
             children: [
               if (content != null && content.isNotEmpty)
                 Text(content.join('\n')),
-              if (content != null && content.isNotEmpty)
-                verticalMargin12,
+              if (content != null && content.isNotEmpty) verticalMargin12,
               if (hint != null && hint.trim().isNotEmpty) Text(hint),
             ],
           ),
