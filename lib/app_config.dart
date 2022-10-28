@@ -5,7 +5,7 @@ import 'env.dart';
 import 'routes/routes.dart';
 import 'app_theme.dart';
 import 'vaahextendflutter/tag/tag_panel.dart';
-import 'view/pages/home/home.dart';
+import 'view/pages/home.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 

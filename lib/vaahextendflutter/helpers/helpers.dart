@@ -3,7 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../app_theme.dart';
-import 'constant_helpers.dart';
+import 'constants.dart';
 
 class Helpers {
   static logout() {

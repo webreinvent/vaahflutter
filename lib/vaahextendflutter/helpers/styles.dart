@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screen_helper.dart';
+import 'responsive.dart';
 
 class TextStyles {
   const TextStyles._();

@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../env.dart';
-import '../helpers/constant_helpers.dart';
-import '../helpers/styles_helper.dart';
+import '../helpers/constants.dart';
+import '../helpers/styles.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 28.0; // tag handle height

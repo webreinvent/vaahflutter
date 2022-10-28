@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 
 import '../env.dart';
 import '../app_theme.dart';
-import '../vaahextendflutter/helpers/console_log_helper.dart';
+import '../vaahextendflutter/helpers/console.dart';
 import '../vaahextendflutter/services/api.dart';
 
 class BaseController extends GetxController {

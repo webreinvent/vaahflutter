@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'app_theme.dart';
-import 'vaahextendflutter/helpers/console_log_helper.dart';
+import 'vaahextendflutter/helpers/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
