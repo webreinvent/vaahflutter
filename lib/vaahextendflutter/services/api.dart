@@ -33,7 +33,7 @@ class Api {
 
   static dynamic parseResponse(dynamic data) {
     if (data is List) {
-      List<Map<String, dynamic>> parsedData = [];
+      dynamic parsedData = [];
       for (var e in data) {
         parsedData.add(parseResponse(e));
       }
@@ -44,7 +44,7 @@ class Api {
         (key, value) {
           dynamic parsedvalue = parseResponse(value);
           parsedData.addAll({
-            key.toUpperCase(): parsedvalue,
+            _snakeCasetoLowerCamelCase(key): parsedvalue,
           });
         },
       );
@@ -52,6 +52,16 @@ class Api {
     }
     return data;
   }
+
+  static String _snakeCasetoLowerCamelCase(String data) {
+    List<String> sentence = data.split('_');
+    String result = '';
+    for (var e in sentence) {
+      result += e[0].toUpperCase()+e.substring(1);
+    }
+    return result[0].toLowerCase()+result.substring(1);
+  }
+
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
@@ -102,12 +112,7 @@ class Api {
       }
 
       if (callback != null) {
-        dynamic newdata = parseResponse({
-          'property_a': 'Data_a',
-          'property_b': [{'Data_Key_b': 'Data_b'}],
-          'property_c': {'Data_Key_c': 'Data_c'}
-        });
-        await callback(newdata, response);
+        await callback(parseResponse(responseData), response);
       }
 
       return;
@@ -559,3 +564,4 @@ class Api {
     );
   }
 }
+
