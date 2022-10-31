@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'env.dart';
 
-import 'routes/routes.dart';
 import 'app_theme.dart';
+import 'env.dart';
+import 'routes/middleware.dart';
 import 'vaahextendflutter/tag/tag_panel.dart';
 import 'view/pages/home.dart';
 
@@ -23,7 +23,7 @@ class AppConfig extends StatelessWidget {
       onGenerateInitialRoutes: (String initialRoute) {
         return [TeamHomePage.route()];
       },
-      onGenerateRoute: onGenerateRoute,
+      onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
         return TagPanelHost(
           navigatorKey: _navigatorKey,
