@@ -31,20 +31,23 @@ class Api {
     return Options(headers: header, contentType: contentType);
   }
 
-  static dynamic parseResponse(dynamic data) {
+  static dynamic _parseKeys({
+    required dynamic data,
+    required Function changeKeys,
+  }) {
     if (data is List) {
       dynamic parsedData = [];
       for (var e in data) {
-        parsedData.add(parseResponse(e));
+        parsedData.add(_parseKeys(data: e, changeKeys: changeKeys));
       }
       return parsedData;
     } else if (data is Map) {
       Map<String, dynamic> parsedData = {};
       data.forEach(
         (key, value) {
-          dynamic parsedvalue = parseResponse(value);
+          dynamic parsedvalue = _parseKeys(data: value, changeKeys: changeKeys);
           parsedData.addAll({
-            _snakeCasetoLowerCamelCase(key): parsedvalue,
+            changeKeys(key): parsedvalue,
           });
         },
       );
@@ -53,15 +56,20 @@ class Api {
     return data;
   }
 
+  static String _lowerCamelCaseToSnakeCase(String data) {
+    List<String> parts = data.split(RegExp(r"(?=(?!^)[A-Z])"));
+    String result = parts.join('_');
+    return result.toLowerCase();
+  }
+
   static String _snakeCasetoLowerCamelCase(String data) {
     List<String> sentence = data.split('_');
     String result = '';
     for (var e in sentence) {
-      result += e[0].toUpperCase()+e.substring(1);
+      result += e[0].toUpperCase() + e.substring(1);
     }
-    return result[0].toLowerCase()+result.substring(1);
+    return result[0].toLowerCase() + result.substring(1);
   }
-
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
@@ -112,7 +120,13 @@ class Api {
       }
 
       if (callback != null) {
-        await callback(parseResponse(responseData), response);
+        await callback(
+          _parseKeys(
+            data: responseData,
+            changeKeys: _snakeCasetoLowerCamelCase,
+          ),
+          response,
+        );
       }
 
       return;
@@ -231,9 +245,16 @@ class Api {
         break;
 
       case 'post':
+        Console.info(_parseKeys(
+          data: params,
+          changeKeys: _lowerCamelCaseToSnakeCase,
+        ).toString());
         response = await _dio.post<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: _parseKeys(
+            data: params,
+            changeKeys: _lowerCamelCaseToSnakeCase,
+          ),
           queryParameters: query,
           options: options,
         );
@@ -242,7 +263,10 @@ class Api {
       case 'put':
         response = await _dio.put<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: _parseKeys(
+            data: params,
+            changeKeys: _lowerCamelCaseToSnakeCase,
+          ),
           queryParameters: query,
           options: options,
         );
@@ -251,7 +275,10 @@ class Api {
       case 'patch':
         response = await _dio.patch<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: _parseKeys(
+            data: params,
+            changeKeys: _lowerCamelCaseToSnakeCase,
+          ),
           queryParameters: query,
           options: options,
         );
@@ -260,7 +287,10 @@ class Api {
       case 'delete':
         response = await _dio.delete<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: _parseKeys(
+            data: params,
+            changeKeys: _lowerCamelCaseToSnakeCase,
+          ),
           queryParameters: query,
           options: options,
         );
@@ -564,4 +594,3 @@ class Api {
     );
   }
 }
-
