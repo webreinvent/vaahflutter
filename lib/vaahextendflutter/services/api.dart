@@ -64,11 +64,18 @@ class Api {
 
   static String _snakeCasetoLowerCamelCase(String data) {
     List<String> sentence = data.split('_');
+    sentence.removeWhere((element) => element.isEmpty);
     String result = '';
     for (var e in sentence) {
       result += e[0].toUpperCase() + e.substring(1);
     }
-    return result[0].toLowerCase() + result.substring(1);
+    if(result.isEmpty){
+      return data;
+    }
+    if (result[0].isAlphabetOnly){
+      result = result[0].toLowerCase() + result.substring(1);
+    }
+    return result;
   }
 
   // return type of ajax is ApiResponseType? so if there is error
