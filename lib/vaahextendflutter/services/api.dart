@@ -252,10 +252,6 @@ class Api {
         break;
 
       case 'post':
-        Console.info(_parseKeys(
-          data: params,
-          changeKeys: _lowerCamelCaseToSnakeCase,
-        ).toString());
         response = await _dio.post<dynamic>(
           '$_apiBaseUrl$url',
           data: _parseKeys(
