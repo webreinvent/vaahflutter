@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -69,10 +70,10 @@ class Api {
     for (var e in sentence) {
       result += e[0].toUpperCase() + e.substring(1);
     }
-    if(result.isEmpty){
+    if (result.isEmpty) {
       return data;
     }
-    if (result[0].isAlphabetOnly){
+    if (result[0].isAlphabetOnly) {
       result = result[0].toLowerCase() + result.substring(1);
     }
     return result;
@@ -242,6 +243,12 @@ class Api {
         options.headers = customHeader;
       }
     }
+    String encodedData = jsonEncode(
+      _parseKeys(
+        data: params,
+        changeKeys: _lowerCamelCaseToSnakeCase,
+      ),
+    );
     switch (method) {
       case 'get':
         response = await _dio.get<dynamic>(
@@ -254,10 +261,7 @@ class Api {
       case 'post':
         response = await _dio.post<dynamic>(
           '$_apiBaseUrl$url',
-          data: _parseKeys(
-            data: params,
-            changeKeys: _lowerCamelCaseToSnakeCase,
-          ),
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -266,10 +270,7 @@ class Api {
       case 'put':
         response = await _dio.put<dynamic>(
           '$_apiBaseUrl$url',
-          data: _parseKeys(
-            data: params,
-            changeKeys: _lowerCamelCaseToSnakeCase,
-          ),
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -278,10 +279,7 @@ class Api {
       case 'patch':
         response = await _dio.patch<dynamic>(
           '$_apiBaseUrl$url',
-          data: _parseKeys(
-            data: params,
-            changeKeys: _lowerCamelCaseToSnakeCase,
-          ),
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -290,10 +288,7 @@ class Api {
       case 'delete':
         response = await _dio.delete<dynamic>(
           '$_apiBaseUrl$url',
-          data: _parseKeys(
-            data: params,
-            changeKeys: _lowerCamelCaseToSnakeCase,
-          ),
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
