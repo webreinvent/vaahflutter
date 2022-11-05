@@ -1,11 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import 'app_theme.dart';
-import 'vaahextendflutter/helpers/console.dart';
+import 'package:team/app_theme.dart';
+import 'package:team/vaahextendflutter/helpers/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 

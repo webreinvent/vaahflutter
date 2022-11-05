@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:team/view/pages/something_went_wrong.dart';
-
-import '../../vaahextendflutter/base/base_stateful.dart';
+import 'package:get/get.dart';
+import 'package:team/controllers/user_controller.dart';
+import 'package:team/routes/observer.dart';
+import 'package:team/vaahextendflutter/base/base_stateful.dart';
+import 'package:team/vaahextendflutter/helpers/constants.dart';
+import 'package:team/view/pages/details.dart';
 
 class TeamHomePage extends StatefulWidget {
   static const String routeName = '/home';
 
   static Route<void> route() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: '/'),
-      builder: (_) => const TeamHomePage(),
+      settings: const RouteSettings(name: '/home'),
+      builder: (_) => const RouteAwareWidget(
+        name: '/home',
+        child: TeamHomePage(),
+      ),
     );
   }
 
@@ -26,11 +32,36 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () => Navigator.pushNamed(context, SomethingWentWrong.routeName),
-          child: const Text(
-            '404 Error page',
-          ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: () => Navigator.pushNamed(context, DetailsPage.routeName),
+              child: const Text(
+                'Route Details',
+              ),
+            ),
+            horizontalMargin12,
+            ElevatedButton(
+              onPressed: () {
+                UserController userController = Get.find<UserController>();
+                userController.login('NA', 'NA');
+              },
+              child: const Text(
+                'Login',
+              ),
+            ),
+            horizontalMargin12,
+            ElevatedButton(
+              onPressed: () {
+                UserController userController = Get.find<UserController>();
+                userController.logout();
+              },
+              child: const Text(
+                'Logout',
+              ),
+            ),
+          ],
         ),
       ),
     );

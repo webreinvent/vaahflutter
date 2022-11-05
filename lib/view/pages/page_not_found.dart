@@ -2,20 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:team/routes/observer.dart';
 import 'package:team/vaahextendflutter/base/base_stateless.dart';
 
-class PermissionDenied extends BaseStateless {
-  static const String routeName = '/permission-denied';
+class PageNotFound extends BaseStateless {
+  static const String routeName = '/page-not-found';
 
   static Route<void> route() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: '/permission-denied'),
+      settings: const RouteSettings(name: '/page-not-found'),
       builder: (_) => const RouteAwareWidget(
-        name: '/permission-denied',
-        child: PermissionDenied(),
+        name: '/page-not-found',
+        child: PageNotFound(),
       ),
     );
   }
 
-  const PermissionDenied({super.key});
+  const PageNotFound({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class PermissionDenied extends BaseStateless {
     return Scaffold(
       appBar: AppBar(),
       body: const Center(
-        child: Text('Permission Denied'),
+        child: Text('Page Not Found!'),
       ),
     );
   }
