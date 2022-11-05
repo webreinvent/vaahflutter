@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:team/models/user/permission/permission.dart';
 import 'package:team/models/user/permission/route/route.dart';
 import 'package:team/models/user/user.dart';
+import 'package:team/vaahextendflutter/helpers/console.dart';
 import 'package:team/vaahextendflutter/helpers/helpers.dart';
 import 'package:team/view/pages/details.dart';
 import 'package:team/view/pages/more_details.dart';
@@ -14,6 +15,11 @@ class UserController extends GetxController {
   set user(User? user) {
     _user = user;
     update();
+  }
+
+  UserController() {
+    // Check if user exists locally?
+    Console.danger('Check if user exists locally?');
   }
 
   Future<void> login(String username, String password) async {
@@ -32,10 +38,6 @@ class UserController extends GetxController {
   }
 
   Future<void> forgotPassword(String username) async {}
-
-  Future<void> userLocallyExists() async {
-    // check and initialize
-  }
 
   Future<void> logout() async {
     user = null;

@@ -9,15 +9,11 @@ import 'package:team/vaahextendflutter/services/api.dart';
 class BaseController extends GetxController {
   Future<void> init() async {
     String environment = const String.fromEnvironment('environment', defaultValue: 'default');
-    final EnvController envController = Get.put(
-      EnvController(
-        environment,
-      ),
-    );
+    final EnvController envController = Get.put(EnvController(environment));
     Console.info('Env Type: ${envController.config.envType}');
     Console.info('Version: ${envController.config.version}+${envController.config.build}');
+    Get.put(UserController()); // RouteController is depended on UserController thus, init it first.
     Get.put(RouteController());
-    Get.put(UserController());
     await Api.initApi();
     AppTheme.init();
   }
