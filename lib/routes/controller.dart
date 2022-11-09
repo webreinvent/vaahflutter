@@ -3,6 +3,7 @@ import 'package:team/controllers/user_controller.dart';
 import 'package:team/vaahextendflutter/helpers/console.dart';
 
 class RouteController extends GetxController {
+
   bool checkRoutePermission(String path) {
     if(Get.isRegistered<UserController>()){
       Console.danger("UserController is not initialized!");
@@ -12,8 +13,7 @@ class RouteController extends GetxController {
     if (userController.user == null) {
       return false;
     }
-    return userController.user!.permissions.routes
-        .where((element) => element.path == path)
-        .isNotEmpty;
+    return userController.user!.permissions.contains(path);
   }
+
 }
