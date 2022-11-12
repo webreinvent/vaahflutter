@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team/routes/observer.dart';
 import 'package:team/vaahextendflutter/base/base_stateless.dart';
 
 class PermissionDenied extends BaseStateless {
@@ -8,10 +7,7 @@ class PermissionDenied extends BaseStateless {
   static Route<void> route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/permission-denied'),
-      builder: (_) => const RouteAwareWidget(
-        name: '/permission-denied',
-        child: PermissionDenied(),
-      ),
+      builder: (_) => const PermissionDenied(),
     );
   }
 

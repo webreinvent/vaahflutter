@@ -13,8 +13,3 @@ final Map<String, Route<dynamic> Function()> routes = {
   DetailsPage.routeName: DetailsPage.route,
   MoreDetailsPage.routeName: MoreDetailsPage.route,
 };
-
-const List<String> defaultPermissions = [
-  '/',
-  TeamHomePage.routeName,
-];

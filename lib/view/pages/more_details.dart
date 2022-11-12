@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:team/routes/observer.dart';
+import 'package:team/models/user.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
+import 'package:team/view/pages/permission_denied.dart';
 
 class MoreDetailsPage extends StatefulWidget {
   static const String routeName = '/more-details';
 
   static Route<void> route() {
+    if (!User.hasPermission('can-access-more-details')) {
+      return PermissionDenied.route();
+    }
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/more-details'),
-      builder: (_) => const RouteAwareWidget(
-        name: '/more-details',
-        child: MoreDetailsPage(),
-      ),
+      builder: (_) => const MoreDetailsPage(),
     );
   }
 

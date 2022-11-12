@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:team/controllers/user_controller.dart';
-import 'package:team/routes/observer.dart';
+import 'package:team/models/user.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/view/pages/details.dart';
@@ -12,10 +10,7 @@ class TeamHomePage extends StatefulWidget {
   static Route<void> route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/home'),
-      builder: (_) => const RouteAwareWidget(
-        name: '/home',
-        child: TeamHomePage(),
-      ),
+      builder: (_) => const TeamHomePage(),
     );
   }
 
@@ -44,8 +39,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
             horizontalMargin12,
             ElevatedButton(
               onPressed: () {
-                UserController userController = Get.find<UserController>();
-                userController.login('NA', 'NA');
+                User.signin('NA', 'NA');
               },
               child: const Text(
                 'Login',
@@ -54,8 +48,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
             horizontalMargin12,
             ElevatedButton(
               onPressed: () {
-                UserController userController = Get.find<UserController>();
-                userController.logout();
+                User.signout('NA');
               },
               child: const Text(
                 'Logout',

@@ -24,8 +24,7 @@ class Api {
   static final Dio _dio = Dio();
 
   // Get request header options
-  static Future<Options> _getOptions(
-      {String contentType = Headers.jsonContentType}) async {
+  static Future<Options> _getOptions({String contentType = Headers.jsonContentType}) async {
     final Map<String, String> header = <String, String>{};
     header.addAll(<String, String>{'Accept': 'application/json'});
     header.addAll(<String, String>{'X-Requested-With': 'XMLHttpRequest'});
@@ -81,18 +80,16 @@ class Api {
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
-  static Future<void> ajax<T>({
+  static Future<dynamic> ajax<T>({
     required String url,
     Future<void> Function(dynamic data, Response<dynamic>? res)? callback,
     String method = 'get',
     Map<String, dynamic>?
         params, // eg: { 'name': 'abc' }. params is data passed in post, put, etc. requests.
     Map<String, dynamic>? query, // eg: { 'name': 'abc' }
-    List<Map<String, String>>?
-        headers, // eg: [{'title': 'content'}, {'key', 'value'}]
+    List<Map<String, String>>? headers, // eg: [{'title': 'content'}, {'key', 'value'}]
     int? customTimeoutLimit,
-    bool showAlert =
-        true, // if set false then on success or error, nothing will be shown
+    bool showAlert = true, // if set false then on success or error, nothing will be shown
     String alertType = 'toast', // 'toast' and 'dialog' are valid values
     Future<void> Function()? onStart,
     Future<void> Function()? onCompleted,
@@ -137,7 +134,7 @@ class Api {
         );
       }
 
-      return;
+      return {'data': parseResponse(responseData), 'response': response};
     } catch (error) {
       // On completed, use for hide loading
       if (onCompleted != null) {
@@ -168,7 +165,13 @@ class Api {
         if (callback != null) {
           await callback(null, null);
         }
-        return;
+        return {
+          'data': null,
+          'response': {
+            'success': false,
+            'errors': [error]
+          }
+        };
       }
 
       // Here response error means server sends error response. eg 401: unauthorised
@@ -181,7 +184,13 @@ class Api {
         if (callback != null) {
           await callback(null, null);
         }
-        return;
+        return {
+          'data': null,
+          'response': {
+            'success': false,
+            'errors': [error]
+          }
+        };
       }
 
       if (callback != null) {
@@ -226,10 +235,8 @@ class Api {
   }) async {
     Response? response;
     final Options options = await _getOptions();
-    options.sendTimeout =
-        customTimeoutLimit ?? _envController.config.timeoutLimit;
-    options.receiveTimeout =
-        customTimeoutLimit ?? _envController.config.timeoutLimit;
+    options.sendTimeout = customTimeoutLimit ?? _envController.config.timeoutLimit;
+    options.receiveTimeout = customTimeoutLimit ?? _envController.config.timeoutLimit;
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
@@ -302,8 +309,7 @@ class Api {
               await Helpers.showErrorDialog(
                 title: 'Error',
                 content: ['Invalid request type!'],
-                hint:
-                    "get, post, put, patch, delete request types are allowed.",
+                hint: "get, post, put, patch, delete request types are allowed.",
               );
               break;
             }
@@ -337,8 +343,7 @@ class Api {
   ) async {
     if (response != null && response.data != null) {
       try {
-        final Map<String, dynamic> formatedResponse =
-            response.data as Map<String, dynamic>;
+        final Map<String, dynamic> formatedResponse = response.data as Map<String, dynamic>;
         dynamic responseData = formatedResponse['data'];
         if (responseData == null) {
           Console.warning('response doesn\'t contain data key.');
@@ -347,9 +352,8 @@ class Api {
         if (formatedResponse['messages'] == null) {
           Console.warning('response doesn\'t contain messages key.');
         } else {
-          responseMessages = (formatedResponse['messages'] as List<dynamic>)
-              .map((e) => e.toString())
-              .toList();
+          responseMessages =
+              (formatedResponse['messages'] as List<dynamic>).map((e) => e.toString()).toList();
         }
         String? responseHint = formatedResponse['hint'] as String?;
         if (responseHint == null) {
@@ -474,13 +478,10 @@ class Api {
           if (error.response?.data != null) {
             try {
               Console.danger('${error.response}');
-              final Map<String, dynamic> response =
-                  error.response?.data as Map<String, dynamic>;
+              final Map<String, dynamic> response = error.response?.data as Map<String, dynamic>;
               Console.danger('$response');
               if (response['errors'] != null) {
-                errors = (response['errors'] as List<dynamic>)
-                    .map((e) => e.toString())
-                    .toList();
+                errors = (response['errors'] as List<dynamic>).map((e) => e.toString()).toList();
               }
               if (errors.isEmpty) {
                 Console.warning('response doesn\'t contain errors key.');
@@ -520,8 +521,7 @@ class Api {
               // ignore: unnecessary_null_comparison
               if (Helpers.showErrorToast != null) {
                 await Helpers.showErrorToast(
-                  content:
-                      errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
+                  content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
                 );
                 return;
               }
@@ -569,8 +569,7 @@ class Api {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (content != null && content.isNotEmpty)
-                Text(content.join('\n')),
+              if (content != null && content.isNotEmpty) Text(content.join('\n')),
               if (content != null && content.isNotEmpty) verticalMargin12,
               if (hint != null && hint.trim().isNotEmpty) Text(hint),
             ],

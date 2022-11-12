@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:team/app_theme.dart';
 import 'package:team/env.dart';
 import 'package:team/routes/middleware.dart';
-import 'package:team/routes/observer.dart';
 import 'package:team/vaahextendflutter/tag/tag_panel.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
@@ -19,7 +18,6 @@ class AppConfig extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: AppTheme.colors['primary'],
       ),
-      navigatorObservers: <RouteObserver<ModalRoute<void>>>[routeObserver],
       onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
         return TagPanelHost(

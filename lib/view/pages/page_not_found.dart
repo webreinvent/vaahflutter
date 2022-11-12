@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:team/routes/observer.dart';
 import 'package:team/vaahextendflutter/base/base_stateless.dart';
 
 class PageNotFound extends BaseStateless {
@@ -8,10 +7,7 @@ class PageNotFound extends BaseStateless {
   static Route<void> route() {
     return MaterialPageRoute(
       settings: const RouteSettings(name: '/page-not-found'),
-      builder: (_) => const RouteAwareWidget(
-        name: '/page-not-found',
-        child: PageNotFound(),
-      ),
+      builder: (_) => const PageNotFound(),
     );
   }
 
