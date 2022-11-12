@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team/models/user.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/view/pages/details.dart';
+import 'package:team/view/layouts/forgot_password.dart';
 
 class TeamHomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -48,7 +48,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
             horizontalMargin12,
             ElevatedButton(
               onPressed: () {
-                User.signout('NA');
+                User.signout();
               },
               child: const Text(
                 'Logout',

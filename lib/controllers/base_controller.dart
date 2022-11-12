@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:team/app_theme.dart';
 import 'package:team/controllers/root_assets_controller.dart';
 import 'package:team/env.dart';
@@ -7,10 +8,11 @@ import 'package:team/vaahextendflutter/services/api.dart';
 
 class BaseController extends GetxController {
   Future<void> init() async {
-    Get.put(RootAssetsController());
+    await GetStorage.init();
     initEnvController();
-    await Api.initApi();
     AppTheme.init();
+    await Api.init();
+    Get.put(RootAssetsController());
   }
 }
 

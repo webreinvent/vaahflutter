@@ -205,7 +205,7 @@ class Api {
     }
   }
 
-  static Future<void> initApi() async {
+  static Future<void> init() async {
     bool envControllerExists = getx.Get.isRegistered<EnvController>();
     if (!envControllerExists) {
       throw Exception('envController does not exist in app');

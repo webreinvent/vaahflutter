@@ -4,71 +4,50 @@ import 'package:team/vaahextendflutter/services/api.dart';
 
 class User {
   static final RootAssetsController rootAssetsController = Get.find<RootAssetsController>();
-  static const String apiEndPoint = 'user';
-
-  // final String firstName;
-  // final String? lastName;
-  // final List<String> permissions;
-  //
-  // const User({
-  //   required this.firstName,
-  //   this.lastName,
-  //   required this.permissions,
-  // });
-
-  static Future<void> signin(String username, String password) async {
-    rootAssetsController.user = {
-      "name": "name",
-      "permissions": ["can-access-details", 'can-access-more-details']
-    };
-    // await Api.ajax(
-    //   url: apiEndPoint, // TODO: change end point
-    //   method: 'post',
-    //   params: {"username": username, "password": password},
-    // );
-    return;
-  }
-
-  static Future<void> forgotPassword(String username) async {
-    await Api.ajax(
-      url: '$apiEndPoint/forgot-password', // TODO: change end point
-      method: 'post',
-      params: {"username": username},
-    );
-    return;
-  }
-
-  static Future<void> signout(String username) async {
-    await Api.ajax(
-      url: '$apiEndPoint/signout', // TODO: change end point
-      method: 'post',
-      params: {"username": username},
-    );
-    rootAssetsController.user = null;
-    return;
-  }
+  static const String apiEndPoint = '/user'; // TODO: change end point
 
   static bool hasPermission(String value) {
-    if (rootAssetsController.user?['permissions'] == null) {
+    if (rootAssetsController.user == null || rootAssetsController.user?['permissions'] == null) {
       return false;
     }
     return (rootAssetsController.user?['permissions'] as List<String>).contains(value);
+  }
+
+  static Future<void> signin(String identifier, String password) async {
+    Map<String, dynamic> user = await Api.ajax(
+      url: apiEndPoint,
+      method: 'post',
+      params: {"identifier": identifier, "password": password},
+    );
+    rootAssetsController.user = user;
+    rootAssetsController.apiToken = user['token'];
+    return;
+  }
+
+  static Future<void> forgotPassword(String identifier) async {
+    await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'post',
+      params: {"identifier": identifier},
+    );
+    // TODO: On the same page  of the call Show enter otp, reset pass
+    return;
+  }
+
+  static Future<void> signout() async {
+    rootAssetsController.user = null;
+    return;
   }
 
   static Future<Map?> createItem(Map<String, dynamic> item) async {
     return await Api.ajax(
       url: apiEndPoint, // TODO: change end point
       method: 'post',
-      params: {'data': item},
+      params: item,
     );
   }
 
-  static Future<List<Map>?> getList(String orderBy, int page, int itemsPerPage) async {
-    Map<String, dynamic> query = {
-      "orderBy": orderBy,
-      "page": page,
-      "itemsPerPage": itemsPerPage,
-    }; // TODO: change the query
+  static Future<List<Map>?> getList(Map<String, dynamic> query) async {
     return await Api.ajax(
       url: apiEndPoint, // TODO: change end point
       method: 'get',
@@ -76,11 +55,59 @@ class User {
     );
   }
 
-  static Future<List<Map>?> updateList(List<Map> items) async {
+  static Future<List<Map>?> updateList(String type, List<Map> items) async {
     return await Api.ajax(
       url: apiEndPoint, // TODO: change end point
       method: 'post',
-      params: {'data': items},
+      params: {'type': type, 'data': items},
+    );
+  }
+
+  static Future<List<Map>?> deleteList(String type, List<Map> items) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'delete',
+      params: {'type': type, 'data': items},
+    );
+  }
+
+  static Future<List<Map>?> listAction(String type, List<Map> items) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'patch',
+      params: {'type': type, 'data': items},
+    );
+  }
+
+  static Future<Map?> getItem(String id) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'get',
+      query: {"id": id},
+    );
+  }
+
+  static Future<Map?> updateItem(String id, Map item) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'patch',
+      params: {'id': id, 'item': item},
+    );
+  }
+
+  static Future<Map?> deleteItem(String id) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'delete',
+      params: {"id": id},
+    );
+  }
+
+  static Future<Map?> itemAction(String id, String type) async {
+    return await Api.ajax(
+      url: apiEndPoint, // TODO: change end point
+      method: 'post',
+      params: {'id': id, 'type': type},
     );
   }
 }
