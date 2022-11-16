@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../vaahextendflutter/base/base_stateful.dart';
@@ -18,12 +17,6 @@ class TeamHomePage extends StatefulWidget {
 }
 
 class _TeamHomePageState extends BaseStateful<TeamHomePage> {
-
-  @override
-  void afterFirstBuild(BuildContext context) {
-    super.afterFirstBuild(context);
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);

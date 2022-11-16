@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,53 @@ class Api {
     header.addAll(<String, String>{'Accept': 'application/json'});
     header.addAll(<String, String>{'X-Requested-With': 'XMLHttpRequest'});
     return Options(headers: header, contentType: contentType);
+  }
+
+  static dynamic _parseKeys({
+    required dynamic data,
+    required Function changeKeys,
+  }) {
+    if (data is List) {
+      dynamic parsedData = [];
+      for (var e in data) {
+        parsedData.add(_parseKeys(data: e, changeKeys: changeKeys));
+      }
+      return parsedData;
+    } else if (data is Map) {
+      Map<String, dynamic> parsedData = {};
+      data.forEach(
+        (key, value) {
+          dynamic parsedvalue = _parseKeys(data: value, changeKeys: changeKeys);
+          parsedData.addAll({
+            changeKeys(key): parsedvalue,
+          });
+        },
+      );
+      return parsedData;
+    }
+    return data;
+  }
+
+  static String _lowerCamelCaseToSnakeCase(String data) {
+    List<String> parts = data.split(RegExp(r"(?=(?!^)[A-Z])"));
+    String result = parts.join('_');
+    return result.toLowerCase();
+  }
+
+  static String _snakeCasetoLowerCamelCase(String data) {
+    List<String> sentence = data.split('_');
+    sentence.removeWhere((element) => element.isEmpty);
+    String result = '';
+    for (var e in sentence) {
+      result += e[0].toUpperCase() + e.substring(1);
+    }
+    if (result.isEmpty) {
+      return data;
+    }
+    if (result[0].isAlphabetOnly) {
+      result = result[0].toLowerCase() + result.substring(1);
+    }
+    return result;
   }
 
   // return type of ajax is ApiResponseType? so if there is error
@@ -80,7 +128,13 @@ class Api {
       }
 
       if (callback != null) {
-        await callback(responseData, response);
+        await callback(
+          _parseKeys(
+            data: responseData,
+            changeKeys: _snakeCasetoLowerCamelCase,
+          ),
+          response,
+        );
       }
 
       return;
@@ -189,6 +243,12 @@ class Api {
         options.headers = customHeader;
       }
     }
+    String encodedData = jsonEncode(
+      _parseKeys(
+        data: params,
+        changeKeys: _lowerCamelCaseToSnakeCase,
+      ),
+    );
     switch (method) {
       case 'get':
         response = await _dio.get<dynamic>(
@@ -201,7 +261,7 @@ class Api {
       case 'post':
         response = await _dio.post<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -210,7 +270,7 @@ class Api {
       case 'put':
         response = await _dio.put<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -219,7 +279,7 @@ class Api {
       case 'patch':
         response = await _dio.patch<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -228,7 +288,7 @@ class Api {
       case 'delete':
         response = await _dio.delete<dynamic>(
           '$_apiBaseUrl$url',
-          data: params,
+          data: encodedData,
           queryParameters: query,
           options: options,
         );
@@ -259,7 +319,10 @@ class Api {
               await Helpers.showErrorToast(content: 'Invalid request type!');
               break;
             }
-            _showToast(content: 'ERR: Invalid request type!', color: AppTheme.colors['danger']!,);
+            _showToast(
+              content: 'ERR: Invalid request type!',
+              color: AppTheme.colors['danger']!,
+            );
             break;
           }
         }
@@ -457,7 +520,8 @@ class Api {
               // ignore: unnecessary_null_comparison
               if (Helpers.showErrorToast != null) {
                 await Helpers.showErrorToast(
-                  content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
+                  content:
+                      errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
                 );
                 return;
               }
@@ -484,7 +548,9 @@ class Api {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: color.withOpacity(0.5),
-      textColor: color == AppTheme.colors['white'] ? AppTheme.colors['black'] : AppTheme.colors['whiteColor'],
+      textColor: color == AppTheme.colors['white']
+          ? AppTheme.colors['black']
+          : AppTheme.colors['whiteColor'],
       fontSize: 16.0,
     );
   }
@@ -505,8 +571,7 @@ class Api {
             children: [
               if (content != null && content.isNotEmpty)
                 Text(content.join('\n')),
-              if (content != null && content.isNotEmpty)
-                verticalMargin12,
+              if (content != null && content.isNotEmpty) verticalMargin12,
               if (hint != null && hint.trim().isNotEmpty) Text(hint),
             ],
           ),
