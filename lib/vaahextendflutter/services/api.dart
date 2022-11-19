@@ -134,7 +134,10 @@ class Api {
         );
       }
 
-      return {'data': parseResponse(responseData), 'response': response};
+      return {
+        'data': _parseKeys(data: responseData, changeKeys: _snakeCasetoLowerCamelCase),
+        'response': response
+      };
     } catch (error) {
       // On completed, use for hide loading
       if (onCompleted != null) {
