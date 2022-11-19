@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-const double deafaultPadding = 16.0;
-const double deafaultMargin = 16.0;
+const double defaultPadding = 16.0;
+const double defaultMargin = 16.0;
 
 // Common Widgets
 const emptyWidget = SizedBox();

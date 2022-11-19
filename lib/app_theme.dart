@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'vaahextendflutter/base/base_theme.dart';
+import 'package:team/vaahextendflutter/base/base_theme.dart';
 
 class AppTheme {
   static final Map<String, MaterialColor> colors = Map.of(BaseTheme.colors);
@@ -10,8 +9,6 @@ class AppTheme {
     // colors['secondary'] = gray;
   }
 }
-
-
 
 // To define new color developer should visit https://colors.eva.design/
 

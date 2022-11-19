@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'env.dart';
-
-import 'routes/routes.dart';
-import 'app_theme.dart';
-import 'vaahextendflutter/tag/tag_panel.dart';
-import 'view/pages/home.dart';
+import 'package:team/app_theme.dart';
+import 'package:team/env.dart';
+import 'package:team/routes/middleware.dart';
+import 'package:team/vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,12 +18,9 @@ class AppConfig extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: AppTheme.colors['primary'],
       ),
-      onGenerateInitialRoutes: (String initialRoute) {
-        return [TeamHomePage.route()];
-      },
-      onGenerateRoute: onGenerateRoute,
+      onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
-        return TagPanelHost(
+        return DebugWidget(
           navigatorKey: _navigatorKey,
           child: child!,
         );

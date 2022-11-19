@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:team/view/pages/home.dart';
+import 'package:team/view/pages/not_found.dart';
+import 'package:team/view/pages/permission_denied.dart';
 
-import '../view/pages/home.dart';
-import '../view/pages/something_went_wrong.dart';
-
-
-Map<String,  Route<void>> routes = {
-  '/': TeamHomePage.route(),
-  SomethingWentWrong.routeName: SomethingWentWrong.route(),
+final Map<String, Route<dynamic> Function()> routes = {
+  '/': HomePage.route,
+  HomePage.routePath: HomePage.route,
+  NotFoundPage.routePath: NotFoundPage.route,
+  PermissionDeniedPage.routePath: PermissionDeniedPage.route,
 };
-
-Route<dynamic>? onGenerateRoute(RouteSettings route) {
-  return routes[route.name] ?? SomethingWentWrong.route();
-}

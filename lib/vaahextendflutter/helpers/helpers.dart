@@ -34,7 +34,7 @@ class Helpers {
       AlertDialog(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
-            Radius.circular(deafaultPadding),
+            Radius.circular(defaultPadding),
           ),
         ),
         contentPadding: EdgeInsets.zero,
