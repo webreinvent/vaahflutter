@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:team/app_theme.dart';
 import 'package:team/env.dart';
 import 'package:team/routes/middleware.dart';
-import 'package:team/vaahextendflutter/tag/tag_panel.dart';
+import 'package:team/vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
@@ -20,7 +20,7 @@ class AppConfig extends StatelessWidget {
       ),
       onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
-        return TagPanelHost(
+        return DebugWidget(
           navigatorKey: _navigatorKey,
           child: child!,
         );

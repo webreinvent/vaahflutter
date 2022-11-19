@@ -18,8 +18,8 @@ const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 28.0; // tag handle height
 
 @immutable
-class TagPanelHost extends StatefulWidget {
-  const TagPanelHost({
+class DebugWidget extends StatefulWidget {
+  const DebugWidget({
     Key? key,
     required this.navigatorKey,
     required this.child,
@@ -29,14 +29,14 @@ class TagPanelHost extends StatefulWidget {
   final Widget child;
 
   @override
-  TagPanelHostState createState() => TagPanelHostState();
+  DebugWidgetState createState() => DebugWidgetState();
 
-  static TagPanelHostState of(BuildContext context) {
-    return context.findAncestorStateOfType<TagPanelHostState>()!;
+  static DebugWidgetState of(BuildContext context) {
+    return context.findAncestorStateOfType<DebugWidgetState>()!;
   }
 }
 
-class TagPanelHostState extends State<TagPanelHost>
+class DebugWidgetState extends State<DebugWidget>
     with SingleTickerProviderStateMixin {
   final _drawerKey = GlobalKey();
   final _focusScopeNode = FocusScopeNode();

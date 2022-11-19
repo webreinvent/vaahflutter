@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
 
-class TeamHomePage extends StatefulWidget {
-  static const String routeName = '/home';
+class HomePage extends StatefulWidget {
+  static const String routePath = '/home';
 
   static Route<void> route() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: '/home'),
-      builder: (_) => const TeamHomePage(),
+      settings: const RouteSettings(name: routePath),
+      builder: (_) => const HomePage(),
     );
   }
 
-  const TeamHomePage({super.key});
+  const HomePage({super.key});
 
   @override
-  State<TeamHomePage> createState() => _TeamHomePageState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _TeamHomePageState extends BaseStateful<TeamHomePage> {
+class _HomePageState extends BaseStateful<HomePage> {
   @override
   Widget build(BuildContext context) {
     super.build(context);

@@ -3,8 +3,8 @@ import 'package:team/controllers/root_assets_controller.dart';
 import 'package:team/vaahextendflutter/services/api.dart';
 
 class User {
+  static const String apiEndPoint = '/users'; // TODO: change end point
   static final RootAssetsController rootAssetsController = Get.find<RootAssetsController>();
-  static const String apiEndPoint = '/user'; // TODO: change end point
 
   static bool hasPermission(String value) {
     if (rootAssetsController.user == null || rootAssetsController.user?['permissions'] == null) {

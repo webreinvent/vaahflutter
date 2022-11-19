@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/base/base_stateless.dart';
 
-class PermissionDenied extends BaseStateless {
-  static const String routeName = '/permission-denied';
+class PermissionDeniedPage extends BaseStateless {
+  static const String routePath = '/permission-denied';
 
   static Route<void> route() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: '/permission-denied'),
-      builder: (_) => const PermissionDenied(),
+      settings: const RouteSettings(name: routePath),
+      builder: (_) => const PermissionDeniedPage(),
     );
   }
 
-  const PermissionDenied({super.key});
+  const PermissionDeniedPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/base/base_stateless.dart';
 
-class PageNotFound extends BaseStateless {
-  static const String routeName = '/page-not-found';
+class NotFoundPage extends BaseStateless {
+  static const String routePath = '/page-not-found';
 
   static Route<void> route() {
     return MaterialPageRoute(
-      settings: const RouteSettings(name: '/page-not-found'),
-      builder: (_) => const PageNotFound(),
+      settings: const RouteSettings(name: routePath),
+      builder: (_) => const NotFoundPage(),
     );
   }
 
-  const PageNotFound({super.key});
+  const NotFoundPage({super.key});
 
   @override
   Widget build(BuildContext context) {
