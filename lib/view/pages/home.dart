@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:team/models/user.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/view/layouts/forgot_password.dart';
 
 class TeamHomePage extends StatefulWidget {
   static const String routeName = '/home';
@@ -26,37 +23,7 @@ class _TeamHomePageState extends BaseStateful<TeamHomePage> {
     super.build(context);
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, DetailsPage.routeName),
-              child: const Text(
-                'Route Details',
-              ),
-            ),
-            horizontalMargin12,
-            ElevatedButton(
-              onPressed: () {
-                User.signin('NA', 'NA');
-              },
-              child: const Text(
-                'Login',
-              ),
-            ),
-            horizontalMargin12,
-            ElevatedButton(
-              onPressed: () {
-                User.signout();
-              },
-              child: const Text(
-                'Logout',
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: const Center(child: Text('WebReinvent')),
     );
   }
 }
