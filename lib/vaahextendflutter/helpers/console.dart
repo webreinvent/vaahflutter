@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:colorize/colorize.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,12 +25,21 @@ class Console {
     Console.printChunks(text);
   }
 
+  static String _parseData(Object? data) {
+    try {
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+      return encoder.convert(data).toString();
+    } catch (err) {
+      return "Cannot parse the data, please check the type of data!";
+    }
+  }
+
   static void log(String text, [Object? data]) {
     Colorize txt = Colorize(text);
     Console.printLog(txt);
 
     if (data != null) {
-      Colorize dataColor = Colorize(data.toString());
+      Colorize dataColor = Colorize(_parseData(data));
       Console.printLog(dataColor);
     }
   }
@@ -39,7 +50,7 @@ class Console {
     Console.printLog(txt);
 
     if (data != null) {
-      Colorize dataColor = Colorize(data.toString());
+      Colorize dataColor = Colorize(_parseData(data));
       dataColor.blue();
       Console.printLog(dataColor);
     }
@@ -51,7 +62,7 @@ class Console {
     Console.printLog(txt);
 
     if (data != null) {
-      Colorize dataColor = Colorize(data.toString());
+      Colorize dataColor = Colorize(_parseData(data));
       dataColor.green();
       Console.printLog(dataColor);
     }
@@ -63,7 +74,7 @@ class Console {
     Console.printLog(txt);
 
     if (data != null) {
-      Colorize dataColor = Colorize(data.toString());
+      Colorize dataColor = Colorize(_parseData(data));
       dataColor.yellow();
       Console.printLog(dataColor);
     }
@@ -75,7 +86,7 @@ class Console {
     Console.printLog(txt);
 
     if (data != null) {
-      Colorize dataColor = Colorize(data.toString());
+      Colorize dataColor = Colorize(_parseData(data));
       dataColor.red();
       Console.printLog(dataColor);
     }
