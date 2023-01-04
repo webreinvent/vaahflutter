@@ -30,7 +30,8 @@ class Console {
       JsonEncoder encoder = const JsonEncoder.withIndent('  ');
       return encoder.convert(data).toString();
     } catch (err) {
-      return "Cannot parse the data, please check the type of data!";
+      danger("Cannot parse the data, please check the type of data!");
+      return '';
     }
   }
 
@@ -40,6 +41,7 @@ class Console {
 
     if (data != null) {
       Colorize dataColor = Colorize(_parseData(data));
+      dataColor.white();
       Console.printLog(dataColor);
     }
   }
