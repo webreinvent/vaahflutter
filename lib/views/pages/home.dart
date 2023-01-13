@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
+import 'package:team/views/pages/ui/index.dart';
 
 class HomePage extends StatefulWidget {
   static const String routePath = '/home';
@@ -23,7 +24,14 @@ class _HomePageState extends BaseStateful<HomePage> {
     super.build(context);
     return Scaffold(
       appBar: AppBar(),
-      body: const Center(child: Text('WebReinvent')),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.push(context, UIPage.route());
+          },
+          child: const Text('WebReinvent'),
+        ),
+      ),
     );
   }
 }

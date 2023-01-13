@@ -7,17 +7,17 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
-import '../../../env.dart';
-import '../../app_theme.dart';
+import '../app_theme.dart';
+import '../env.dart';
+import '../helpers/alerts.dart';
 import '../helpers/console.dart';
 import '../helpers/constants.dart';
-import '../helpers/helpers.dart';
 
 // alertType : 'dialog', 'toast',
 
 class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
-  static late final EnvController _envController;
+  static late final EnvironmentConfig _config;
 
   // Get base url by env
   static late final String _apiBaseUrl;
@@ -62,7 +62,7 @@ class Api {
     return result.toLowerCase();
   }
 
-  static String _snakeCasetoLowerCamelCase(String data) {
+  static String _snakeCaseToLowerCamelCase(String data) {
     List<String> sentence = data.split('_');
     sentence.removeWhere((element) => element.isEmpty);
     String result = '';
@@ -128,14 +128,14 @@ class Api {
         await callback(
           _parseKeys(
             data: responseData,
-            changeKeys: _snakeCasetoLowerCamelCase,
+            changeKeys: _snakeCaseToLowerCamelCase,
           ),
           response,
         );
       }
 
       return {
-        'data': _parseKeys(data: responseData, changeKeys: _snakeCasetoLowerCamelCase),
+        'data': _parseKeys(data: responseData, changeKeys: _snakeCaseToLowerCamelCase),
         'response': response
       };
     } catch (error) {
@@ -208,15 +208,10 @@ class Api {
     }
   }
 
-  static Future<void> init() async {
-    bool envControllerExists = getx.Get.isRegistered<EnvController>();
-    if (!envControllerExists) {
-      throw Exception('envController does not exist in app');
-    }
-    // get env controller and set variable showEnvAndVersionTag
-    _envController = getx.Get.find<EnvController>();
-    _apiBaseUrl = _envController.config.apiUrl;
-    if (_envController.config.enableApiLogs) {
+  static void init() {
+    // get env controller to get variable apiUrl
+    _config = EnvironmentConfig.getEnvConfig();
+    if (_config.enableApiLogs) {
       _dio.interceptors.add(
         LogInterceptor(
           responseBody: true,
@@ -238,8 +233,8 @@ class Api {
   }) async {
     Response? response;
     final Options options = await _getOptions();
-    options.sendTimeout = customTimeoutLimit ?? _envController.config.timeoutLimit;
-    options.receiveTimeout = customTimeoutLimit ?? _envController.config.timeoutLimit;
+    options.sendTimeout = customTimeoutLimit ?? _config.timeoutLimit;
+    options.receiveTimeout = customTimeoutLimit ?? _config.timeoutLimit;
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
@@ -307,9 +302,8 @@ class Api {
       default:
         if (showAlert) {
           if (alertType == 'dialog') {
-            // ignore: unnecessary_null_comparison
-            if (Helpers.showErrorDialog != null) {
-              await Helpers.showErrorDialog(
+            if (Alerts.showErrorDialog != null) {
+              await Alerts.showErrorDialog!(
                 title: 'Error',
                 content: ['Invalid request type!'],
                 hint: "get, post, put, patch, delete request types are allowed.",
@@ -323,9 +317,8 @@ class Api {
             );
             break;
           } else {
-            // ignore: unnecessary_null_comparison
-            if (Helpers.showErrorToast != null) {
-              await Helpers.showErrorToast(content: 'Invalid request type!');
+            if (Alerts.showErrorToast != null) {
+              await Alerts.showErrorToast!(content: 'Invalid request type!');
               break;
             }
             _showToast(
@@ -364,9 +357,8 @@ class Api {
         }
         if (showAlert) {
           if (alertType == 'dialog') {
-            // ignore: unnecessary_null_comparison
-            if (Helpers.showSuccessDialog != null) {
-              await Helpers.showSuccessDialog(
+            if (Alerts.showSuccessDialog != null) {
+              await Alerts.showSuccessDialog!(
                 title: 'Success',
                 content: responseMessages,
                 hint: responseHint,
@@ -379,9 +371,8 @@ class Api {
               );
             }
           } else {
-            // ignore: unnecessary_null_comparison
-            if (Helpers.showSuccessToast != null) {
-              await Helpers.showSuccessToast(
+            if (Alerts.showSuccessToast != null) {
+              await Alerts.showSuccessToast!(
                 content: responseMessages?.join('\n') ?? 'Successful',
               );
             } else {
@@ -408,9 +399,8 @@ class Api {
     Console.danger(error.toString());
     if (showAlert) {
       if (alertType == 'dialog') {
-        // ignore: unnecessary_null_comparison
-        if (Helpers.showErrorDialog != null) {
-          await Helpers.showErrorDialog(
+        if (Alerts.showErrorDialog != null) {
+          await Alerts.showErrorDialog!(
             title: 'Error',
             content: ['Check your internet connection!'],
           );
@@ -421,9 +411,8 @@ class Api {
           content: ['Check your internet connection!'],
         );
       } else {
-        // ignore: unnecessary_null_comparison
-        if (Helpers.showErrorToast != null) {
-          await Helpers.showErrorToast(
+        if (Alerts.showErrorToast != null) {
+          await Alerts.showErrorToast!(
             content: 'ERR: Check your internet connection!',
           );
           return;
@@ -501,13 +490,11 @@ class Api {
           }
           if (errorCode == 'unauthorized') {
             Console.danger('Error type: unauthorized');
-            Helpers.logout();
           }
           if (showAlert) {
             if (alertType == 'dialog') {
-              // ignore: unnecessary_null_comparison
-              if (Helpers.showErrorDialog != null) {
-                await Helpers.showErrorDialog(
+              if (Alerts.showErrorDialog != null) {
+                await Alerts.showErrorDialog!(
                   title: 'Error',
                   content: errors,
                   hint: debug,
@@ -521,9 +508,8 @@ class Api {
                 hint: debug,
               );
             } else {
-              // ignore: unnecessary_null_comparison
-              if (Helpers.showErrorToast != null) {
-                await Helpers.showErrorToast(
+              if (Alerts.showErrorToast != null) {
+                await Alerts.showErrorToast!(
                   content: errors.isEmpty ? 'Error' : 'ERR: ${errors.join('\n')}',
                 );
                 return;
