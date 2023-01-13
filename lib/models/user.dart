@@ -26,11 +26,11 @@ class User {
 
   static Future<void> forgotPassword(String identifier) async {
     await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'post',
       params: {"identifier": identifier},
     );
-    // TODO: On the same page  of the call Show enter otp, reset pass
+    // TODO: On the same page of the call Show enter otp, reset pass
     return;
   }
 
@@ -41,7 +41,7 @@ class User {
 
   static Future<Map?> createItem(Map<String, dynamic> item) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'post',
       params: item,
     );
@@ -49,7 +49,7 @@ class User {
 
   static Future<List<Map>?> getList(Map<String, dynamic> query) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'get',
       query: query,
     );
@@ -57,7 +57,7 @@ class User {
 
   static Future<List<Map>?> updateList(String type, List<Map> items) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'post',
       params: {'type': type, 'data': items},
     );
@@ -65,7 +65,7 @@ class User {
 
   static Future<List<Map>?> deleteList(String type, List<Map> items) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'delete',
       params: {'type': type, 'data': items},
     );
@@ -73,7 +73,7 @@ class User {
 
   static Future<List<Map>?> listAction(String type, List<Map> items) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'patch',
       params: {'type': type, 'data': items},
     );
@@ -81,7 +81,7 @@ class User {
 
   static Future<Map?> getItem(String id) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'get',
       query: {"id": id},
     );
@@ -89,7 +89,7 @@ class User {
 
   static Future<Map?> updateItem(String id, Map item) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'patch',
       params: {'id': id, 'item': item},
     );
@@ -97,7 +97,7 @@ class User {
 
   static Future<Map?> deleteItem(String id) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'delete',
       params: {"id": id},
     );
@@ -105,7 +105,7 @@ class User {
 
   static Future<Map?> itemAction(String id, String type) async {
     return await Api.ajax(
-      url: apiEndPoint, // TODO: change end point
+      url: apiEndPoint,
       method: 'post',
       params: {'id': id, 'type': type},
     );

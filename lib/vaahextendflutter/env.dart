@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:team/app_theme.dart';
+import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
@@ -18,14 +18,14 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   version: version,
   build: build,
   backendUrl: '',
-  apiUrl: 'https://apivoid.herokuapp.com',
+  apiUrl: '',
   timeoutLimit: 60 * 1000, // 60 seconds
   firebaseId: '',
   enableConsoleLogs: true,
   enableLocalLogs: true,
   enableApiLogs: true,
-  showEnvAndVersionTag: true,
-  envAndVersionTagColor: AppTheme.colors['black']!.withOpacity(0.7),
+  showDebugPanel: true,
+  debugPanelColor: AppTheme.colors['black']!.withOpacity(0.7),
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -46,7 +46,7 @@ Map<String, EnvironmentConfig> envConfigs = {
     envType: 'production',
     enableConsoleLogs: false,
     enableLocalLogs: false,
-    showEnvAndVersionTag: false,
+    showDebugPanel: false,
   ),
 };
 
@@ -86,8 +86,8 @@ class EnvironmentConfig {
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
   final bool enableApiLogs;
-  final bool showEnvAndVersionTag;
-  final Color envAndVersionTagColor;
+  final bool showDebugPanel;
+  final Color debugPanelColor;
 
   const EnvironmentConfig({
     required this.appTitle,
@@ -102,13 +102,24 @@ class EnvironmentConfig {
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
     required this.enableApiLogs,
-    required this.showEnvAndVersionTag,
-    required this.envAndVersionTagColor,
+    required this.showDebugPanel,
+    required this.debugPanelColor,
   });
 
   static EnvironmentConfig getEnvConfig() {
+    final bool envControllerExists = Get.isRegistered<EnvController>();
+    if (!envControllerExists) {
+      setEnvConfig();
+    }
     EnvController envController = Get.find<EnvController>();
     return envController.config;
+  }
+
+  static void setEnvConfig() {
+    String environment = const String.fromEnvironment('environment', defaultValue: 'default');
+    final EnvController envController = Get.put(EnvController(environment));
+    Console.info('Env Type: ${envController.config.envType}');
+    Console.info('Version: ${envController.config.version}+${envController.config.build}');
   }
 
   EnvironmentConfig copyWith({
@@ -124,8 +135,8 @@ class EnvironmentConfig {
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
     bool? enableApiLogs,
-    bool? showEnvAndVersionTag,
-    Color? envAndVersionTagColor,
+    bool? showDebugPanel,
+    Color? debugPanelColor,
   }) {
     return EnvironmentConfig(
       appTitle: appTitle ?? this.appTitle,
@@ -140,8 +151,8 @@ class EnvironmentConfig {
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       enableApiLogs: enableApiLogs ?? this.enableApiLogs,
-      showEnvAndVersionTag: showEnvAndVersionTag ?? this.showEnvAndVersionTag,
-      envAndVersionTagColor: envAndVersionTagColor ?? this.envAndVersionTagColor,
+      showDebugPanel: showDebugPanel ?? this.showDebugPanel,
+      debugPanelColor: debugPanelColor ?? this.debugPanelColor,
     );
   }
 }

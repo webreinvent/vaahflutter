@@ -2,17 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
-import '../../app_theme.dart';
+import '../app_theme.dart';
 import 'constants.dart';
 
-class Helpers {
-  static logout() {
-    // Navigate using getx
-  }
-
-  // ignore: unused_element
-  static _toast({required String content}) {
-    Fluttertoast.showToast(
+class Alerts {
+  static Future<void> _toast({required String content}) async {
+    await Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
@@ -22,7 +17,6 @@ class Helpers {
     );
   }
 
-  // ignore: unused_element
   static _dialog({
     required String title,
     List<String>? content,
@@ -45,8 +39,7 @@ class Helpers {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (content != null && content.isNotEmpty)
-                verticalMargin12,
+              if (content != null && content.isNotEmpty) verticalMargin12,
               if (content != null && content.isNotEmpty)
                 Padding(
                   padding: horizontalPadding8,
@@ -66,8 +59,7 @@ class Helpers {
                     textAlign: TextAlign.center,
                   ),
                 ),
-              if (hint != null && hint.trim().isNotEmpty)
-                verticalMargin8
+              if (hint != null && hint.trim().isNotEmpty) verticalMargin8
             ],
           ),
         ),
@@ -79,7 +71,9 @@ class Helpers {
                 child: Text(
                   'Ok',
                   style: TextStyle(
-                    color: color == AppTheme.colors['white'] ? AppTheme.colors['black'] : AppTheme.colors['white'],
+                    color: color == AppTheme.colors['white']
+                        ? AppTheme.colors['black']
+                        : AppTheme.colors['white'],
                   ),
                 ),
                 onPressed: () {
@@ -95,41 +89,55 @@ class Helpers {
     );
   }
 
-  static showErrorToast({required String content}) {
-    _toast(content: content);
-  }
+  static Future<void> Function({
+    required String content,
+  })? showErrorToast = ({required String content}) async {
+    await _toast(content: content);
+  };
 
-  static showSuccessToast({required String content}) {
-    _toast(content: content);
-  }
+  static Future<void> Function({
+    required String content,
+  })? showSuccessToast = ({required String content}) async {
+    await _toast(content: content);
+  };
 
-  static showErrorDialog({
+  static Future<void> Function({
     required String title,
     List<String>? content,
     String? hint,
     List<Widget>? actions,
-  }) {
-    _dialog(
+  })? showErrorDialog = ({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) async {
+    await _dialog(
       title: title,
       content: content,
       hint: hint,
       actions: actions,
       color: AppTheme.colors['danger']!,
     );
-  }
+  };
 
-  static showSuccessDialog({
+  static Future<void> Function({
     required String title,
     List<String>? content,
     String? hint,
     List<Widget>? actions,
-  }) {
-    _dialog(
+  })? showSuccessDialog = ({
+    required String title,
+    List<String>? content,
+    String? hint,
+    List<Widget>? actions,
+  }) async {
+    await _dialog(
       title: title,
       content: content,
       hint: hint,
       actions: actions,
       color: AppTheme.colors['success']!,
     );
-  }
+  };
 }

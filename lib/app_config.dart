@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:team/app_theme.dart';
-import 'package:team/env.dart';
 import 'package:team/routes/middleware.dart';
+import 'package:team/vaahextendflutter/app_theme.dart';
+import 'package:team/vaahextendflutter/env.dart';
 import 'package:team/vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();

@@ -8,14 +8,13 @@
 // *****************************************
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../env.dart';
+import '../env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
-const double constHandleHeight = 28.0; // tag handle height
+const double constHandleHeight = 38.0; // tag handle height
 
 @immutable
 class DebugWidget extends StatefulWidget {
@@ -36,28 +35,22 @@ class DebugWidget extends StatefulWidget {
   }
 }
 
-class DebugWidgetState extends State<DebugWidget>
-    with SingleTickerProviderStateMixin {
+class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderStateMixin {
   final _drawerKey = GlobalKey();
   final _focusScopeNode = FocusScopeNode();
   final _handleHeight = constHandleHeight;
   late AnimationController _controller;
 
-  // To determine whether to show tag or not deending on env variable
-  EnvController? envController;
-  bool showEnvAndVersionTag = false;
+  // To determine whether to show tag or not depending on env variable
+  late EnvironmentConfig _environmentConfig;
+  bool showDebugPanel = false;
 
   @override
   void initState() {
     super.initState();
-    // check if envController Exists in app or not
-    bool envControllerExists = Get.isRegistered<EnvController>();
-    if (envControllerExists) {
-      // get env controller and set variable showEnvAndVersionTag
-      envController = Get.find<EnvController>();
-      showEnvAndVersionTag =
-          envController?.config.showEnvAndVersionTag ?? false;
-    }
+    // get env controller and set variable showDebugPanel
+    _environmentConfig = EnvironmentConfig.getEnvConfig();
+    showDebugPanel = _environmentConfig.showDebugPanel;
     // initialise AnimationController
     _controller = AnimationController(
       duration: duration250milli,
@@ -92,7 +85,7 @@ class DebugWidgetState extends State<DebugWidget>
 
   @override
   Widget build(BuildContext context) {
-    return showEnvAndVersionTag
+    return showDebugPanel
         ? LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               final height = constraints.maxHeight;
@@ -113,8 +106,7 @@ class DebugWidgetState extends State<DebugWidget>
                         return;
                       }
                       if (details.primaryVelocity!.abs() >= 365.0) {
-                        final visualVelocity =
-                            -details.primaryVelocity! / height;
+                        final visualVelocity = -details.primaryVelocity! / height;
                         _controller.fling(velocity: visualVelocity);
                       } else if (_controller.value < 0.5) {
                         close();
@@ -152,58 +144,57 @@ class DebugWidgetState extends State<DebugWidget>
                               child: _EnvPanel(
                                 handleHeight: _handleHeight,
                                 onHandlePressed: toggle,
-                                config: envController!.config,
+                                config: _environmentConfig,
                                 child: Builder(
                                   builder: (BuildContext context) {
                                     return ListView(
                                       primary: false,
                                       padding: EdgeInsets.only(
-                                        top:
-                                            MediaQuery.of(context).padding.top +
-                                                defaultPadding +
-                                                _handleHeight,
+                                        top: MediaQuery.of(context).padding.top +
+                                            defaultPadding +
+                                            _handleHeight,
                                         bottom: defaultPadding,
                                         left: defaultPadding,
                                         right: defaultPadding,
                                       ),
                                       children: [
                                         SelectableText(
-                                          envController!.config.envType,
+                                          _environmentConfig.envType,
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin4,
                                         SelectableText(
-                                          'Version: ${envController!.config.version}',
+                                          'Version: ${_environmentConfig.version}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin4,
                                         SelectableText(
-                                          'Build: ${envController!.config.build}',
+                                          'Build: ${_environmentConfig.build}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin16,
                                         SelectableText(
-                                          'Backend URL: ${envController!.config.backendUrl}',
+                                          'Backend URL: ${_environmentConfig.backendUrl}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'API URL: ${envController!.config.apiUrl}',
+                                          'API URL: ${_environmentConfig.apiUrl}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'Firebase Id: ${envController!.config.firebaseId}',
+                                          'Firebase Id: ${_environmentConfig.firebaseId}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'Console Logs Enabled: ${envController!.config.enableConsoleLogs}',
+                                          'Console Logs Enabled: ${_environmentConfig.enableConsoleLogs}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
                                         SelectableText(
-                                          'Local Logs Enabled: ${envController!.config.enableLocalLogs}',
+                                          'Local Logs Enabled: ${_environmentConfig.enableLocalLogs}',
                                           style: TextStyles.regular3,
                                         ),
                                         verticalMargin8,
@@ -245,14 +236,14 @@ class _EnvPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        primaryColor: config.envAndVersionTagColor,
+        primaryColor: config.debugPanelColor,
         colorScheme: ColorScheme.fromSwatch(
-          accentColor: config.envAndVersionTagColor,
+          accentColor: config.debugPanelColor,
           brightness: Brightness.dark,
         ),
       ),
       child: Material(
-        color: config.envAndVersionTagColor,
+        color: config.debugPanelColor,
         clipBehavior: Clip.antiAlias,
         shape: const _PanelBorder(),
         child: Stack(
@@ -281,10 +272,7 @@ class _EnvPanel extends StatelessWidget {
                       height: handleHeight,
                       child: FittedBox(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 2,
-                          ),
+                          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 10),
                           child: Text(
                             '${config.envType} ${config.version}+${config.build}',
                           ),
@@ -306,8 +294,8 @@ class _PanelBorder extends ShapeBorder {
   const _PanelBorder();
 
   static const double handleWidth = constHandleWidth;
-  static const double handleHeight = constHandleHeight +
-      4; // if you want a small width line visible with tag remove + 4
+  static const double handleHeight =
+      constHandleHeight + 4; // if you want a small width line visible with tag remove + 4
 
   @override
   EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
@@ -325,8 +313,8 @@ class _PanelBorder extends ShapeBorder {
     const borderRadius = BorderRadius.all(Radius.circular(handleHeight / 2));
 
     final width = ((rect.width - handleWidth) / 2);
-    final leftend = rect.left + width;
-    final rightend = rect.right - width;
+    final leftEnd = rect.left + width;
+    final rightEnd = rect.right - width;
     return Path.combine(
       PathOperation.union,
       Path.combine(
@@ -341,7 +329,7 @@ class _PanelBorder extends ShapeBorder {
               Rect.fromLTRB(
                 rect.left - handleWidth,
                 -handleHeight,
-                leftend,
+                leftEnd,
                 handleHeight - 4.0,
               ),
             ),
@@ -349,7 +337,7 @@ class _PanelBorder extends ShapeBorder {
           ..addRRect(
             borderRadius.toRRect(
               Rect.fromLTRB(
-                rightend,
+                rightEnd,
                 -handleHeight,
                 rect.right + handleHeight,
                 handleHeight - 4.0,
@@ -358,7 +346,7 @@ class _PanelBorder extends ShapeBorder {
           )
           ..addRect(
             Rect.fromLTWH(
-              leftend,
+              leftEnd,
               0,
               handleWidth,
               handleHeight / 2,
@@ -369,7 +357,7 @@ class _PanelBorder extends ShapeBorder {
         ..addRRect(
           borderRadius.toRRect(
             Rect.fromLTWH(
-              leftend,
+              leftEnd,
               0,
               handleWidth,
               handleHeight,
