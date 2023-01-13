@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
+import 'package:team/views/pages/ui/components/themecolors.dart';
 
 class UIPage extends StatefulWidget {
   static const String routePath = '/ui-page';
@@ -34,7 +35,11 @@ class _UIPageState extends BaseStateful<UIPage> {
           physics: const BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [],
+            children: const [
+              verticalMargin24,
+              AppThemeColors(),
+              verticalMargin24,
+            ],
           ),
         ),
       ),
