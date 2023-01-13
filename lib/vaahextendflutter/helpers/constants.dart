@@ -48,6 +48,7 @@ const horizontalPadding24 = EdgeInsets.symmetric(horizontal: 24.0);
 const horizontalPadding32 = EdgeInsets.symmetric(horizontal: 32.0);
 const horizontalPadding48 = EdgeInsets.symmetric(horizontal: 48.0);
 
+const verticalPadding0 = EdgeInsets.symmetric(vertical: 0.0);
 const verticalPadding2 = EdgeInsets.symmetric(vertical: 2.0);
 const verticalPadding4 = EdgeInsets.symmetric(vertical: 4.0);
 const verticalPadding8 = EdgeInsets.symmetric(vertical: 8.0);
@@ -59,6 +60,8 @@ const verticalPadding48 = EdgeInsets.symmetric(vertical: 48.0);
 
 const emptyPadding = EdgeInsets.zero;
 
+const allPadding0 = EdgeInsets.zero;
+const allPadding2 = EdgeInsets.all(2.0);
 const allPadding4 = EdgeInsets.all(4.0);
 const allPadding8 = EdgeInsets.all(8.0);
 const allPadding12 = EdgeInsets.all(12.0);
@@ -67,6 +70,7 @@ const allPadding24 = EdgeInsets.all(24.0);
 const allPadding32 = EdgeInsets.all(32.0);
 const allPadding48 = EdgeInsets.all(48.0);
 
+const leftPadding2 = EdgeInsets.only(left: 2.0);
 const leftPadding4 = EdgeInsets.only(left: 4.0);
 const leftPadding8 = EdgeInsets.only(left: 8.0);
 const leftPadding12 = EdgeInsets.only(left: 12.0);
@@ -85,6 +89,7 @@ const topPadding24 = EdgeInsets.only(top: 24.0);
 const topPadding32 = EdgeInsets.only(top: 32.0);
 const topPadding48 = EdgeInsets.only(top: 48.0);
 
+const rightPadding2 = EdgeInsets.only(right: 2.0);
 const rightPadding4 = EdgeInsets.only(right: 4.0);
 const rightPadding8 = EdgeInsets.only(right: 8.0);
 const rightPadding12 = EdgeInsets.only(right: 12.0);
@@ -103,8 +108,7 @@ const bottomPadding24 = EdgeInsets.only(bottom: 24.0);
 const bottomPadding32 = EdgeInsets.only(bottom: 32.0);
 const bottomPadding48 = EdgeInsets.only(bottom: 48.0);
 
-const duration250milli =
-    Duration(milliseconds: 250); // best suitable for animations
+const duration250milli = Duration(milliseconds: 250); // best suitable for animations
 const duration300milli = Duration(milliseconds: 300);
 const duration400milli = Duration(milliseconds: 400);
 const duration500milli = Duration(milliseconds: 500);
