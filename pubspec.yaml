@@ -21,6 +21,7 @@ dependencies:
   get_storage: ^2.0.3
   flutter_svg: ^1.1.6
   intl: ^0.18.0
+  file_picker: ^5.2.5
 
 dev_dependencies:
   flutter_test:

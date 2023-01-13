@@ -3,6 +3,7 @@ import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/styles.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import 'package:team/views/pages/ui/components/inputs/complex.dart';
 import 'package:team/views/pages/ui/components/inputs/defaults.dart';
 import 'package:team/views/pages/ui/components/inputs/icons.dart';
 import 'package:team/views/pages/ui/components/inputs/sizes.dart';
@@ -37,6 +38,8 @@ class _AppInputsState extends State<AppInputs> {
           const InputSizes(),
           verticalMargin24,
           const InputIcons(),
+          verticalMargin24,
+          const ComplexInputs(),
           verticalMargin24,
         ],
       ),
