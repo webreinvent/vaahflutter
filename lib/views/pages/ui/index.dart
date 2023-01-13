@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/base/base_stateful.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
+import 'package:team/views/pages/ui/components/inputs/inputs.dart';
 import 'package:team/views/pages/ui/components/themecolors.dart';
 
 class UIPage extends StatefulWidget {
@@ -38,6 +39,8 @@ class _UIPageState extends BaseStateful<UIPage> {
             children: const [
               verticalMargin24,
               AppThemeColors(),
+              verticalMargin24,
+              AppInputs(),
               verticalMargin24,
             ],
           ),
