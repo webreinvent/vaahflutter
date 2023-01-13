@@ -2,9 +2,8 @@ import 'dart:convert';
 
 import 'package:colorize/colorize.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../../../env.dart';
+import '../env.dart';
 
 class Console {
   static void printChunks(Colorize text) {
@@ -17,11 +16,7 @@ class Console {
   }
 
   static void printLog(Colorize text) {
-    bool envControllerExists = Get.isRegistered<EnvController>();
-    if (envControllerExists) {
-      EnvController envController = Get.find<EnvController>();
-      if (envController.config.enableConsoleLogs == false) return;
-    }
+    if (!EnvironmentConfig.getEnvConfig().enableConsoleLogs) return;
     Console.printChunks(text);
   }
 
