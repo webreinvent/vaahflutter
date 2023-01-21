@@ -40,6 +40,8 @@ class _AppInputsState extends State<AppInputs> {
                     InputSizesPreview(),
                     verticalMargin24,
                     InputIconsPreview(),
+                    verticalMargin24,
+                    ComplexInputsPreview(),
                   ],
                 ),
               ),
@@ -60,6 +62,21 @@ class _AppInputsState extends State<AppInputs> {
                     ExpansionPanelWrap(
                       title: 'Input Icons',
                       child: InputIconsCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Date Time Inputs',
+                      child: DateTimeSectionCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Slider Inputs',
+                      child: SlidersSectionCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'File Picker and Auto Complete',
+                      child: AutoCompleteAndFilePickerSectionCode(),
                     ),
                   ],
                 ),
