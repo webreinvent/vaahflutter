@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart' hide ExpansionPanel;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:team/vaahextendflutter/app_theme.dart';
+import 'package:team/vaahextendflutter/helpers/constants.dart';
+import 'package:team/vaahextendflutter/helpers/styles.dart';
 
 final _expansionTween = CurveTween(curve: Curves.fastOutSlowIn);
 final _iconTurnTween = Tween<double>(begin: 0.0, end: 0.5) //
@@ -16,19 +18,23 @@ typedef ExpansionHeaderBuilder = Widget Function(BuildContext context, Expansion
 class AppExpansionPanel extends StatefulWidget {
   const AppExpansionPanel({
     Key? key,
-    required this.headerBuilder,
+    this.headerBuilder,
+    this.heading,
     required this.children,
     this.expanded = false,
     this.padding = EdgeInsets.zero,
     this.border = true,
+    this.backgroundColor,
     this.textStyle,
   }) : super(key: key);
 
-  final ExpansionHeaderBuilder headerBuilder;
+  final ExpansionHeaderBuilder? headerBuilder;
+  final String? heading;
   final List<Widget> children;
   final bool expanded;
   final EdgeInsets padding;
   final bool border;
+  final Color? backgroundColor;
   final TextStyle? textStyle;
 
   @override
@@ -86,12 +92,16 @@ class _AppExpansionPanelState extends State<AppExpansionPanel>
   Widget build(BuildContext context) {
     return Material(
       type: widget.border ? MaterialType.canvas : MaterialType.transparency,
+      color: widget.backgroundColor ?? AppTheme.colors['black']!.shade50.withOpacity(0.5),
       shape: widget.border ? AppTheme.panelBorder : null,
       textStyle: widget.textStyle,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          widget.headerBuilder(context, this),
+          if (widget.headerBuilder != null)
+            widget.headerBuilder!(context, this)
+          else
+            defaultHeaderBuilder(context, this),
           SizeTransition(
             axis: Axis.vertical,
             axisAlignment: -1.0,
@@ -106,6 +116,25 @@ class _AppExpansionPanelState extends State<AppExpansionPanel>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget defaultHeaderBuilder(BuildContext context, ExpansionControl control) {
+    return InkWell(
+      onTap: () {
+        control.expanded = !control.expanded;
+      },
+      child: Padding(
+        padding: allPadding16,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(widget.heading ?? '', style: TextStyles.bold5),
+            ),
+            const AppExpansionPanelIcon(),
+          ],
+        ),
       ),
     );
   }

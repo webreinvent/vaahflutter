@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/styles.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/tab_options.dart';
 import 'package:team/views/pages/ui/components/inputs/defaults.dart';
 import 'package:team/views/pages/ui/components/inputs/icons.dart';
 import 'package:team/views/pages/ui/components/inputs/sizes.dart';
-import 'package:team/views/pages/ui/components/section_title_selector.dart';
 
 class AppInputs extends StatefulWidget {
   const AppInputs({Key? key}) : super(key: key);
@@ -16,8 +17,6 @@ class AppInputs extends StatefulWidget {
 }
 
 class _AppInputsState extends State<AppInputs> {
-  int _selectedIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     return ContainerWithRoundedBorder(
@@ -29,45 +28,72 @@ class _AppInputsState extends State<AppInputs> {
         children: [
           Text('Text Inputs', style: TextStyles.semiBold7),
           verticalMargin24,
-          tabOptions(),
-          Divider(color: AppTheme.colors['primary']!.shade200),
-          verticalMargin24,
-          const DefaultTextInputs(),
-          verticalMargin24,
-          const InputSizes(),
-          verticalMargin24,
-          const InputIcons(),
-          verticalMargin24,
+          TabOptions(
+            tabs: [
+              TabOption(
+                name: 'Preview',
+                tab: Column(
+                  children: const [
+                    DefaultTextInputsPreview(),
+                    verticalMargin24,
+                    InputSizesPreview(),
+                    verticalMargin24,
+                    InputIconsPreview(),
+                  ],
+                ),
+              ),
+              TabOption(
+                name: 'Code',
+                tab: Column(
+                  children: const [
+                    ExpansionPanelWrap(
+                      title: 'Defaults',
+                      child: DefaultTextInputsCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input Sizes',
+                      child: InputSizesCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input Icons',
+                      child: InputIconsCode(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget tabOptions() {
-    return Wrap(
-      crossAxisAlignment: WrapCrossAlignment.end,
-      children: [
-        sectionTitleSelector(
-          title: 'Preview',
-          condition: _selectedIndex == 0,
-          callback: () {
-            setState(() {
-              _selectedIndex = 0;
-            });
-          },
-        ),
-        verticalMargin12,
-        horizontalMargin12,
-        sectionTitleSelector(
-          title: 'Code',
-          condition: _selectedIndex == 1,
-          callback: () {
-            setState(() {
-              _selectedIndex = 1;
-            });
-          },
-        ),
-      ],
+@immutable
+class ExpansionPanelWrap extends StatelessWidget {
+  const ExpansionPanelWrap({
+    Key? key,
+    required this.title,
+    required this.child,
+  }) : super(key: key);
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: bottomPadding1,
+      child: AppExpansionPanel(
+        padding: allPadding16,
+        textStyle: TextStyles.regular4?.copyWith(color: AppTheme.colors['primary']),
+        heading: title,
+        children: [
+          child,
+        ],
+      ),
     );
   }
 }
