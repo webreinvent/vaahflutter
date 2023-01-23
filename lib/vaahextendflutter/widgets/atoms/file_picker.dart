@@ -12,7 +12,6 @@ class VaahFilePicker extends StatefulWidget {
   final double borderRadius;
   final bool isEnabled;
   final InputSize size;
-  final double height;
   final Color? iconBackgroundColor;
   final Color? iconColor;
   final String? Function(String?)? validator;
@@ -31,7 +30,6 @@ class VaahFilePicker extends StatefulWidget {
     this.borderRadius = defaultPadding / 2,
     this.isEnabled = true,
     this.size = InputSize.medium,
-    this.height = 250,
     this.iconBackgroundColor,
     this.iconColor,
     this.validator,
@@ -60,7 +58,7 @@ class _VaahFilePickerState extends State<VaahFilePicker> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      onTap: onTap,
+      onTap: _onTap,
       decoration: InputDecoration(
         contentPadding: widget.padding,
         border: border(AppTheme.colors['black']!.shade400),
@@ -106,7 +104,7 @@ class _VaahFilePickerState extends State<VaahFilePicker> {
     );
   }
 
-  void onTap() async {
+  void _onTap() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowedExtensions: widget.allowedExtensions,
       dialogTitle: widget.dialogTitle,
@@ -120,7 +118,7 @@ class _VaahFilePickerState extends State<VaahFilePicker> {
       setState(() {
         _controller.text = files.map((element) => element.name).toList().join(', ');
       });
-      widget.callback!(files);
+      if (widget.callback != null) widget.callback!(files);
     } else {
       // User canceled the picker
     }
