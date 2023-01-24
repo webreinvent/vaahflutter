@@ -21,6 +21,8 @@ extension DateTimeExtension on DateTime {
   // Return DateTime with zero millisecond and microsecond
   DateTime get resetMillisecond => DateTime(year, month, day, hour, minute, second);
 
+  DateTime get nowAsUtc => DateTime.now().asUtc;
+
   DateTime daysBefore(int days) => subtract(Duration(days: days));
 
   DateTime daysAfter(int days) => add(Duration(days: days));
@@ -61,13 +63,16 @@ extension DateTimeExtension on DateTime {
 
   DateTime get asClient => asLocal;
 
-  DateTime? timezone(String timezone, {bool daylight = false}) {
+  DateTime? toTimezone(String timezone, {bool daylight = false}) {
     Duration? difference = TimezoneHelper.getTimezoneUTCOffset(timezone);
     if (difference == null) return null;
+    if (!isUtc) {
+      return asUtc.add(difference);
+    }
     return add(difference);
   }
 
-  DateTime? timezoneToUTC(String timezone, {bool daylight = false}) {
+  DateTime? fromTimezone(String timezone, {bool daylight = false}) {
     Duration? difference = TimezoneHelper.getTimezoneUTCOffset(timezone);
     if (difference == null) return null;
     return subtract(difference);
