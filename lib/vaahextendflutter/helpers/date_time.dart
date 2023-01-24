@@ -1,34 +1,33 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
+import 'package:team/vaahextendflutter/helpers/timezone.dart';
 
 enum TimeZone { utc, local }
 
 extension TimeOfDayExtension on TimeOfDay {
+  String formatExt({String format = 'hh:mm a'}) =>
+      DateFormat(format).format(DateTime(0, 0, 0, hour, minute));
+
   // HH:MM AM
-  String toHmaa() {
-    return DateFormat('hh:mm aaaa').format(DateTime(0, 0, 0, hour, minute));
-  }
+  String get toHMaa => DateFormat('hh:mm a').format(DateTime(0, 0, 0, hour, minute));
 }
 
 // Extension for DateTime
 extension DateTimeExtension on DateTime {
-  String toTime(BuildContext context) => TimeOfDay.fromDateTime(asLocal()).format(context);
+  String toTime(BuildContext context) => TimeOfDay.fromDateTime(asLocal).format(context);
 
   // Return DateTime with zero millisecond and microsecond
-  DateTime resetMillisecond() {
-    return DateTime(year, month, day, hour, minute, second);
-  }
+  DateTime get resetMillisecond => DateTime(year, month, day, hour, minute, second);
 
   DateTime daysBefore(int days) => subtract(Duration(days: days));
 
   DateTime daysAfter(int days) => add(Duration(days: days));
 
-  DateTime nextDayStart() => onlyDate().daysAfter(1);
+  DateTime get nextDayStart => onlyDate.daysAfter(1);
 
-  DateTime localTimeToday() {
+  DateTime get localTimeToday {
     DateTime now = DateTime.now();
     return DateTime(
       now.year,
@@ -42,96 +41,70 @@ extension DateTimeExtension on DateTime {
     );
   }
 
-  DateTime onlyDate() => isUtc ? DateTime.utc(year, month, day) : DateTime(year, month, day);
+  DateTime get onlyDate => isUtc ? DateTime.utc(year, month, day) : DateTime(year, month, day);
 
-  DateTime onlyMonth() => isUtc ? DateTime.utc(year, month) : DateTime(year, month);
+  DateTime get onlyMonth => isUtc ? DateTime.utc(year, month) : DateTime(year, month);
 
   DateTime onlyTime([int? hourArg, int? minuteArg]) =>
       DateTime.utc(1970, 1, 1, hourArg ?? hour, minuteArg ?? minute, 0, 0, 0);
 
-  DateTime utcTimeFirstDaySinceEpoch() =>
+  DateTime get utcTimeFirstDaySinceEpoch =>
       DateTime.utc(1970, 1, 1, hour, minute, second, millisecond, microsecond);
 
   // Convert local time as current utc
   // DateTime.now() = 2021-01-25 18:49:03.049422
   // DateTime.asUtc() = 2021-01-25 18:49:03.049422
   // DateTime.toUtc() = 2021-01-25 11:49:03.056208Z
-  DateTime asUtc() => isUtc
-      ? this
-      : DateTime.utc(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-        );
+  DateTime get asUtc => isUtc ? this : toUtc();
 
-  DateTime asLocal() => !isUtc
-      ? this
-      : DateTime(
-          year,
-          month,
-          day,
-          hour,
-          minute,
-          second,
-          millisecond,
-          microsecond,
-        );
+  DateTime get asLocal => !isUtc ? this : toLocal();
+
+  DateTime get asClient => asLocal;
+
+  DateTime? timezone(String timezone, {bool daylight = false}) {
+    Duration? difference = TimezoneHelper.getTimezoneUTCOffset(timezone);
+    if (difference == null) return null;
+    return add(difference);
+  }
+
+  DateTime? timezoneToUTC(String timezone, {bool daylight = false}) {
+    Duration? difference = TimezoneHelper.getTimezoneUTCOffset(timezone);
+    if (difference == null) return null;
+    return subtract(difference);
+  }
 
   // Convert DateTime to String
-  // Month(short) DD HH:MM AM/PM
-  String toDateTimeString() {
-    return DateFormat('MMM dd  h:mm a').format(this);
-  }
+  String format({String format = 'yyyy MMM dd, h:mm a'}) => DateFormat(format).format(this);
 
-  // Day, Month DD / HH:MM am/pm
-  String toFullDateTimeString() {
-    return DateFormat('EEEE, MMMM dd / h:mm a').format(this);
-  }
+  // Month(short) DD HH:MM AM/PM
+  String get toDateTimeString => DateFormat('MMM dd h:mm a').format(this);
+
+  // Day, Month DD HH:MM am/pm
+  String get toFullDateTimeString => DateFormat('EEEE, MMMM dd h:mm a').format(this);
 
   // Day, Month DD am/pm
-  String toFullDateString() {
-    return DateFormat('EEE, yyyy MMMM dd').format(this);
-  }
+  String get toFullDateString => DateFormat('EEE, yyyy MMMM dd').format(this);
 
-  // HH:MM AM
-  String toHmaa() {
-    return DateFormat('hh:mm aaaa').format(this);
-  }
+  // HH:MM am/pm
+  String get toHMaa => DateFormat('hh:mm aaaa').format(this);
 
-  // HH:MM:SS
-  String toHHMMSS() {
-    return DateFormat('hh:mm:ss').format(this);
-  }
+  // HH:MM:SS am/pm
+  String get toHHMMSS => DateFormat('hh:mm:ss a').format(this);
 
   // Month DD
-  String toMMMMdd() {
-    return DateFormat('MMMM dd').format(this);
-  }
+  String get toMMMMdd => DateFormat('MMMM dd').format(this);
 
   // Month(short) DD
-  String toMMMdd() {
-    return DateFormat('MMM dd').format(this);
-  }
+  String get toMMMdd => DateFormat('MMM dd').format(this);
 
   // YYYY-MM-DD
-  String toYyyymmmdd() {
-    return DateFormat('yyyy-MMM-dd').format(this);
-  }
+  String get toYyyymmmdd => DateFormat('yyyy-MMM-dd').format(this);
 
   // YYYY-MM-DD
-  String toDateOfBirth() {
-    return DateFormat('yyyy-MM-dd').format(this);
-  }
+  String get toDateOfBirth => DateFormat('yyyy-MM-dd').format(this);
 
   // To query format: YYYY-MM-DD
-  String toQueryFormat() {
-    return DateFormat('yyyy-MM-dd').format(this);
-  }
+  String get toQueryFormat => DateFormat('yyyy-MM-dd').format(this);
 }
 
 // Extension for DateTime from String
@@ -142,7 +115,7 @@ extension DateTimeStringExtendsion on String {
     return DateFormat(pattern).parse(this, true).toLocal();
   }
 
-  String safe() => this;
+  String get safe => this;
 
   String zeroPrefix(int count) {
     if (length >= count) {
@@ -157,22 +130,16 @@ extension DateTimeStringExtendsion on String {
     }
   }
 
-  int? parseInt() => int.tryParse(this);
+  int? get parseInt => int.tryParse(this);
 
-  double? parseDouble() => double.tryParse(this);
-
-  String truncate(int limit) {
-    return length > limit ? '${substring(0, min(length, limit)).trim()}...' : this;
-  }
+  double? get parseDouble => double.tryParse(this);
 }
 
 // Extension for duration
 extension DurationExtension on Duration {
-  Duration safe() => this;
+  Duration get safe => this;
 
-  String format() {
-    return toString().split('.').first.padLeft(8, '0');
-  }
+  String get format => toString().split('.').first.padLeft(8, '0');
 
   // Add zero padding
   String _twoDigits(int n) {
@@ -183,7 +150,7 @@ extension DurationExtension on Duration {
   }
 
   // hours:minutes:seconds
-  String toHms() {
+  String get toHms {
     final String twoDigitHours = _twoDigits(inHours.remainder(24));
     final String twoDigitMinutes = _twoDigits(inMinutes.remainder(60));
     final String twoDigitSeconds = _twoDigits(inSeconds.remainder(60));
@@ -191,7 +158,7 @@ extension DurationExtension on Duration {
   }
 
   // minutes:seconds
-  String toMs() {
+  String get toMs {
     final String twoDigitMinutes = _twoDigits(inMinutes.remainder(60));
     final String twoDigitSeconds = _twoDigits(inSeconds.remainder(60));
     return '$twoDigitMinutes:$twoDigitSeconds';
@@ -200,36 +167,36 @@ extension DurationExtension on Duration {
 
 // Extension for int
 extension DateExtensions on int {
-  DateTime localDateTime() => DateTime.fromMillisecondsSinceEpoch(this, isUtc: false);
+  DateTime get localDateTime => DateTime.fromMillisecondsSinceEpoch(this, isUtc: false);
 
-  DateTime utcDateTime() => DateTime.fromMillisecondsSinceEpoch(this, isUtc: true);
+  DateTime get utcDateTime => DateTime.fromMillisecondsSinceEpoch(this, isUtc: true);
 
   DateTime asDateTime({TimeZone from = TimeZone.utc}) {
     switch (from) {
       case TimeZone.local:
-        return localDateTime();
+        return localDateTime;
       case TimeZone.utc:
       default:
-        return utcDateTime();
+        return utcDateTime;
     }
   }
 
-  DateTime asLocal({TimeZone from = TimeZone.utc}) => asDateTime(from: from).asLocal();
+  DateTime asLocal({TimeZone from = TimeZone.utc}) => asDateTime(from: from).asLocal;
 
   String toTime(BuildContext context, {TimeZone from = TimeZone.utc}) =>
       asDateTime(from: from).toTime(context);
 
   int localTimeToday({TimeZone from = TimeZone.utc}) =>
-      asDateTime(from: from).localTimeToday().millisecondsSinceEpoch;
+      asDateTime(from: from).localTimeToday.millisecondsSinceEpoch;
 
   int onlyDate({TimeZone from = TimeZone.utc}) =>
-      asDateTime(from: from).onlyDate().millisecondsSinceEpoch;
+      asDateTime(from: from).onlyDate.millisecondsSinceEpoch;
 
   int onlyTime({TimeZone from = TimeZone.utc}) =>
-      asDateTime(from: from).utcTimeFirstDaySinceEpoch().millisecondsSinceEpoch;
+      asDateTime(from: from).utcTimeFirstDaySinceEpoch.millisecondsSinceEpoch;
 
   int utcTimeFirstDaySinceEpoch({TimeZone from = TimeZone.utc}) =>
-      asDateTime(from: from).utcTimeFirstDaySinceEpoch().millisecondsSinceEpoch;
+      asDateTime(from: from).utcTimeFirstDaySinceEpoch.millisecondsSinceEpoch;
 
   Duration asDuration() => Duration(milliseconds: this);
 }
