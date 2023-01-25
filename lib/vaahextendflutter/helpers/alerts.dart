@@ -91,8 +91,14 @@ class Alerts {
 
   static Future<void> Function({
     required String content,
-  })? showErrorToast = ({required String content}) async {
+  })? showInfoToast = ({required String content}) async {
     await _toast(content: content);
+  };
+
+  static Future<void> Function({
+    required String content,
+  })? showErrorToast = ({required String content}) async {
+    await _toast(content: 'Error: $content');
   };
 
   static Future<void> Function({
