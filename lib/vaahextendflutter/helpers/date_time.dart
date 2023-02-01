@@ -14,6 +14,27 @@ extension TimeOfDayExtension on TimeOfDay {
   String get toHMaa => DateFormat('hh:mm a').format(DateTime(0, 0, 0, hour, minute));
 }
 
+class DateTimeHelper {
+  static DateTime? fromTimezone(
+    String timezone,
+    String datetime, {
+    String pattern = 'yyyy-MM-dd hh:mm:ss',
+    bool daylight = false,
+  }) {
+    // Will return UTC DateTime
+    return DateFormat(pattern).parse(datetime, true).fromTimezone(timezone, daylight: daylight);
+  }
+
+  static DateTime? toTimezone(
+    String timezone,
+    String datetime, {
+    String pattern = 'yyyy-MM-dd hh:mm:ss',
+    bool daylight = false,
+  }) {
+    return DateFormat(pattern).parse(datetime, true).toTimezone(timezone, daylight: daylight);
+  }
+}
+
 // Extension for DateTime
 extension DateTimeExtension on DateTime {
   String toTime(BuildContext context) => TimeOfDay.fromDateTime(asLocal).format(context);
