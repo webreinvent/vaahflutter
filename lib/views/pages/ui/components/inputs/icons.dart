@@ -19,30 +19,30 @@ class InputIconsPreview extends StatelessWidget {
       children: [
         Text('Input Icons', style: heading),
         verticalMargin16,
-        const TextInput(
+        const InputText(
           size: InputSize.small,
           label: 'Small',
           prefixIcon: FontAwesomeIcons.user,
         ),
         verticalMargin8,
-        const TextInput(
+        const InputText(
           size: InputSize.medium,
           label: 'Medium',
           prefixIcon: FontAwesomeIcons.user,
         ),
         verticalMargin8,
-        const TextInput(
+        const InputText(
           size: InputSize.large,
           label: 'Large',
           prefixIcon: FontAwesomeIcons.user,
         ),
         verticalMargin8,
-        const TextInput(
+        const InputText(
           label: 'Search',
           suffixIcon: FontAwesomeIcons.magnifyingGlass,
         ),
         verticalMargin8,
-        TextInput(
+        InputText(
           label: 'Search',
           prefixOnTap: () {
             Alerts.showSuccessToast!(content: 'Prefix icon onTap');
@@ -73,7 +73,7 @@ class InputIconsCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            "const TextInput(",
+            "const InputText(",
             "    size: InputSize.small,",
             "    label: 'Small',",
             "    prefixIcon: FontAwesomeIcons.user,",
@@ -85,7 +85,7 @@ class InputIconsCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            "const TextInput(",
+            "const InputText(",
             "    size: InputSize.medium,",
             "    label: 'Medium',",
             "    prefixIcon: FontAwesomeIcons.user,",
@@ -97,7 +97,7 @@ class InputIconsCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            "const TextInput(",
+            "const InputText(",
             "    size: InputSize.large,",
             "    label: 'Large',",
             "    prefixIcon: FontAwesomeIcons.user,",
@@ -109,7 +109,7 @@ class InputIconsCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            "const TextInput(",
+            "const InputText(",
             "    label: 'Search',",
             "    suffixIcon: FontAwesomeIcons.magnifyingGlass,",
             "),",
@@ -120,7 +120,7 @@ class InputIconsCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            "const TextInput(",
+            "const InputText(",
             "    label: 'Search',",
             "    prefixOnTap: () {",
             "        Alerts.showSuccessToast!(content: 'Prefix icon onTap');",

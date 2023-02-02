@@ -16,11 +16,11 @@ class InputSizesPreview extends StatelessWidget {
       children: [
         Text('Input Sizes', style: heading),
         verticalMargin16,
-        const TextInput(size: InputSize.small, label: 'Small'),
+        const InputText(size: InputSize.small, label: 'Small'),
         verticalMargin8,
-        const TextInput(size: InputSize.medium, label: 'Medium'),
+        const InputText(size: InputSize.medium, label: 'Medium'),
         verticalMargin8,
-        const TextInput(size: InputSize.large, label: 'Large'),
+        const InputText(size: InputSize.large, label: 'Large'),
       ],
     );
   }
@@ -37,15 +37,15 @@ class InputSizesCode extends StatelessWidget {
       children: [
         Text('Small', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const TextInput(size: InputSize.small, label: 'Small'),"]),
+        const CodePreview(code: ["const InputText(size: InputSize.small, label: 'Small'),"]),
         verticalMargin8,
         Text('Medium', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const TextInput(size: InputSize.medium, label: 'Medium'),"]),
+        const CodePreview(code: ["const InputText(size: InputSize.medium, label: 'Medium'),"]),
         verticalMargin8,
         Text('Large', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const TextInput(size: InputSize.large, label: 'Large'),"]),
+        const CodePreview(code: ["const InputText(size: InputSize.large, label: 'Large'),"]),
         verticalMargin8,
       ],
     );

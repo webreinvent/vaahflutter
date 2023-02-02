@@ -5,8 +5,8 @@ import 'package:team/vaahextendflutter/widgets/atoms/inputs.dart';
 import 'package:team/views/pages/ui/components/code_preview.dart';
 import 'package:team/views/pages/ui/components/commons.dart';
 
-class DefaultTextInputsPreview extends StatelessWidget {
-  const DefaultTextInputsPreview({Key? key}) : super(key: key);
+class InputTextPreview extends StatelessWidget {
+  const InputTextPreview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +17,13 @@ class DefaultTextInputsPreview extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Defaults', style: heading),
+          Text('Input Text', style: heading),
           verticalMargin16,
-          const TextInput(label: 'Default'),
+          const InputText(label: 'Default'),
           verticalMargin8,
-          const TextInput(label: 'Disabled', isEnabled: false),
+          const InputText(label: 'Disabled', isEnabled: false),
           verticalMargin8,
-          TextInput(label: 'Invalid', validator: (_) => 'Message'),
+          InputText(label: 'Invalid', validator: (_) => 'Message'),
           verticalMargin8,
           ElevatedButton(
             onPressed: () => formKey.currentState?.validate(),
@@ -35,8 +35,8 @@ class DefaultTextInputsPreview extends StatelessWidget {
   }
 }
 
-class DefaultTextInputsCode extends StatelessWidget {
-  const DefaultTextInputsCode({Key? key}) : super(key: key);
+class InputTextCode extends StatelessWidget {
+  const InputTextCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,17 +46,17 @@ class DefaultTextInputsCode extends StatelessWidget {
       children: [
         Text('Simple', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const TextInput(label: 'Simple'),"]),
+        const CodePreview(code: ["const InputText(label: 'Simple'),"]),
         verticalMargin8,
         Text('Disabled', style: TextStyles.regular2),
         verticalMargin4,
-        const CodePreview(code: ["const TextInput(label: 'Disabled', isEnabled: false),"]),
+        const CodePreview(code: ["const InputText(label: 'Disabled', isEnabled: false),"]),
         verticalMargin8,
         Text('Invalid', style: TextStyles.regular2),
         verticalMargin4,
         const CodePreview(
           code: [
-            "TextInput(",
+            "InputText(",
             "    label: 'Invalid',",
             "    validator: (value) {",
             "        if (value!.isEmpty) {",

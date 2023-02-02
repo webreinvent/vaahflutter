@@ -26,7 +26,7 @@ class _AppInputsState extends State<AppInputs> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Text Inputs', style: TextStyles.semiBold7),
+          Text('Inputs', style: TextStyles.semiBold7),
           verticalMargin24,
           TabOptions(
             tabs: [
@@ -34,7 +34,7 @@ class _AppInputsState extends State<AppInputs> {
                 name: 'Preview',
                 tab: Column(
                   children: const [
-                    DefaultTextInputsPreview(),
+                    InputTextPreview(),
                     verticalMargin24,
                     InputSizesPreview(),
                     verticalMargin24,
@@ -47,8 +47,8 @@ class _AppInputsState extends State<AppInputs> {
                 tab: Column(
                   children: const [
                     ExpansionPanelWrap(
-                      title: 'Defaults',
-                      child: DefaultTextInputsCode(),
+                      title: 'Input Text',
+                      child: InputTextCode(),
                     ),
                     verticalMargin8,
                     ExpansionPanelWrap(
