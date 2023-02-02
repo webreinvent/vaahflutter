@@ -19,8 +19,9 @@ class Alerts {
 
   static _dialog({
     required String title,
-    List<String>? content,
+    List<String>? messages,
     String? hint,
+    Color? hintColor,
     List<Widget>? actions,
     Color color = Colors.white,
   }) {
@@ -31,7 +32,7 @@ class Alerts {
             Radius.circular(defaultPadding),
           ),
         ),
-        contentPadding: EdgeInsets.zero,
+        contentPadding: allPadding8,
         title: Center(child: Text(title)),
         content: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -39,27 +40,30 @@ class Alerts {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              if (content != null && content.isNotEmpty) verticalMargin12,
-              if (content != null && content.isNotEmpty)
+              if (messages != null && messages.isNotEmpty) ...[
+                verticalMargin12,
                 Padding(
                   padding: horizontalPadding8,
                   child: Text(
-                    content.join('\n'),
+                    messages.join('\n'),
                     textAlign: TextAlign.center,
                   ),
                 ),
-              if ((content != null && content.isNotEmpty) ||
+              ],
+              if ((messages != null && messages.isNotEmpty) ||
                   (hint != null && hint.trim().isNotEmpty))
                 verticalMargin8,
-              if (hint != null && hint.trim().isNotEmpty)
+              if (hint != null && hint.trim().isNotEmpty) ...[
                 Padding(
                   padding: horizontalPadding8,
                   child: Text(
                     hint,
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: hintColor),
                   ),
                 ),
-              if (hint != null && hint.trim().isNotEmpty) verticalMargin8
+                verticalMargin8,
+              ],
             ],
           ),
         ),
@@ -91,8 +95,14 @@ class Alerts {
 
   static Future<void> Function({
     required String content,
-  })? showErrorToast = ({required String content}) async {
+  })? showInfoToast = ({required String content}) async {
     await _toast(content: content);
+  };
+
+  static Future<void> Function({
+    required String content,
+  })? showErrorToast = ({required String content}) async {
+    await _toast(content: 'Error: $content');
   };
 
   static Future<void> Function({
@@ -103,19 +113,20 @@ class Alerts {
 
   static Future<void> Function({
     required String title,
-    List<String>? content,
+    List<String>? messages,
     String? hint,
     List<Widget>? actions,
   })? showErrorDialog = ({
     required String title,
-    List<String>? content,
+    List<String>? messages,
     String? hint,
     List<Widget>? actions,
   }) async {
     await _dialog(
       title: title,
-      content: content,
+      messages: messages,
       hint: hint,
+      hintColor: AppTheme.colors['danger'],
       actions: actions,
       color: AppTheme.colors['danger']!,
     );
@@ -123,19 +134,20 @@ class Alerts {
 
   static Future<void> Function({
     required String title,
-    List<String>? content,
+    List<String>? messages,
     String? hint,
     List<Widget>? actions,
   })? showSuccessDialog = ({
     required String title,
-    List<String>? content,
+    List<String>? messages,
     String? hint,
     List<Widget>? actions,
   }) async {
     await _dialog(
       title: title,
-      content: content,
+      messages: messages,
       hint: hint,
+      hintColor: AppTheme.colors['success'],
       actions: actions,
       color: AppTheme.colors['success']!,
     );

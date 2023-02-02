@@ -5,6 +5,17 @@ import 'responsive.dart';
 class TextStyles {
   const TextStyles._();
 
+  // Light
+  static final light0 = _baseLight[TextSize.size0];
+  static final light1 = _baseLight[TextSize.size1];
+  static final light2 = _baseLight[TextSize.size2];
+  static final light3 = _baseLight[TextSize.size3];
+  static final light4 = _baseLight[TextSize.size4];
+  static final light5 = _baseLight[TextSize.size5];
+  static final light6 = _baseLight[TextSize.size6];
+  static final light7 = _baseLight[TextSize.size7];
+  static final light8 = _baseLight[TextSize.size8];
+
   // Regular
   static final regular0 = _baseRegular[TextSize.size0];
   static final regular1 = _baseRegular[TextSize.size1];
@@ -51,79 +62,71 @@ class TextStyles {
 
   // --------------------------------------------------------------------------
 
-  // static final _baseLight = <TextSize, TextStyle>{
-  //   TextSize.size0: createBaseTextStyle(TextWeight.light, TextSize.size0),
-  //   TextSize.size1: createBaseTextStyle(TextWeight.light, TextSize.size1),
-  //   TextSize.size2: createBaseTextStyle(TextWeight.light, TextSize.size2),
-  //   TextSize.size3: createBaseTextStyle(TextWeight.light, TextSize.size3),
-  //   TextSize.size4: createBaseTextStyle(TextWeight.light, TextSize.size4),
-  //   TextSize.size5: createBaseTextStyle(TextWeight.light, TextSize.size5),
-  //   TextSize.size6: createBaseTextStyle(TextWeight.light, TextSize.size6),
-  //   TextSize.size7: createBaseTextStyle(TextWeight.light, TextSize.size7),
-  //   TextSize.size8: createBaseTextStyle(TextWeight.light, TextSize.size8),
-  // };
+  static final _baseLight = <TextSize, TextStyle>{
+    TextSize.size0: _createBaseTextStyle(TextWeight.light, TextSize.size0),
+    TextSize.size1: _createBaseTextStyle(TextWeight.light, TextSize.size1),
+    TextSize.size2: _createBaseTextStyle(TextWeight.light, TextSize.size2),
+    TextSize.size3: _createBaseTextStyle(TextWeight.light, TextSize.size3),
+    TextSize.size4: _createBaseTextStyle(TextWeight.light, TextSize.size4),
+    TextSize.size5: _createBaseTextStyle(TextWeight.light, TextSize.size5),
+    TextSize.size6: _createBaseTextStyle(TextWeight.light, TextSize.size6),
+    TextSize.size7: _createBaseTextStyle(TextWeight.light, TextSize.size7),
+    TextSize.size8: _createBaseTextStyle(TextWeight.light, TextSize.size8),
+  };
 
   static final _baseRegular = <TextSize, TextStyle>{
-    TextSize.size0: createBaseTextStyle(TextWeight.regular, TextSize.size0),
-    TextSize.size1: createBaseTextStyle(TextWeight.regular, TextSize.size1),
-    TextSize.size2: createBaseTextStyle(TextWeight.regular, TextSize.size2),
-    TextSize.size3: createBaseTextStyle(TextWeight.regular, TextSize.size3),
-    TextSize.size4: createBaseTextStyle(TextWeight.regular, TextSize.size4),
-    TextSize.size5: createBaseTextStyle(TextWeight.regular, TextSize.size5),
-    TextSize.size6: createBaseTextStyle(TextWeight.regular, TextSize.size6),
-    TextSize.size7: createBaseTextStyle(TextWeight.regular, TextSize.size7),
-    TextSize.size8: createBaseTextStyle(TextWeight.regular, TextSize.size8),
+    TextSize.size0: _createBaseTextStyle(TextWeight.regular, TextSize.size0),
+    TextSize.size1: _createBaseTextStyle(TextWeight.regular, TextSize.size1),
+    TextSize.size2: _createBaseTextStyle(TextWeight.regular, TextSize.size2),
+    TextSize.size3: _createBaseTextStyle(TextWeight.regular, TextSize.size3),
+    TextSize.size4: _createBaseTextStyle(TextWeight.regular, TextSize.size4),
+    TextSize.size5: _createBaseTextStyle(TextWeight.regular, TextSize.size5),
+    TextSize.size6: _createBaseTextStyle(TextWeight.regular, TextSize.size6),
+    TextSize.size7: _createBaseTextStyle(TextWeight.regular, TextSize.size7),
+    TextSize.size8: _createBaseTextStyle(TextWeight.regular, TextSize.size8),
   };
 
   static final _baseSemiBold = <TextSize, TextStyle>{
-    TextSize.size0: createBaseTextStyle(TextWeight.semiBold, TextSize.size0),
-    TextSize.size1: createBaseTextStyle(TextWeight.semiBold, TextSize.size1),
-    TextSize.size2: createBaseTextStyle(TextWeight.semiBold, TextSize.size2),
-    TextSize.size3: createBaseTextStyle(TextWeight.semiBold, TextSize.size3),
-    TextSize.size4: createBaseTextStyle(TextWeight.semiBold, TextSize.size4),
-    TextSize.size5: createBaseTextStyle(TextWeight.semiBold, TextSize.size5),
-    TextSize.size6: createBaseTextStyle(TextWeight.semiBold, TextSize.size6),
-    TextSize.size7: createBaseTextStyle(TextWeight.semiBold, TextSize.size7),
-    TextSize.size8: createBaseTextStyle(TextWeight.semiBold, TextSize.size8),
+    TextSize.size0: _createBaseTextStyle(TextWeight.semiBold, TextSize.size0),
+    TextSize.size1: _createBaseTextStyle(TextWeight.semiBold, TextSize.size1),
+    TextSize.size2: _createBaseTextStyle(TextWeight.semiBold, TextSize.size2),
+    TextSize.size3: _createBaseTextStyle(TextWeight.semiBold, TextSize.size3),
+    TextSize.size4: _createBaseTextStyle(TextWeight.semiBold, TextSize.size4),
+    TextSize.size5: _createBaseTextStyle(TextWeight.semiBold, TextSize.size5),
+    TextSize.size6: _createBaseTextStyle(TextWeight.semiBold, TextSize.size6),
+    TextSize.size7: _createBaseTextStyle(TextWeight.semiBold, TextSize.size7),
+    TextSize.size8: _createBaseTextStyle(TextWeight.semiBold, TextSize.size8),
   };
 
   static final _baseBold = <TextSize, TextStyle>{
-    TextSize.size0: createBaseTextStyle(TextWeight.bold, TextSize.size0),
-    TextSize.size1: createBaseTextStyle(TextWeight.bold, TextSize.size1),
-    TextSize.size2: createBaseTextStyle(TextWeight.bold, TextSize.size2),
-    TextSize.size3: createBaseTextStyle(TextWeight.bold, TextSize.size3),
-    TextSize.size4: createBaseTextStyle(TextWeight.bold, TextSize.size4),
-    TextSize.size5: createBaseTextStyle(TextWeight.bold, TextSize.size5),
-    TextSize.size6: createBaseTextStyle(TextWeight.bold, TextSize.size6),
-    TextSize.size7: createBaseTextStyle(TextWeight.bold, TextSize.size7),
-    TextSize.size8: createBaseTextStyle(TextWeight.bold, TextSize.size8),
+    TextSize.size0: _createBaseTextStyle(TextWeight.bold, TextSize.size0),
+    TextSize.size1: _createBaseTextStyle(TextWeight.bold, TextSize.size1),
+    TextSize.size2: _createBaseTextStyle(TextWeight.bold, TextSize.size2),
+    TextSize.size3: _createBaseTextStyle(TextWeight.bold, TextSize.size3),
+    TextSize.size4: _createBaseTextStyle(TextWeight.bold, TextSize.size4),
+    TextSize.size5: _createBaseTextStyle(TextWeight.bold, TextSize.size5),
+    TextSize.size6: _createBaseTextStyle(TextWeight.bold, TextSize.size6),
+    TextSize.size7: _createBaseTextStyle(TextWeight.bold, TextSize.size7),
+    TextSize.size8: _createBaseTextStyle(TextWeight.bold, TextSize.size8),
   };
 
   static final _baseBoldUnder = <TextSize, TextStyle>{
-    TextSize.size0:
-        createBaseTextStyle(TextWeight.bold, TextSize.size0, underline: true),
-    TextSize.size1:
-        createBaseTextStyle(TextWeight.bold, TextSize.size1, underline: true),
-    TextSize.size2:
-        createBaseTextStyle(TextWeight.bold, TextSize.size2, underline: true),
-    TextSize.size3:
-        createBaseTextStyle(TextWeight.bold, TextSize.size3, underline: true),
-    TextSize.size4:
-        createBaseTextStyle(TextWeight.bold, TextSize.size4, underline: true),
-    TextSize.size5:
-        createBaseTextStyle(TextWeight.bold, TextSize.size5, underline: true),
-    TextSize.size6:
-        createBaseTextStyle(TextWeight.bold, TextSize.size6, underline: true),
-    TextSize.size7:
-        createBaseTextStyle(TextWeight.bold, TextSize.size7, underline: true),
-    TextSize.size8:
-        createBaseTextStyle(TextWeight.bold, TextSize.size8, underline: true),
+    TextSize.size0: _createBaseTextStyle(TextWeight.bold, TextSize.size0, underline: true),
+    TextSize.size1: _createBaseTextStyle(TextWeight.bold, TextSize.size1, underline: true),
+    TextSize.size2: _createBaseTextStyle(TextWeight.bold, TextSize.size2, underline: true),
+    TextSize.size3: _createBaseTextStyle(TextWeight.bold, TextSize.size3, underline: true),
+    TextSize.size4: _createBaseTextStyle(TextWeight.bold, TextSize.size4, underline: true),
+    TextSize.size5: _createBaseTextStyle(TextWeight.bold, TextSize.size5, underline: true),
+    TextSize.size6: _createBaseTextStyle(TextWeight.bold, TextSize.size6, underline: true),
+    TextSize.size7: _createBaseTextStyle(TextWeight.bold, TextSize.size7, underline: true),
+    TextSize.size8: _createBaseTextStyle(TextWeight.bold, TextSize.size8, underline: true),
   };
 
-  static TextStyle createBaseTextStyle(TextWeight weight, TextSize size,
+  static TextStyle _createBaseTextStyle(TextWeight weight, TextSize size,
       {Color? color, double? lineHeight, bool underline = false}) {
     final fontSize = _fontSizes[size]!;
     return TextStyle(
+      color: color,
       fontWeight: _fontWeights[weight]!,
       fontSize: fontSize,
       decoration: underline ? TextDecoration.underline : null,

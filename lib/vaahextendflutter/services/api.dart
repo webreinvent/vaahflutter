@@ -305,7 +305,7 @@ class Api {
             if (Alerts.showErrorDialog != null) {
               await Alerts.showErrorDialog!(
                 title: 'Error',
-                content: ['Invalid request type!'],
+                messages: ['Invalid request type!'],
                 hint: "get, post, put, patch, delete request types are allowed.",
               );
               break;
@@ -360,7 +360,7 @@ class Api {
             if (Alerts.showSuccessDialog != null) {
               await Alerts.showSuccessDialog!(
                 title: 'Success',
-                content: responseMessages,
+                messages: responseMessages,
                 hint: responseHint,
               );
             } else {
@@ -402,7 +402,7 @@ class Api {
         if (Alerts.showErrorDialog != null) {
           await Alerts.showErrorDialog!(
             title: 'Error',
-            content: ['Check your internet connection!'],
+            messages: ['Check your internet connection!'],
           );
           return;
         }
@@ -496,7 +496,7 @@ class Api {
               if (Alerts.showErrorDialog != null) {
                 await Alerts.showErrorDialog!(
                   title: 'Error',
-                  content: errors,
+                  messages: errors,
                   hint: debug,
                 );
                 return;
