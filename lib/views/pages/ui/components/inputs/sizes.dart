@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
+import 'package:team/vaahextendflutter/helpers/styles.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/inputs.dart';
+import 'package:team/views/pages/ui/components/code_preview.dart';
 import 'package:team/views/pages/ui/components/commons.dart';
 
-class InputSizes extends StatelessWidget {
-  const InputSizes({Key? key}) : super(key: key);
+class InputSizesPreview extends StatelessWidget {
+  const InputSizesPreview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,11 +16,37 @@ class InputSizes extends StatelessWidget {
       children: [
         Text('Input Sizes', style: heading),
         verticalMargin16,
-        const TextInput(size: InputSize.small, label: 'Small'),
+        const InputText(size: InputSize.small, label: 'Small'),
         verticalMargin8,
-        const TextInput(size: InputSize.medium, label: 'Medium'),
+        const InputText(size: InputSize.medium, label: 'Medium'),
         verticalMargin8,
-        const TextInput(size: InputSize.large, label: 'Large'),
+        const InputText(size: InputSize.large, label: 'Large'),
+      ],
+    );
+  }
+}
+
+class InputSizesCode extends StatelessWidget {
+  const InputSizesCode({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Small', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(code: ["const InputText(size: InputSize.small, label: 'Small'),"]),
+        verticalMargin8,
+        Text('Medium', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(code: ["const InputText(size: InputSize.medium, label: 'Medium'),"]),
+        verticalMargin8,
+        Text('Large', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(code: ["const InputText(size: InputSize.large, label: 'Large'),"]),
+        verticalMargin8,
       ],
     );
   }

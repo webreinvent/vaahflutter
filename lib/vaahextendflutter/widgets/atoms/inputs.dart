@@ -6,7 +6,7 @@ import 'package:team/vaahextendflutter/helpers/constants.dart';
 
 enum InputSize { extraSmall, small, medium, large, extraLarge }
 
-class TextInput extends StatelessWidget {
+class InputText extends StatelessWidget {
   final String? label;
   final EdgeInsets padding;
   final double borderRadius;
@@ -27,7 +27,7 @@ class TextInput extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
 
-  const TextInput({
+  const InputText({
     super.key,
     this.label,
     this.padding = allPadding12,
