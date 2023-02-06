@@ -10,7 +10,7 @@ enum PickerType { dateOnly, timeOnly, dateAndTime }
 
 typedef ValidatorFun = String? Function(String?);
 
-class DateTimeInput extends StatefulWidget {
+class InputDateTime extends StatefulWidget {
   final String label;
   final EdgeInsets padding;
   final double borderRadius;
@@ -26,7 +26,7 @@ class DateTimeInput extends StatefulWidget {
   final ValidatorFun? validator;
   final Function(dynamic)? callback;
 
-  const DateTimeInput({
+  const InputDateTime({
     super.key,
     required this.label,
     this.padding = allPadding12,
@@ -45,10 +45,10 @@ class DateTimeInput extends StatefulWidget {
   });
 
   @override
-  State<DateTimeInput> createState() => _DateTimeInputState();
+  State<InputDateTime> createState() => _InputDateTimeState();
 }
 
-class _DateTimeInputState extends State<DateTimeInput> {
+class _InputDateTimeState extends State<InputDateTime> {
   DateTime? date;
   TimeOfDay? time;
   final controller = TextEditingController();

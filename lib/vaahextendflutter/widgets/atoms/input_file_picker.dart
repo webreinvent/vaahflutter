@@ -5,7 +5,7 @@ import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/enums.dart';
 
-class VaahFilePicker extends StatefulWidget {
+class InputFilePicker extends StatefulWidget {
   final String label;
   final EdgeInsets padding;
   final double borderRadius;
@@ -22,7 +22,7 @@ class VaahFilePicker extends StatefulWidget {
   final FileType fileType;
   final List<String>? allowedExtensions;
 
-  const VaahFilePicker({
+  const InputFilePicker({
     super.key,
     required this.label,
     this.padding = allPadding12,
@@ -42,10 +42,10 @@ class VaahFilePicker extends StatefulWidget {
   });
 
   @override
-  State<VaahFilePicker> createState() => _VaahFilePickerState();
+  State<InputFilePicker> createState() => _InputFilePickerState();
 }
 
-class _VaahFilePickerState extends State<VaahFilePicker> {
+class _InputFilePickerState extends State<InputFilePicker> {
   final TextEditingController _controller = TextEditingController();
 
   @override

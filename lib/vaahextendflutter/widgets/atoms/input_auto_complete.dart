@@ -6,8 +6,6 @@ import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/enums.dart';
 
 class InputAutoComplete extends StatefulWidget {
-
-class AutoCompleteInput extends StatefulWidget {
   final String label;
   final EdgeInsets padding;
   final double borderRadius;
@@ -22,7 +20,7 @@ class AutoCompleteInput extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Function(dynamic)? onSelected;
 
-  const AutoCompleteInput({
+  const InputAutoComplete({
     super.key,
     required this.label,
     this.padding = allPadding12,
@@ -40,10 +38,10 @@ class AutoCompleteInput extends StatefulWidget {
   });
 
   @override
-  State<AutoCompleteInput> createState() => _AutoCompleteInputState();
+  State<InputAutoComplete> createState() => _InputAutoCompleteState();
 }
 
-class _AutoCompleteInputState extends State<AutoCompleteInput> {
+class _InputAutoCompleteState extends State<InputAutoComplete> {
   final controller = TextEditingController();
 
   @override

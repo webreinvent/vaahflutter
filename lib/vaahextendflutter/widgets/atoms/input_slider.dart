@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as services;
 import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/inputs.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_text.dart';
 
-class SliderInput extends StatefulWidget {
+class InputSlider extends StatefulWidget {
   final double initialValue;
   final Function(double)? onChanged;
   final Function(double)? onChangeStart;
@@ -20,7 +20,7 @@ class SliderInput extends StatefulWidget {
   final Color? inactiveColor;
   final Color? thumbColor;
 
-  const SliderInput({
+  const InputSlider({
     Key? key,
     required this.initialValue,
     this.onChanged,
@@ -39,10 +39,10 @@ class SliderInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<SliderInput> createState() => _SliderInputState();
+  State<InputSlider> createState() => _InputSliderState();
 }
 
-class _SliderInputState extends State<SliderInput> {
+class _InputSliderState extends State<InputSlider> {
   String? err;
   late double _value;
   String? label;
@@ -146,7 +146,7 @@ class _SliderInputState extends State<SliderInput> {
   }
 }
 
-class RangeSliderInput extends StatefulWidget {
+class InputRangeSlider extends StatefulWidget {
   final RangeValues initialValues;
   final Function(RangeValues)? onChanged;
   final Function(RangeValues)? onChangeStart;
@@ -160,7 +160,7 @@ class RangeSliderInput extends StatefulWidget {
   final Color? inactiveColor;
   final Color? thumbColor;
 
-  const RangeSliderInput({
+  const InputRangeSlider({
     Key? key,
     required this.initialValues,
     this.onChanged,
@@ -177,10 +177,10 @@ class RangeSliderInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RangeSliderInput> createState() => _RangeSliderInputState();
+  State<InputRangeSlider> createState() => _InputRangeSliderState();
 }
 
-class _RangeSliderInputState extends State<RangeSliderInput> {
+class _InputRangeSliderState extends State<InputRangeSlider> {
   late RangeValues _values;
   RangeLabels? _labels;
   int? divisions;

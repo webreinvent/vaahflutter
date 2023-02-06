@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/inputs.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_text.dart';
 import 'package:team/views/pages/ui/components/code_preview.dart';
 import 'package:team/views/pages/ui/components/commons.dart';
 

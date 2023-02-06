@@ -3,43 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:team/vaahextendflutter/helpers/console.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/auto_complete_input.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/date_time_input.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/file_picker.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/slider_input.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_auto_complete.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_date_time.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_file_picker.dart';
+import 'package:team/vaahextendflutter/widgets/atoms/input_slider.dart';
 import 'package:team/views/pages/ui/components/code_preview.dart';
 import 'package:team/views/pages/ui/components/commons.dart';
 
-class ComplexInputsPreview extends StatelessWidget {
-  const ComplexInputsPreview({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        DateTimeSectionPreview(),
-        verticalMargin16,
-        SlidersSectionPreview(),
-        verticalMargin16,
-        AutoCompleteAndFilePickerSectionPreview(),
-      ],
-    );
-  }
-}
-
-class DateTimeSectionPreview extends StatelessWidget {
-  const DateTimeSectionPreview({Key? key}) : super(key: key);
+class InputDateTimePreview extends StatelessWidget {
+  const InputDateTimePreview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Complex Inputs', style: heading),
+        Text('Input Date Time', style: heading),
         verticalMargin16,
-        DateTimeInput(
+        InputDateTime(
           label: 'Choose Date',
           pickerType: PickerType.dateOnly,
           callback: (data) {
@@ -47,7 +28,7 @@ class DateTimeSectionPreview extends StatelessWidget {
           },
         ),
         verticalMargin16,
-        DateTimeInput(
+        InputDateTime(
           label: 'Choose Time',
           pickerType: PickerType.timeOnly,
           callback: (data) {
@@ -55,7 +36,7 @@ class DateTimeSectionPreview extends StatelessWidget {
           },
         ),
         verticalMargin16,
-        DateTimeInput(
+        InputDateTime(
           label: 'Choose Date And Time',
           pickerType: PickerType.dateAndTime,
           callback: (data) {
@@ -67,8 +48,8 @@ class DateTimeSectionPreview extends StatelessWidget {
   }
 }
 
-class DateTimeSectionCode extends StatelessWidget {
-  const DateTimeSectionCode({Key? key}) : super(key: key);
+class InputDateTimeCode extends StatelessWidget {
+  const InputDateTimeCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,29 +98,28 @@ class DateTimeSectionCode extends StatelessWidget {
             "),",
           ],
         ),
-        verticalMargin8,
       ],
     );
   }
 }
 
-class SlidersSectionPreview extends StatelessWidget {
-  const SlidersSectionPreview({Key? key}) : super(key: key);
+class InputSliderPreview extends StatelessWidget {
+  const InputSliderPreview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Sliders', style: heading),
+        Text('Input Sliders', style: heading),
         verticalMargin16,
         Text('basic slider', style: normal),
-        SliderInput(
+        InputSlider(
           initialValue: 0.8,
           onChanged: (_) => Console.danger(_.toString()),
         ),
         Text('with input slider', style: normal),
-        SliderInput(
+        InputSlider(
           min: 0,
           max: 100,
           initialValue: 50,
@@ -148,7 +128,7 @@ class SlidersSectionPreview extends StatelessWidget {
           onChanged: (_) => Console.danger(_.toString()),
         ),
         Text('step', style: normal),
-        SliderInput(
+        InputSlider(
           initialValue: 20,
           min: 0,
           max: 100,
@@ -156,7 +136,7 @@ class SlidersSectionPreview extends StatelessWidget {
           onChanged: (_) => Console.danger(_.toString()),
         ),
         Text('decimal step', style: normal),
-        SliderInput(
+        InputSlider(
           initialValue: 4,
           min: 0,
           max: 10,
@@ -164,13 +144,13 @@ class SlidersSectionPreview extends StatelessWidget {
           onChanged: (_) => Console.danger(_.toString()),
         ),
         Text('vertical slider', style: normal),
-        SliderInput(
+        InputSlider(
           initialValue: 0,
           onChanged: (_) => Console.danger(_.toString()),
           forceVertical: true,
         ),
         Text('range slider', style: normal),
-        RangeSliderInput(
+        InputRangeSlider(
           min: 0,
           max: 10,
           initialValues: const RangeValues(2, 6),
@@ -183,8 +163,8 @@ class SlidersSectionPreview extends StatelessWidget {
   }
 }
 
-class SlidersSectionCode extends StatelessWidget {
-  const SlidersSectionCode({Key? key}) : super(key: key);
+class InputSliderCode extends StatelessWidget {
+  const InputSliderCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -271,23 +251,22 @@ class SlidersSectionCode extends StatelessWidget {
             "),",
           ],
         ),
-        verticalMargin8,
       ],
     );
   }
 }
 
-class AutoCompleteAndFilePickerSectionPreview extends StatelessWidget {
-  const AutoCompleteAndFilePickerSectionPreview({Key? key}) : super(key: key);
+class InputFilePickerPreview extends StatelessWidget {
+  const InputFilePickerPreview({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('File picker and Auto Complete', style: heading),
+        Text('Input File Picker', style: heading),
         verticalMargin16,
-        VaahFilePicker(
+        InputFilePicker(
           label: 'Pick Files',
           allowMultiple: true,
           callback: (List<PlatformFile>? files) {
@@ -297,8 +276,52 @@ class AutoCompleteAndFilePickerSectionPreview extends StatelessWidget {
             }
           },
         ),
+      ],
+    );
+  }
+}
+
+class InputFilePickerCode extends StatelessWidget {
+  const InputFilePickerCode({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Input File Picker', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(
+          code: [
+            "VaahFilePicker(",
+            "    label: 'Pick Files',",
+            "    allowMultiple: true,",
+            "    callback: (List<PlatformFile>? files) {",
+            "        if (files == null) return;",
+            "        for (final element in files) {",
+            "            Console.danger(element.name);",
+            "        }",
+            "    },",
+            "),",
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class InputAutoCompletePreview extends StatelessWidget {
+  const InputAutoCompletePreview({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Input Auto Complete', style: heading),
         verticalMargin16,
-        const AutoCompleteInput(
+        const InputAutoComplete(
           label: 'Select Continent',
           hints: [
             'Asia',
@@ -316,8 +339,8 @@ class AutoCompleteAndFilePickerSectionPreview extends StatelessWidget {
   }
 }
 
-class AutoCompleteAndFilePickerSectionCode extends StatelessWidget {
-  const AutoCompleteAndFilePickerSectionCode({Key? key}) : super(key: key);
+class InputAutoCompleteCode extends StatelessWidget {
+  const InputAutoCompleteCode({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -325,24 +348,7 @@ class AutoCompleteAndFilePickerSectionCode extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Basic Slider', style: TextStyles.regular2),
-        verticalMargin4,
-        const CodePreview(
-          code: [
-            "VaahFilePicker(",
-            "    label: 'Pick Files',",
-            "    allowMultiple: true,",
-            "    callback: (List<PlatformFile>? files) {",
-            "        if (files == null) return;",
-            "        for (final element in files) {",
-            "            Console.danger(element.name);",
-            "        }",
-            "    },",
-            "),",
-          ],
-        ),
-        verticalMargin8,
-        Text('Basic Slider', style: TextStyles.regular2),
+        Text('Input Auto Complete', style: TextStyles.regular2),
         verticalMargin4,
         const CodePreview(
           code: [
@@ -360,7 +366,6 @@ class AutoCompleteAndFilePickerSectionCode extends StatelessWidget {
             "),",
           ],
         ),
-        verticalMargin8,
       ],
     );
   }
