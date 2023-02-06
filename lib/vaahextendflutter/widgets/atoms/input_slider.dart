@@ -118,7 +118,7 @@ class _SliderInputState extends State<SliderInput> {
                       Container(
                         margin: verticalPadding24,
                         padding: horizontalPadding16 + verticalPadding0,
-                        child: TextInput(
+                        child: InputText(
                           controller: controller,
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
