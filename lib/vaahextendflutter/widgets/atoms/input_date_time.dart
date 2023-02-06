@@ -4,8 +4,7 @@ import 'package:team/vaahextendflutter/app_theme.dart';
 import 'package:team/vaahextendflutter/helpers/console.dart';
 import 'package:team/vaahextendflutter/helpers/constants.dart';
 import 'package:team/vaahextendflutter/helpers/date_time.dart';
-
-enum InputSize { extraSmall, small, medium, large, extraLarge }
+import 'package:team/vaahextendflutter/helpers/enums.dart';
 
 enum PickerType { dateOnly, timeOnly, dateAndTime }
 
