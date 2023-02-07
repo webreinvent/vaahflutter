@@ -144,10 +144,13 @@ class InputSliderPreview extends StatelessWidget {
           onChanged: (_) => Console.danger(_.toString()),
         ),
         Text('vertical slider', style: normal),
-        InputSlider(
-          initialValue: 0,
-          onChanged: (_) => Console.danger(_.toString()),
-          forceVertical: true,
+        Padding(
+          padding: verticalPadding24,
+          child: InputSlider(
+            initialValue: 0,
+            onChanged: (_) => Console.danger(_.toString()),
+            forceVertical: true,
+          ),
         ),
         Text('range slider', style: normal),
         InputRangeSlider(
