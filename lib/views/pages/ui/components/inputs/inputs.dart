@@ -5,6 +5,7 @@ import 'package:team/vaahextendflutter/helpers/styles.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import 'package:team/vaahextendflutter/widgets/atoms/tab_options.dart';
+import 'package:team/views/pages/ui/components/inputs/complex.dart';
 import 'package:team/views/pages/ui/components/inputs/defaults.dart';
 import 'package:team/views/pages/ui/components/inputs/icons.dart';
 import 'package:team/views/pages/ui/components/inputs/sizes.dart';
@@ -39,6 +40,14 @@ class _AppInputsState extends State<AppInputs> {
                     InputSizesPreview(),
                     verticalMargin24,
                     InputIconsPreview(),
+                    verticalMargin24,
+                    InputDateTimePreview(),
+                    verticalMargin24,
+                    InputSliderPreview(),
+                    verticalMargin24,
+                    InputFilePickerPreview(),
+                    verticalMargin24,
+                    InputAutoCompletePreview(),
                   ],
                 ),
               ),
@@ -59,6 +68,26 @@ class _AppInputsState extends State<AppInputs> {
                     ExpansionPanelWrap(
                       title: 'Input Icons',
                       child: InputIconsCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input Date Time',
+                      child: InputDateTimeCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input Slider',
+                      child: InputSliderCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input File Picker',
+                      child: InputFilePickerCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Input Auto Complete',
+                      child: InputAutoCompleteCode(),
                     ),
                   ],
                 ),
