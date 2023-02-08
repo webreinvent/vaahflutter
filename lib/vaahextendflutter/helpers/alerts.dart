@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import './constants.dart';
 import '../app_theme.dart';
-import 'constants.dart';
 
 class Alerts {
   static Future<void> _toast({required String content}) async {

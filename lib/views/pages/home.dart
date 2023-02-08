@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/base/base_stateful.dart';
-import 'package:team/views/pages/ui/index.dart';
+
+import './ui/index.dart';
+import '../../vaahextendflutter/base/base_stateful.dart';
 
 class HomePage extends StatefulWidget {
   static const String routePath = '/home';

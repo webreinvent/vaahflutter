@@ -1,9 +1,10 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/enums.dart';
+
+import '../../app_theme.dart';
+import '../../helpers/constants.dart';
+import '../../helpers/enums.dart';
 
 class InputFilePicker extends StatefulWidget {
   final String label;

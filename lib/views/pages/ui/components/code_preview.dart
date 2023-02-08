@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+
+import '../../../../vaahextendflutter/app_theme.dart';
+import '../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../vaahextendflutter/helpers/styles.dart';
+import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 
 class CodePreview extends StatelessWidget {
   final List<String> code;

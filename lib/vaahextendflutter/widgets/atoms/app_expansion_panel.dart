@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart' hide ExpansionPanel;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
+
+import '../../app_theme.dart';
+import '../../helpers/constants.dart';
+import '../../helpers/styles.dart';
 
 final _expansionTween = CurveTween(curve: Curves.fastOutSlowIn);
 final _iconTurnTween = Tween<double>(begin: 0.0, end: 0.5) //

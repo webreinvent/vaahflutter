@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
-import 'package:team/controllers/root_assets_controller.dart';
-import 'package:team/vaahextendflutter/services/api.dart';
+
+import '../controllers/root_assets_controller.dart';
+import '../vaahextendflutter/services/api.dart';
 
 class User {
   static const String apiEndPoint = '/users'; // TODO: change end point

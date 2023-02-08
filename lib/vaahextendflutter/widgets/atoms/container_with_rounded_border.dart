@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
+
+import '../../helpers/constants.dart';
 
 class ContainerWithRoundedBorder extends StatelessWidget {
   final EdgeInsets padding;

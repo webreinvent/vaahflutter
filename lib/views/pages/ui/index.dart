@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/base/base_stateful.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/views/pages/ui/components/inputs/inputs.dart';
-import 'package:team/views/pages/ui/components/themecolors.dart';
+
+import './components/inputs/inputs.dart';
+import './components/themecolors.dart';
+import '../../../vaahextendflutter/app_theme.dart';
+import '../../../vaahextendflutter/base/base_stateful.dart';
+import '../../../vaahextendflutter/helpers/constants.dart';
 
 class UIPage extends StatefulWidget {
   static const String routePath = '/ui-page';

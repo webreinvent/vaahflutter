@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
+
+import '../../../../vaahextendflutter/app_theme.dart';
 
 TextStyle heading = TextStyle(
   fontSize: AppTheme.large,
