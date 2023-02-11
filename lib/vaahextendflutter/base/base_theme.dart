@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class BaseTheme {
   static const Map<String, MaterialColor> colors = {
     'primary': _primary,
+    'secondary': _secondary,
     'info': _info,
     'success': _success,
     'warning': _warning,
     'danger': _danger,
+    'help': _help,
     'white': _white,
     'black': _black,
   };
@@ -25,6 +27,22 @@ const MaterialColor _primary = MaterialColor(
     700: Color(0xFF1939B7),
     800: Color(0xFF102693),
     900: Color(0xFF091A7A),
+  },
+);
+
+const MaterialColor _secondary = MaterialColor(
+  0xFF787878,
+  <int, Color>{
+    50: Color(0xFFF8F8F8),
+    100: Color(0xFFF8F8F8),
+    200: Color(0xFFF1F1F1),
+    300: Color(0xFFD6D6D6),
+    400: Color(0xFFAEAEAE),
+    500: Color(0xFF787878),
+    600: Color(0xFF675759),
+    700: Color(0xFF563C40),
+    800: Color(0xFF45262E),
+    900: Color(0xFF391723),
   },
 );
 
@@ -89,6 +107,22 @@ const MaterialColor _danger = MaterialColor(
     700: Color(0xFFB71629),
     800: Color(0xFF930E28),
     900: Color(0xFF7A0828),
+  },
+);
+
+const MaterialColor _help = MaterialColor(
+  0xFFBE00FF,
+  <int, Color>{
+    50: Color(0xFFFFCCFD),
+    100: Color(0xFFFFCCFD),
+    200: Color(0xFFFA99FF),
+    300: Color(0xFFED66FF),
+    400: Color(0xFFDB3FFF),
+    500: Color(0xFFBE00FF),
+    600: Color(0xFF9300DB),
+    700: Color(0xFF6E00B7),
+    800: Color(0xFF4E0093),
+    900: Color(0xFF38007A),
   },
 );
 
