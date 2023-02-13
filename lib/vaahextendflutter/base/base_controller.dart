@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../../controllers/root_assets_controller.dart';
 import '../app_theme.dart';
@@ -13,5 +14,13 @@ class BaseController extends GetxController {
     AppTheme.init();
     Api.init();
     Get.put(RootAssetsController());
+
+    final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
+    await SentryFlutter.init(
+      (options) => options
+        ..dsn = config.sentryDsn
+        ..tracesSampleRate = config.sentryTracesSampleRate
+        ..environment = config.envType,
+    );
   }
 }

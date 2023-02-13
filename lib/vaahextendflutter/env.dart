@@ -22,6 +22,8 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   apiUrl: '',
   timeoutLimit: 60 * 1000, // 60 seconds
   firebaseId: '',
+  sentryDsn: '',
+  sentryTracesSampleRate: 1.0,
   enableConsoleLogs: true,
   enableLocalLogs: true,
   enableApiLogs: true,
@@ -83,6 +85,8 @@ class EnvironmentConfig {
   final String backendUrl;
   final String apiUrl;
   final String firebaseId;
+  final String sentryDsn;
+  final double sentryTracesSampleRate;
   final int timeoutLimit;
   final bool enableConsoleLogs;
   final bool enableLocalLogs;
@@ -99,6 +103,8 @@ class EnvironmentConfig {
     required this.backendUrl,
     required this.apiUrl,
     required this.firebaseId,
+    required this.sentryDsn,
+    required this.sentryTracesSampleRate,
     required this.timeoutLimit,
     required this.enableConsoleLogs,
     required this.enableLocalLogs,
@@ -132,6 +138,8 @@ class EnvironmentConfig {
     String? backendUrl,
     String? apiUrl,
     String? firebaseId,
+    String? sentryDsn,
+    double? sentryTracesSampleRate,
     int? timeoutLimit,
     bool? enableConsoleLogs,
     bool? enableLocalLogs,
@@ -148,6 +156,8 @@ class EnvironmentConfig {
       backendUrl: backendUrl ?? this.backendUrl,
       apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
+      sentryDsn: sentryDsn ?? this.sentryDsn,
+      sentryTracesSampleRate: sentryTracesSampleRate ?? this.sentryTracesSampleRate,
       timeoutLimit: timeoutLimit ?? this.timeoutLimit,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,

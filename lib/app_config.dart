@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 import './routes/middleware.dart';
 import './vaahextendflutter/app_theme.dart';
@@ -19,6 +20,9 @@ class AppConfig extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: AppTheme.colors['primary'],
       ),
+      navigatorObservers: [
+        SentryNavigatorObserver(),
+      ],
       onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
         return DebugWidget(
