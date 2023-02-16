@@ -5,6 +5,7 @@ import './extra.dart';
 import './icon.dart';
 import './icon_and_label.dart';
 import './outlined.dart';
+import './radioandcheckbox.dart';
 import './text.dart';
 import '../../../../../vaahextendflutter/app_theme.dart';
 import '../../../../../vaahextendflutter/helpers/constants.dart';
@@ -45,6 +46,8 @@ class Buttons extends StatelessWidget {
                     ButtonIconLabelPreview(),
                     Divider(height: defaultPadding * 2),
                     ButtonExtrasPreview(),
+                    Divider(height: defaultPadding * 2),
+                    ButtonRadioAndCheckboxPreview(),
                   ],
                 ),
               ),
@@ -80,6 +83,11 @@ class Buttons extends StatelessWidget {
                     ExpansionPanelWrap(
                       title: 'Button Properties',
                       child: ButtonExtrasCode(),
+                    ),
+                    verticalMargin8,
+                    ExpansionPanelWrap(
+                      title: 'Radio and Checkbox Buttons',
+                      child: ButtonRadioAndCheckboxCode(),
                     ),
                   ],
                 ),
