@@ -1,4 +1,4 @@
-package com.webreinvent.team
+package com.webreinvent.vaahflutter
 
 import io.flutter.embedding.android.FlutterActivity
 
