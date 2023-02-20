@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/base/base_stateless.dart';
+
+import '../../vaahextendflutter/base/base_stateless.dart';
 
 class NotFoundPage extends BaseStateless {
   static const String routePath = '/page-not-found';

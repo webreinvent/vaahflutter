@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/views/pages/ui/components/section_title_selector.dart';
+
+import './section_title_selector.dart';
+import '../../helpers/constants.dart';
 
 class TabOption {
   final String name;

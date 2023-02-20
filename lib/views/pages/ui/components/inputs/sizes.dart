@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/enums.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_text.dart';
-import 'package:team/views/pages/ui/components/code_preview.dart';
-import 'package:team/views/pages/ui/components/commons.dart';
+
+import '../../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../../vaahextendflutter/helpers/enums.dart';
+import '../../../../../vaahextendflutter/helpers/styles.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/input_text.dart';
+import '../code_preview.dart';
+import '../commons.dart';
 
 class InputSizesPreview extends StatelessWidget {
   const InputSizesPreview({Key? key}) : super(key: key);

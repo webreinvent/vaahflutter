@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
+
+import '../../app_theme.dart';
+import '../../helpers/styles.dart';
 
 Widget sectionTitleSelector({
   required String title,

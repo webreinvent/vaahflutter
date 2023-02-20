@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/tab_options.dart';
-import 'package:team/views/pages/ui/components/inputs/complex.dart';
-import 'package:team/views/pages/ui/components/inputs/defaults.dart';
-import 'package:team/views/pages/ui/components/inputs/icons.dart';
-import 'package:team/views/pages/ui/components/inputs/sizes.dart';
+
+import './complex.dart';
+import './defaults.dart';
+import './icons.dart';
+import './sizes.dart';
+import '../../../../../vaahextendflutter/app_theme.dart';
+import '../../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../../vaahextendflutter/helpers/styles.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/tab_options.dart';
 
 class AppInputs extends StatefulWidget {
   const AppInputs({Key? key}) : super(key: key);

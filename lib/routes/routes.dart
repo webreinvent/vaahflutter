@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:team/views/pages/home.dart';
-import 'package:team/views/pages/not_found.dart';
-import 'package:team/views/pages/permission_denied.dart';
-import 'package:team/views/pages/ui/index.dart';
+
+import '../views/pages/home.dart';
+import '../views/pages/not_found.dart';
+import '../views/pages/permission_denied.dart';
+import '../views/pages/ui/index.dart';
 
 final Map<String, Route<dynamic> Function()> routes = {
   '/': HomePage.route,

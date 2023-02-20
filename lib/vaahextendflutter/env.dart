@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/console.dart';
+
+import './app_theme.dart';
+import './helpers/console.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 

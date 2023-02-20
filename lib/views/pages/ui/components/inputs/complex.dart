@@ -1,14 +1,15 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:team/vaahextendflutter/helpers/console.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/helpers/styles.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_auto_complete.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_date_time.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_file_picker.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_slider.dart';
-import 'package:team/views/pages/ui/components/code_preview.dart';
-import 'package:team/views/pages/ui/components/commons.dart';
+
+import '../../../../../vaahextendflutter/helpers/console.dart';
+import '../../../../../vaahextendflutter/helpers/constants.dart';
+import '../../../../../vaahextendflutter/helpers/styles.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/input_auto_complete.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/input_file_picker.dart';
+import '../../../../../vaahextendflutter/widgets/atoms/input_slider.dart';
+import '../code_preview.dart';
+import '../commons.dart';
 
 class InputDateTimePreview extends StatelessWidget {
   const InputDateTimePreview({Key? key}) : super(key: key);

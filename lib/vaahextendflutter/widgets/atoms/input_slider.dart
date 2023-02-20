@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' as services;
-import 'package:team/vaahextendflutter/app_theme.dart';
-import 'package:team/vaahextendflutter/helpers/constants.dart';
-import 'package:team/vaahextendflutter/widgets/atoms/input_text.dart';
+
+import './input_text.dart';
+import '../../app_theme.dart';
+import '../../helpers/constants.dart';
 
 class InputSlider extends StatefulWidget {
   final double initialValue;
