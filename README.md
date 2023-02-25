@@ -1,58 +1,74 @@
-# Team Mobile App by WebReinvent
+# [VaahFlutter by WebReinvent](https://docs.vaah.dev/vaahflutter)
+
+VaahFlutter is a Flutter-based framework that provides common features required in any application.
+
+The purpose of developing VaahFlutter is to create a framework that can be extended in a manageable and structured manner in order to develop large applications while not having to reinvent all essential functionalities every time.
+
+For More Info Please Check: [docs.vaah.dev/vaahflutter](https://docs.vaah.dev/vaahflutter)
 
 ## Prerequisites
 
-Dart and flutter versions: the project requires
-``` 
-  dart sdk >=2.18.2
-  and flutter version >=3.3.4
+Project requires Dart and flutter versions:
+
+```yaml
+  sdk: ">=2.19.2"
+  flutter: ">=3.7.3"
 ```
 
 To change minimum requirement of dart and flutter change the `sdk and flutter` versions under `environment` in the `pubspec.yaml` file.
 <hr />
 
-## Setup
+## How to run app in different environments:
 
-Run the command: 
-```
-flutter pub get
-```
+| **Environment name** | **Command** |
+| --- | --- |
+| Default | `flutter run` OR `flutter run --dart-define="environment=default"`  |
+| Development | `flutter run --dart-define="environment=develop"` |
+| Staging/ QA | `flutter run --dart-define="environment=stage"` |
+| Production | `flutter run --dart-define="environment=production"` |
 
-## Environments
+## How to build app?
 
-### To run app in `production` mode use command
-```
-flutter run --dart-define="environment=production"
-```
+### Building app with different environments
 
-### To run app in `staging/ QA` mode use command 
-```
-flutter run --dart-define="environment=stage"
-```
+| **Platform** | **Environment name** | **Command** |
+| --- | --- | --- |
+| Android | Default | `flutter build apk` OR `flutter build apk --dart-define="environment=default"`  |
+| Android | Development | `flutter build apk --dart-define="environment=develop"` |
+| Android | Staging/ QA | `flutter build apk --dart-define="environment=stage"` |
+| Android | Production | `flutter build apk --dart-define="environment=production"` |
+| Android (appbundle) | Default | `flutter build appbundle` OR `flutter build appbundle --dart-define="environment=default"`  |
+| Android (appbundle) | Development | `flutter build appbundle --dart-define="environment=develop"` |
+| Android (appbundle) | Staging/ QA | `flutter build appbundle --dart-define="environment=stage"` |
+| Android (appbundle) | Production | `flutter build appbundle --dart-define="environment=production"` |
 
-### To run app in `develop` mode use command 
-```
-flutter run --dart-define="environment=develop"
-```
+| **Platform** | **Environment name** | **Command** |
+| --- | --- | --- |
+| iOS | Default | `flutter build ipa` OR `flutter build ipa --dart-define="environment=default"`  |
+| iOS | Development | `flutter build ipa --dart-define="environment=develop"` |
+| iOS | Staging/ QA | `flutter build ipa --dart-define="environment=stage"` |
+| iOS | Production | `flutter build ipa --dart-define="environment=production"` |
+| iOS (.app) | Default | `flutter build ios` OR `flutter build ipa --dart-define="environment=default"`  |
+| iOS (.app) | Development | `flutter build ios --dart-define="environment=develop"` |
+| iOS (.app) | Staging/ QA | `flutter build ios --dart-define="environment=stage"` |
+| iOS (.app) | Production | `flutter build ios --dart-define="environment=production"` |
 
-### For Android production build use command
-```
-flutter build apk --dart-define="environment=production"
-```
+### Building in different modes.
 
-### For iOS production build use command
-```
-flutter build ipa --dart-define="environment=production"
-```
+Pass additional arguments with your build commands.
 
-### How to create a new environment:
+| **mode** | **Command** |
+| --- | --- |
+| Debug | `flutter build ipa --debug`, `flutter build apk --debug`  |
+| Profile | `flutter build ipa --profile`, `flutter build apk --profile`  |
+| Release | `flutter build ipa --release`, `flutter build apk --release`  |
 
-Go to `lib/env.dart`, find `envConfigs` variable and add configuration for the environment you want to create. Example: for `testing` environment add `'testing'` key and value. And in commands pass your environment name
-```
-// for example if environment name is testing then
-flutter run --dart-define="environment=testing"
-```
-<hr />
+### Building ipa without signing it
+| **flag** | **command** |
+| --- | --- |
+| --no-codesign | `flutter build ipa --no-codesign`, `flutter build ios --no-codesign`  |
+
+Note: building for `ipa` will give `Runner.xcarchive`. To check the app, you should right click on `Runner.xcarchive` > then select `show package contents` > then open `products` > `application` > There you will be able to find the application.
 
 ## Packages:
 In `pubspec.yaml` file > Add essential packages in `dependencies`, and packages that a developer need in `dev_dependencies`.
@@ -86,83 +102,7 @@ flutter pub outdated
 - Avoid print()/ debugPrint() calls
 
 Android Production
-- universal package: `com.webreinvent.team`
+- universal package: `com.webreinvent.vaahflutter`
 
 iOS Production
-- universal package: `com.webreinvent.team`
-
-## VaahExtendFlutter
-
-### → Central log library:
-
-Can be used for logging different details. All methods are static thus no instance of Console is required. Console.info() method will print info in blue color font, Console.success() method will print log in green color font, Console.warning() method will print log in yellow color font, and Console.danger() method will print log in red color font. The files reside in `lib/vaahextendflutter/log/` folder.
-
-### → Environment and Version Tag Panel
-
-Environment and Version Tag can be seen on every page unless you set `showEnvAndVersionTag` to `false` for your Environment configuration in `env.dart` file. You can change color of tag by setting `envAndVersionTagColor` variable for your Environment configuration. 
-
-NOTE: `Remember showEnvAndVersionTag for production should always be false in Environment configuration in `env.dart` file.`
-```dart
-  'production': defaultConfig.copyWith(
-    ...
-    showEnvAndVersionTag: false,
-  ),
-```
-
-#### NOTE: You have to write below code in MaterialApp, and that will show tag panel on each screen. You don't have to wrap any other screen/ widget, or you don't have to extend any screen/ any widget with TagPanelHost.
-
-In file containing material app paste this code after imports
-```dart
-final _navigatorKey = GlobalKey<NavigatorState>();
-```
- In material app paste this code and panel will be visible on all pages.
-```dart
-builder: (BuildContext context, Widget? child) {
-  return TagPanelHost(
-    navigatorKey: _navigatorKey,
-    child: child!,
-  );
-},
-```
-This panel uses EnvController, thus depends on env.dart file.
-
-### → Dynamic font size, dynamic width, dynamic height depending on device size
-
-To use it directly by importing `screen_util.dart` check Usage: comment in `screen_util.dart` file. 
-
-Or for feasibility extend your Statelesswidgets with BaseStateless
-```dart
-class DemoPage extends BaseStateful {
-}
-```
-
-And Statefull widgets with BaseStateful widgets
-```dart
-class _DemoPageState extends BaseStateful<DemoPage> {
-...
-}
-```
-After that you can use dynamic size in that extended widget.
-```dart
-SizedBox(
-  width: 300.wExt, // or swExt
-  height: 200.hExt, // or shExt
-  child: Text(
-    'demo',
-    style: TextStyle(
-      fontSize: 20.spExt,
-    ),
-  ),
-);
-```
-
-### → Base widgets
-`vaahextendflutter/base` folder contains all the base classes/ widgets.
-
-BaseStateless and BaseStateful are used when dev wants to init/ add dependencies in many screens and don't want to write same logic in every file, so they write the logic in base files only. e.g. internet connectivity checker, dynamic size dependency, etc.
-
-So base class implements those logics and other classes can extend the base classes.
-
-### → Helpers
-Most common constants and styles used in whole app.
-
+- universal package: `com.webreinvent.vaahflutter`
