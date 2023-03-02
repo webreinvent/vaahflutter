@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import './app_theme.dart';
-import './helpers/console.dart';
+import './services/logging_library/logging_library.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
@@ -59,8 +59,8 @@ class EnvController extends GetxController {
     try {
       _config = getSpecificConfig(environment);
       update();
-    } catch (e) {
-      Console.danger(e.toString());
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace: stackTrace);
       exit(0);
     }
   }
@@ -121,8 +121,14 @@ class EnvironmentConfig {
   static void setEnvConfig() {
     String environment = const String.fromEnvironment('environment', defaultValue: 'default');
     final EnvController envController = Get.put(EnvController(environment));
-    Console.info('Env Type: ${envController.config.envType}');
-    Console.info('Version: ${envController.config.version}+${envController.config.build}');
+    Log.info(
+      'Env Type: ${envController.config.envType}',
+      disableCloudLogging: true,
+    );
+    Log.info(
+      'Version: ${envController.config.version}+${envController.config.build}',
+      disableCloudLogging: true,
+    );
   }
 
   EnvironmentConfig copyWith({

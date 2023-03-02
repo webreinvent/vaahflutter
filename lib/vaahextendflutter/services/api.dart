@@ -10,8 +10,8 @@ import 'package:get/get.dart' as getx;
 import '../app_theme.dart';
 import '../env.dart';
 import '../helpers/alerts.dart';
-import '../helpers/console.dart';
 import '../helpers/constants.dart';
+import '../services/logging_library/_local/console_service.dart';
 
 // alertType : 'dialog', 'toast',
 

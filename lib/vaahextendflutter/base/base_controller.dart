@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -17,17 +19,34 @@ class BaseController extends GetxController {
     Get.put(RootAssetsController());
 
     final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    await SentryFlutter.init(
-      (options) => options
-        ..dsn = config.sentryDsn
-        ..tracesSampleRate = config.sentryTracesSampleRate
-        ..environment = config.envType,
-      appRunner: () => runApp(
-        DefaultAssetBundle(
-          bundle: SentryAssetBundle(enableStructuredDataTracing: true),
-          child: app,
-        ),
-      ),
-    );
+
+    if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
+      await SentryFlutter.init(
+        (options) => options
+          ..dsn = config.sentryConfig!.dsn
+          ..autoAppStart = config.sentryConfig!.autoAppStart
+          ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
+          ..enableAutoPerformanceTracking = config.sentryConfig!.enableAutoPerformanceTracking
+          ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
+          ..environment = config.envType,
+      );
+      Widget child = app;
+      if (config.sentryConfig!.enableUserInteractionTracing) {
+        child = SentryUserInteractionWidget(
+          child: child,
+        );
+      }
+      if (config.sentryConfig!.enableAssetsInstrumentation) {
+        child = DefaultAssetBundle(
+          bundle: SentryAssetBundle(
+            enableStructuredDataTracing: true,
+          ),
+          child: child,
+        );
+      }
+      runApp(child);
+    } else {
+      runApp(app);
+    }
   }
 }
