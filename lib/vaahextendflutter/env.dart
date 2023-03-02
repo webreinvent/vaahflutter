@@ -10,23 +10,21 @@ import './helpers/console.dart';
 
 // Version and build
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
-const String build = '2022100901'; // build no format 'YYYYMMDDNUMBER'
+const String build = '2022030201'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
-  appTitle: 'WebReinvent Team',
-  appTitleShort: 'Team',
+  appTitle: 'VaahFlutter',
+  appTitleShort: 'VaahFlutter',
   envType: 'default',
   version: version,
   build: build,
   backendUrl: '',
   apiUrl: '',
-  timeoutLimit: 60 * 1000, // 60 seconds
+  timeoutLimit: 20 * 1000, // 20 seconds
   firebaseId: '',
-  sentryDsn: '',
-  sentryTracesSampleRate: 1.0,
   enableConsoleLogs: true,
-  enableLocalLogs: true,
-  enableApiLogs: true,
+  enableCloudLogs: true,
+  enableApiLogInterceptor: true,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.7),
 );
@@ -39,16 +37,16 @@ Map<String, EnvironmentConfig> envConfigs = {
   ),
   'develop': defaultConfig.copyWith(
     envType: 'develop',
-    enableLocalLogs: false,
+    enableCloudLogs: false,
   ),
   'stage': defaultConfig.copyWith(
     envType: 'stage',
-    enableLocalLogs: false,
+    enableCloudLogs: true,
   ),
   'production': defaultConfig.copyWith(
     envType: 'production',
     enableConsoleLogs: false,
-    enableLocalLogs: false,
+    enableApiLogInterceptor: false,
     showDebugPanel: false,
   ),
 };
@@ -85,12 +83,11 @@ class EnvironmentConfig {
   final String backendUrl;
   final String apiUrl;
   final String firebaseId;
-  final String sentryDsn;
-  final double sentryTracesSampleRate;
   final int timeoutLimit;
   final bool enableConsoleLogs;
-  final bool enableLocalLogs;
-  final bool enableApiLogs;
+  final bool enableCloudLogs;
+  final SentryConfig? sentryConfig;
+  final bool enableApiLogInterceptor;
   final bool showDebugPanel;
   final Color debugPanelColor;
 
@@ -103,12 +100,11 @@ class EnvironmentConfig {
     required this.backendUrl,
     required this.apiUrl,
     required this.firebaseId,
-    required this.sentryDsn,
-    required this.sentryTracesSampleRate,
     required this.timeoutLimit,
     required this.enableConsoleLogs,
-    required this.enableLocalLogs,
-    required this.enableApiLogs,
+    required this.enableCloudLogs,
+    this.sentryConfig,
+    required this.enableApiLogInterceptor,
     required this.showDebugPanel,
     required this.debugPanelColor,
   });
@@ -138,12 +134,11 @@ class EnvironmentConfig {
     String? backendUrl,
     String? apiUrl,
     String? firebaseId,
-    String? sentryDsn,
-    double? sentryTracesSampleRate,
     int? timeoutLimit,
     bool? enableConsoleLogs,
-    bool? enableLocalLogs,
-    bool? enableApiLogs,
+    bool? enableCloudLogs,
+    SentryConfig? sentryConfig,
+    bool? enableApiLogInterceptor,
     bool? showDebugPanel,
     Color? debugPanelColor,
   }) {
@@ -156,14 +151,51 @@ class EnvironmentConfig {
       backendUrl: backendUrl ?? this.backendUrl,
       apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
-      sentryDsn: sentryDsn ?? this.sentryDsn,
-      sentryTracesSampleRate: sentryTracesSampleRate ?? this.sentryTracesSampleRate,
       timeoutLimit: timeoutLimit ?? this.timeoutLimit,
       enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
-      enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
-      enableApiLogs: enableApiLogs ?? this.enableApiLogs,
+      enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
+      sentryConfig: sentryConfig ?? this.sentryConfig,
+      enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
+    );
+  }
+}
+
+class SentryConfig {
+  final String dsn;
+  final bool autoAppStart; // To record cold and warm start up time
+  final double tracesSampleRate;
+  final bool enableAutoPerformanceTracking;
+  final bool enableUserInteractionTracing;
+  final bool enableAssetsInstrumentation;
+
+  const SentryConfig({
+    required this.dsn,
+    this.autoAppStart = true,
+    this.tracesSampleRate = 0.6,
+    this.enableAutoPerformanceTracking = true,
+    this.enableUserInteractionTracing = true,
+    this.enableAssetsInstrumentation = true,
+  });
+
+  SentryConfig copyWith({
+    String? dsn,
+    bool? autoAppStart,
+    double? tracesSampleRate,
+    bool? enableAutoPerformanceTracking,
+    bool? enableUserInteractionTracing,
+    bool? enableAssetsInstrumentation,
+  }) {
+    return SentryConfig(
+      dsn: dsn ?? this.dsn,
+      autoAppStart: autoAppStart ?? this.autoAppStart,
+      tracesSampleRate: tracesSampleRate ?? this.tracesSampleRate,
+      enableAutoPerformanceTracking:
+          enableAutoPerformanceTracking ?? this.enableAutoPerformanceTracking,
+      enableUserInteractionTracing:
+          enableUserInteractionTracing ?? this.enableUserInteractionTracing,
+      enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
     );
   }
 }
