@@ -178,7 +178,7 @@ class Api {
       }
 
       // Here response error means server sends error response. eg 401: unauthorised
-      else if (error.type == DioErrorType.response) {
+      else if (error.type == DioErrorType.badResponse) {
         await _handleResponseError(
           error,
           showAlert,
@@ -233,8 +233,8 @@ class Api {
   }) async {
     Response? response;
     final Options options = await _getOptions();
-    options.sendTimeout = customTimeoutLimit ?? _config.timeoutLimit;
-    options.receiveTimeout = customTimeoutLimit ?? _config.timeoutLimit;
+    options.sendTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
+    options.receiveTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
@@ -430,7 +430,7 @@ class Api {
     bool showAlert,
     String alertType,
   ) async {
-    if (error is DioError && error.type == DioErrorType.response) {
+    if (error is DioError && error.type == DioErrorType.badResponse) {
       final Response<dynamic>? response = error.response;
       try {
         // By pass dio header error code to get response content
@@ -460,9 +460,9 @@ class Api {
           error: res.statusMessage,
         );
       } catch (e) {
-        if (error.type == DioErrorType.response) {
+        if (error.type == DioErrorType.badResponse) {
           String errorCode = 'unknown';
-          List<String> errors = [error.message];
+          List<String> errors = error.message == null ? [] : [error.message!];
           String? debug;
           if (error.response?.statusCode == 401) {
             errorCode = 'unauthorized';
@@ -496,7 +496,7 @@ class Api {
               if (Alerts.showErrorDialog != null) {
                 await Alerts.showErrorDialog!(
                   title: 'Error',
-                  messages: errors,
+                  messages: errors.isEmpty ? null : errors,
                   hint: debug,
                 );
                 return;
@@ -504,7 +504,7 @@ class Api {
               Console.danger(errors.toString());
               _showDialog(
                 title: 'Error',
-                content: errors,
+                content: errors.isEmpty ? null : errors,
                 hint: debug,
               );
             } else {
