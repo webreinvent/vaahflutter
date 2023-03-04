@@ -1,4 +1,5 @@
 import './logging_service.dart';
+import '../models/log.dart';
 
 abstract class FirebaseLoggingService implements LoggingService {
   static logEvent({
@@ -15,8 +16,9 @@ abstract class FirebaseLoggingService implements LoggingService {
   }) =>
       throw UnimplementedError();
 
-  static logTransactionTime(
-    Function execute,
-  ) =>
-      throw UnimplementedError();
+  static logTransaction({
+    required Function execute,
+    required TransactionDetails details,
+  }) async =>
+      UnimplementedError();
 }

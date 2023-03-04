@@ -1,4 +1,4 @@
-import 'package:sentry_flutter/sentry_flutter.dart';
+import '../models/log.dart';
 
 abstract class LoggingService {
   static logEvent({
@@ -15,34 +15,9 @@ abstract class LoggingService {
   }) =>
       UnimplementedError();
 
-  static logTransactionTime(
-    Function execute,
-  ) =>
+  static logTransaction({
+    required Function execute,
+    required TransactionDetails details,
+  }) async =>
       UnimplementedError();
-}
-
-enum EventType {
-  log,
-  info,
-  success,
-  warning,
-}
-
-extension EventTypeExtension on EventType {
-  String get toStr => toString().split('.')[1];
-
-  SentryLevel? get toSentryLevel {
-    switch (this) {
-      case EventType.log:
-        return SentryLevel.debug;
-      case EventType.info:
-        return SentryLevel.info;
-      case EventType.success:
-        return SentryLevel.info;
-      case EventType.warning:
-        return SentryLevel.warning;
-      default:
-        return null;
-    }
-  }
 }

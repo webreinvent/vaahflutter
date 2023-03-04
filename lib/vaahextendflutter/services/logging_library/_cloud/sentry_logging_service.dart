@@ -1,6 +1,7 @@
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import './logging_service.dart';
+import '../models/log.dart';
 
 abstract class SentryLoggingService implements LoggingService {
   static logEvent({
@@ -23,8 +24,12 @@ abstract class SentryLoggingService implements LoggingService {
     Sentry.captureException(throwable, stackTrace: stackTrace, hint: hint);
   }
 
-  static logTransactionTime(
-    Function execute,
-  ) =>
-      UnimplementedError();
+  static logTransaction({
+    required Function execute,
+    required TransactionDetails details,
+  }) async {
+    final ISentrySpan transaction = Sentry.startTransaction(details.name, details.operation);
+    await execute();
+    await transaction.finish();
+  }
 }

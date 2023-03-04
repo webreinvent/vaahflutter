@@ -1,13 +1,15 @@
 import './_cloud/firebase_logging_service.dart';
-import './_cloud/logging_service.dart';
 import './_cloud/sentry_logging_service.dart';
 import './_local/console_service.dart';
+import './models/log.dart';
 import '../../env.dart';
 
 class Log {
+  static final EnvironmentConfig _config = EnvironmentConfig.getEnvConfig();
+
   static final List<Type> _services = [
     SentryLoggingService,
-    // FirebaseLoggingService,
+    FirebaseLoggingService,
   ];
 
   static void log(
@@ -16,11 +18,10 @@ class Log {
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
-    EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableLocalLogs && !disableLocalLogging) {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.log(text.toString(), data);
     }
-    if (config.enableCloudLogs && !disableCloudLogging) {
+    if (_config.enableCloudLogs && !disableCloudLogging) {
       _logEvent(text.toString(), data: data, type: EventType.log);
     }
   }
@@ -31,11 +32,10 @@ class Log {
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
-    EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableLocalLogs && !disableLocalLogging) {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.info(text.toString(), data);
     }
-    if (config.enableCloudLogs && !disableCloudLogging) {
+    if (_config.enableCloudLogs && !disableCloudLogging) {
       _logEvent(text.toString(), data: data, type: EventType.info);
     }
   }
@@ -46,11 +46,10 @@ class Log {
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
-    EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableLocalLogs && !disableLocalLogging) {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.success(text.toString(), data);
     }
-    if (config.enableCloudLogs && !disableCloudLogging) {
+    if (_config.enableCloudLogs && !disableCloudLogging) {
       _logEvent(text.toString(), data: data, type: EventType.success);
     }
   }
@@ -61,11 +60,10 @@ class Log {
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
-    EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableLocalLogs && !disableLocalLogging) {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.warning(text.toString(), data);
     }
-    if (config.enableCloudLogs && !disableCloudLogging) {
+    if (_config.enableCloudLogs && !disableCloudLogging) {
       _logEvent(text.toString(), data: data, type: EventType.warning);
     }
   }
@@ -78,16 +76,15 @@ class Log {
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
-    EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableLocalLogs && !disableLocalLogging) {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.danger(throwable.toString(), data);
     }
-    if (config.enableCloudLogs && !disableCloudLogging) {
+    if (_config.enableCloudLogs && !disableCloudLogging) {
       final hintWithData = {
         'hint': hint,
         'data': data,
       };
-      for (var service in _services) {
+      for (final service in _services) {
         switch (service) {
           case SentryLoggingService:
             SentryLoggingService.logException(
@@ -110,12 +107,43 @@ class Log {
     }
   }
 
+  static logTransaction({
+    required Function execute,
+    required TransactionDetails details,
+    bool disableLocalLogging = false,
+    bool disableCloudLogging = false,
+  }) async {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
+      Console.logTransaction(execute: execute, details: details);
+    }
+    if (_config.enableCloudLogs && !disableCloudLogging) {
+      for (final service in _services) {
+        switch (service) {
+          case SentryLoggingService:
+            SentryLoggingService.logTransaction(
+              execute: execute,
+              details: details,
+            );
+            return;
+          case FirebaseLoggingService:
+            FirebaseLoggingService.logTransaction(
+              execute: execute,
+              details: details,
+            );
+            return;
+          default:
+            return;
+        }
+      }
+    }
+  }
+
   static void _logEvent(
     String text, {
     Object? data,
     EventType? type,
   }) {
-    for (var service in _services) {
+    for (final service in _services) {
       switch (service) {
         case SentryLoggingService:
           SentryLoggingService.logEvent(
