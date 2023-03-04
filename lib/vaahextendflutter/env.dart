@@ -22,7 +22,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   apiUrl: '',
   timeoutLimit: 20 * 1000, // 20 seconds
   firebaseId: '',
-  enableConsoleLogs: true,
+  enableLocalLogs: true,
   enableCloudLogs: true,
   enableApiLogInterceptor: true,
   showDebugPanel: true,
@@ -45,7 +45,7 @@ Map<String, EnvironmentConfig> envConfigs = {
   ),
   'production': defaultConfig.copyWith(
     envType: 'production',
-    enableConsoleLogs: false,
+    enableLocalLogs: false,
     enableApiLogInterceptor: false,
     showDebugPanel: false,
   ),
@@ -84,7 +84,7 @@ class EnvironmentConfig {
   final String apiUrl;
   final String firebaseId;
   final int timeoutLimit;
-  final bool enableConsoleLogs;
+  final bool enableLocalLogs;
   final bool enableCloudLogs;
   final SentryConfig? sentryConfig;
   final bool enableApiLogInterceptor;
@@ -101,7 +101,7 @@ class EnvironmentConfig {
     required this.apiUrl,
     required this.firebaseId,
     required this.timeoutLimit,
-    required this.enableConsoleLogs,
+    required this.enableLocalLogs,
     required this.enableCloudLogs,
     this.sentryConfig,
     required this.enableApiLogInterceptor,
@@ -141,7 +141,7 @@ class EnvironmentConfig {
     String? apiUrl,
     String? firebaseId,
     int? timeoutLimit,
-    bool? enableConsoleLogs,
+    bool? enableLocalLogs,
     bool? enableCloudLogs,
     SentryConfig? sentryConfig,
     bool? enableApiLogInterceptor,
@@ -158,7 +158,7 @@ class EnvironmentConfig {
       apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
       timeoutLimit: timeoutLimit ?? this.timeoutLimit,
-      enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
+      enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
       enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,

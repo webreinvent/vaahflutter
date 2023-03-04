@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:colorize/colorize.dart';
 import 'package:flutter/material.dart';
 
-import '../../../env.dart';
-
 class Console {
   static void _printChunks(Colorize text) {
     final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
@@ -16,7 +14,6 @@ class Console {
   }
 
   static void _printLog(Colorize text) {
-    if (!EnvironmentConfig.getEnvConfig().enableConsoleLogs) return;
     Console._printChunks(text);
   }
 

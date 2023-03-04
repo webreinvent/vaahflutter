@@ -13,11 +13,11 @@ class Log {
   static void log(
     dynamic text, {
     Object? data,
-    bool disableConsoleLogging = false,
+    bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableConsoleLogs && !disableConsoleLogging) {
+    if (config.enableLocalLogs && !disableLocalLogging) {
       Console.log(text.toString(), data);
     }
     if (config.enableCloudLogs && !disableCloudLogging) {
@@ -28,11 +28,11 @@ class Log {
   static void info(
     dynamic text, {
     Object? data,
-    bool disableConsoleLogging = false,
+    bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableConsoleLogs && !disableConsoleLogging) {
+    if (config.enableLocalLogs && !disableLocalLogging) {
       Console.info(text.toString(), data);
     }
     if (config.enableCloudLogs && !disableCloudLogging) {
@@ -43,11 +43,11 @@ class Log {
   static void success(
     dynamic text, {
     Object? data,
-    bool disableConsoleLogging = false,
+    bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableConsoleLogs && !disableConsoleLogging) {
+    if (config.enableLocalLogs && !disableLocalLogging) {
       Console.success(text.toString(), data);
     }
     if (config.enableCloudLogs && !disableCloudLogging) {
@@ -58,11 +58,11 @@ class Log {
   static void warning(
     dynamic text, {
     Object? data,
-    bool disableConsoleLogging = false,
+    bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableConsoleLogs && !disableConsoleLogging) {
+    if (config.enableLocalLogs && !disableLocalLogging) {
       Console.warning(text.toString(), data);
     }
     if (config.enableCloudLogs && !disableCloudLogging) {
@@ -75,11 +75,11 @@ class Log {
     Object? data,
     dynamic stackTrace,
     dynamic hint,
-    bool disableConsoleLogging = false,
+    bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
-    if (config.enableConsoleLogs && !disableConsoleLogging) {
+    if (config.enableLocalLogs && !disableLocalLogging) {
       Console.danger(throwable.toString(), data);
     }
     if (config.enableCloudLogs && !disableCloudLogging) {

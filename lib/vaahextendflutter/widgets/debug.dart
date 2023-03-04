@@ -174,7 +174,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                             'API URL: ${_environmentConfig.apiUrl}',
                                             'Request and Response Timeout: ${(_environmentConfig.timeoutLimit) / 1000} Seconds',
                                             'Firebase Id: ${_environmentConfig.firebaseId}',
-                                            'Console Logs Enabled: ${_environmentConfig.enableConsoleLogs}',
+                                            'Local Logs Enabled (Console + Device Specific): ${_environmentConfig.enableLocalLogs}',
                                             'Cloud Logs Enabled: ${_environmentConfig.enableCloudLogs}',
                                             if (null != _environmentConfig.sentryConfig) ...[
                                               'Sentry DSN: ${_environmentConfig.sentryConfig!.dsn}',
