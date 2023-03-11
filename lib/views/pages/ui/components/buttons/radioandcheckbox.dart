@@ -46,12 +46,28 @@ class ButtonRadioAndCheckboxCode extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('x', style: TextStyles.regular2),
+        Text('Radio Buttons', style: TextStyles.regular2),
         verticalMargin4,
         const CodePreview(
-          code: ['x'],
+          code: [
+            "ButtonRadio<Language>(",
+            "    initialValue: items.last,",
+            "    items: items.map((e) => RadioItem(text: e.language, data: e)).toList(),",
+            "    onChanged: (_) {},",
+            "),",
+          ],
         ),
         verticalMargin8,
+        Text('Checkbox Buttons', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(
+          code: [
+            "ButtonCheckBox<Language>(",
+            "    items: items.map((e) => CheckboxItem(text: e.language, data: e)).toList(),",
+            "    onChanged: (_) {},",
+            "),",
+          ],
+        ),
       ],
     );
   }
