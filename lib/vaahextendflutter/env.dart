@@ -30,7 +30,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
 );
 
 // To add new configuration add new key, value pair in envConfigs
-Map<String, EnvironmentConfig> envConfigs = {
+Map<String, EnvironmentConfig> _envConfigs = {
   // Do not remove default config
   'default': defaultConfig.copyWith(
     envType: 'default',
@@ -66,9 +66,9 @@ class EnvController extends GetxController {
   }
 
   EnvironmentConfig getSpecificConfig(String key) {
-    bool configExists = envConfigs.containsKey(key);
+    bool configExists = _envConfigs.containsKey(key);
     if (configExists) {
-      return envConfigs[key]!;
+      return _envConfigs[key]!;
     }
     throw Exception('Environment configuration not found for key: $key');
   }
