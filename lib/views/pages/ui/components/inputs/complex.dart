@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../../vaahextendflutter/helpers/console.dart';
 import '../../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
+import '../../../../../vaahextendflutter/services/logging_library/logging_library.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/input_auto_complete.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/input_date_time.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/input_file_picker.dart';
@@ -25,7 +25,7 @@ class InputDateTimePreview extends StatelessWidget {
           label: 'Choose Date',
           pickerType: PickerType.dateOnly,
           callback: (data) {
-            Console.danger(data.toString());
+            Log.info(data, disableCloudLogging: true);
           },
         ),
         verticalMargin16,
@@ -33,7 +33,7 @@ class InputDateTimePreview extends StatelessWidget {
           label: 'Choose Time',
           pickerType: PickerType.timeOnly,
           callback: (data) {
-            Console.danger(data.toString());
+            Log.info(data, disableCloudLogging: true);
           },
         ),
         verticalMargin16,
@@ -41,7 +41,7 @@ class InputDateTimePreview extends StatelessWidget {
           label: 'Choose Date And Time',
           pickerType: PickerType.dateAndTime,
           callback: (data) {
-            Console.danger(data.toString());
+            Log.info(data, disableCloudLogging: true);
           },
         ),
       ],
@@ -117,7 +117,7 @@ class InputSliderPreview extends StatelessWidget {
         Text('basic slider', style: normal),
         InputSlider(
           initialValue: 0.8,
-          onChanged: (_) => Console.danger(_.toString()),
+          onChanged: (value) => Log.info(value, disableCloudLogging: true),
         ),
         Text('with input slider', style: normal),
         InputSlider(
@@ -126,7 +126,7 @@ class InputSliderPreview extends StatelessWidget {
           initialValue: 50,
           step: 2,
           forceInputBox: true,
-          onChanged: (_) => Console.danger(_.toString()),
+          onChanged: (value) => Log.info(value, disableCloudLogging: true),
         ),
         Text('step', style: normal),
         InputSlider(
@@ -134,7 +134,7 @@ class InputSliderPreview extends StatelessWidget {
           min: 0,
           max: 100,
           step: 20,
-          onChanged: (_) => Console.danger(_.toString()),
+          onChanged: (value) => Log.info(value, disableCloudLogging: true),
         ),
         Text('decimal step', style: normal),
         InputSlider(
@@ -142,14 +142,14 @@ class InputSliderPreview extends StatelessWidget {
           min: 0,
           max: 10,
           step: 0.5,
-          onChanged: (_) => Console.danger(_.toString()),
+          onChanged: (value) => Log.info(value, disableCloudLogging: true),
         ),
         Text('vertical slider', style: normal),
         Padding(
           padding: verticalPadding24,
           child: InputSlider(
             initialValue: 0,
-            onChanged: (_) => Console.danger(_.toString()),
+            onChanged: (value) => Log.info(value, disableCloudLogging: true),
             forceVertical: true,
           ),
         ),
@@ -159,7 +159,7 @@ class InputSliderPreview extends StatelessWidget {
           max: 10,
           initialValues: const RangeValues(2, 6),
           step: 0.1,
-          onChanged: (_) => Console.danger(_.toString()),
+          onChanged: (value) => Log.info(value, disableCloudLogging: true),
           precision: 1,
         ),
       ],
@@ -276,7 +276,7 @@ class InputFilePickerPreview extends StatelessWidget {
           callback: (List<PlatformFile>? files) {
             if (files == null) return;
             for (final element in files) {
-              Console.danger(element.name);
+              Log.info(element.name, disableCloudLogging: true);
             }
           },
         ),

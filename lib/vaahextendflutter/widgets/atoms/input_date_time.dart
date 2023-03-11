@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../app_theme.dart';
-import '../../helpers/console.dart';
 import '../../helpers/constants.dart';
 import '../../helpers/date_time.dart';
 import '../../helpers/enums.dart';
+import '../../services/logging_library/logging_library.dart';
 
 enum PickerType { dateOnly, timeOnly, dateAndTime }
 
@@ -183,7 +183,7 @@ class _InputDateTimeState extends State<InputDateTime> {
         }
         break;
       default:
-        Console.danger('Error in date time input');
+        Log.exception('Error in date time input', disableCloudLogging: true);
     }
   }
 

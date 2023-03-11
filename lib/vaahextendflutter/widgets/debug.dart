@@ -158,46 +158,35 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                         right: defaultPadding,
                                       ),
                                       children: [
-                                        SelectableText(
-                                          _environmentConfig.envType,
-                                          style: TextStyles.regular3,
+                                        ..._showDetails(
+                                          [
+                                            'App Title: ${_environmentConfig.appTitle}',
+                                            'App Title Short: ${_environmentConfig.appTitleShort}',
+                                            _environmentConfig.envType,
+                                            'Version: ${_environmentConfig.version}',
+                                            'Build: ${_environmentConfig.build}',
+                                          ],
                                         ),
-                                        verticalMargin4,
-                                        SelectableText(
-                                          'Version: ${_environmentConfig.version}',
-                                          style: TextStyles.regular3,
+                                        verticalMargin24,
+                                        ..._showDetails(
+                                          [
+                                            'Backend URL: ${_environmentConfig.backendUrl}',
+                                            'API URL: ${_environmentConfig.apiUrl}',
+                                            'Request and Response Timeout: ${(_environmentConfig.timeoutLimit) / 1000} Seconds',
+                                            'Firebase Id: ${_environmentConfig.firebaseId}',
+                                            'Local Logs Enabled (Console + Device Specific): ${_environmentConfig.enableLocalLogs}',
+                                            'Cloud Logs Enabled: ${_environmentConfig.enableCloudLogs}',
+                                            if (null != _environmentConfig.sentryConfig) ...[
+                                              'Sentry DSN: ${_environmentConfig.sentryConfig!.dsn}',
+                                              'Sentry Auto App Start (Record Cold And Warm Start Time): ${_environmentConfig.sentryConfig!.autoAppStart}',
+                                              'Sentry Traces Sample Rate: ${_environmentConfig.sentryConfig!.tracesSampleRate}',
+                                              'Sentry User Interaction Tracing: ${_environmentConfig.sentryConfig!.enableUserInteractionTracing}',
+                                              'Sentry Auto Performance Tracking: ${_environmentConfig.sentryConfig!.enableAutoPerformanceTracking}',
+                                              'Sentry Assets Instrumentation: ${_environmentConfig.sentryConfig!.enableAssetsInstrumentation}',
+                                            ],
+                                            'API Logs Interceptor: ${_environmentConfig.enableApiLogInterceptor}',
+                                          ],
                                         ),
-                                        verticalMargin4,
-                                        SelectableText(
-                                          'Build: ${_environmentConfig.build}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin16,
-                                        SelectableText(
-                                          'Backend URL: ${_environmentConfig.backendUrl}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin8,
-                                        SelectableText(
-                                          'API URL: ${_environmentConfig.apiUrl}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin8,
-                                        SelectableText(
-                                          'Firebase Id: ${_environmentConfig.firebaseId}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin8,
-                                        SelectableText(
-                                          'Console Logs Enabled: ${_environmentConfig.enableConsoleLogs}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin8,
-                                        SelectableText(
-                                          'Local Logs Enabled: ${_environmentConfig.enableLocalLogs}',
-                                          style: TextStyles.regular3,
-                                        ),
-                                        verticalMargin8,
                                       ],
                                     );
                                   },
@@ -214,6 +203,24 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
             },
           )
         : widget.child;
+  }
+
+  List<Widget> _showDetails(List<String> details) {
+    return details
+        .map(
+          (detail) => Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SelectableText(
+                detail,
+                style: TextStyles.regular3,
+              ),
+              verticalMargin8,
+            ],
+          ),
+        )
+        .toList(growable: false);
   }
 }
 

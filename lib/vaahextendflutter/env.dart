@@ -4,49 +4,49 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import './app_theme.dart';
-import './helpers/console.dart';
+import './services/logging_library/logging_library.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
 // Version and build
 const String version = '1.0.0'; // version format 1.0.0 (major.minor.patch)
-const String build = '2022100901'; // build no format 'YYYYMMDDNUMBER'
+const String build = '2022030201'; // build no format 'YYYYMMDDNUMBER'
 
 final EnvironmentConfig defaultConfig = EnvironmentConfig(
-  appTitle: 'WebReinvent Team',
-  appTitleShort: 'Team',
+  appTitle: 'VaahFlutter',
+  appTitleShort: 'VaahFlutter',
   envType: 'default',
   version: version,
   build: build,
   backendUrl: '',
   apiUrl: '',
-  timeoutLimit: 60 * 1000, // 60 seconds
+  timeoutLimit: 20 * 1000, // 20 seconds
   firebaseId: '',
-  enableConsoleLogs: true,
   enableLocalLogs: true,
-  enableApiLogs: true,
+  enableCloudLogs: true,
+  enableApiLogInterceptor: true,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.7),
 );
 
 // To add new configuration add new key, value pair in envConfigs
-Map<String, EnvironmentConfig> envConfigs = {
+Map<String, EnvironmentConfig> _envConfigs = {
   // Do not remove default config
   'default': defaultConfig.copyWith(
     envType: 'default',
   ),
   'develop': defaultConfig.copyWith(
     envType: 'develop',
-    enableLocalLogs: false,
+    enableCloudLogs: false,
   ),
   'stage': defaultConfig.copyWith(
     envType: 'stage',
-    enableLocalLogs: false,
+    enableCloudLogs: true,
   ),
   'production': defaultConfig.copyWith(
     envType: 'production',
-    enableConsoleLogs: false,
     enableLocalLogs: false,
+    enableApiLogInterceptor: false,
     showDebugPanel: false,
   ),
 };
@@ -59,16 +59,16 @@ class EnvController extends GetxController {
     try {
       _config = getSpecificConfig(environment);
       update();
-    } catch (e) {
-      Console.danger(e.toString());
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace: stackTrace);
       exit(0);
     }
   }
 
   EnvironmentConfig getSpecificConfig(String key) {
-    bool configExists = envConfigs.containsKey(key);
+    bool configExists = _envConfigs.containsKey(key);
     if (configExists) {
-      return envConfigs[key]!;
+      return _envConfigs[key]!;
     }
     throw Exception('Environment configuration not found for key: $key');
   }
@@ -84,9 +84,10 @@ class EnvironmentConfig {
   final String apiUrl;
   final String firebaseId;
   final int timeoutLimit;
-  final bool enableConsoleLogs;
   final bool enableLocalLogs;
-  final bool enableApiLogs;
+  final bool enableCloudLogs;
+  final SentryConfig? sentryConfig;
+  final bool enableApiLogInterceptor;
   final bool showDebugPanel;
   final Color debugPanelColor;
 
@@ -100,9 +101,10 @@ class EnvironmentConfig {
     required this.apiUrl,
     required this.firebaseId,
     required this.timeoutLimit,
-    required this.enableConsoleLogs,
     required this.enableLocalLogs,
-    required this.enableApiLogs,
+    required this.enableCloudLogs,
+    this.sentryConfig,
+    required this.enableApiLogInterceptor,
     required this.showDebugPanel,
     required this.debugPanelColor,
   });
@@ -119,8 +121,14 @@ class EnvironmentConfig {
   static void setEnvConfig() {
     String environment = const String.fromEnvironment('environment', defaultValue: 'default');
     final EnvController envController = Get.put(EnvController(environment));
-    Console.info('Env Type: ${envController.config.envType}');
-    Console.info('Version: ${envController.config.version}+${envController.config.build}');
+    Log.info(
+      'Env Type: ${envController.config.envType}',
+      disableCloudLogging: true,
+    );
+    Log.info(
+      'Version: ${envController.config.version}+${envController.config.build}',
+      disableCloudLogging: true,
+    );
   }
 
   EnvironmentConfig copyWith({
@@ -133,9 +141,10 @@ class EnvironmentConfig {
     String? apiUrl,
     String? firebaseId,
     int? timeoutLimit,
-    bool? enableConsoleLogs,
     bool? enableLocalLogs,
-    bool? enableApiLogs,
+    bool? enableCloudLogs,
+    SentryConfig? sentryConfig,
+    bool? enableApiLogInterceptor,
     bool? showDebugPanel,
     Color? debugPanelColor,
   }) {
@@ -149,11 +158,50 @@ class EnvironmentConfig {
       apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
       timeoutLimit: timeoutLimit ?? this.timeoutLimit,
-      enableConsoleLogs: enableConsoleLogs ?? this.enableConsoleLogs,
       enableLocalLogs: enableLocalLogs ?? this.enableLocalLogs,
-      enableApiLogs: enableApiLogs ?? this.enableApiLogs,
+      enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
+      sentryConfig: sentryConfig ?? this.sentryConfig,
+      enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
+    );
+  }
+}
+
+class SentryConfig {
+  final String dsn;
+  final bool autoAppStart; // To record cold and warm start up time
+  final double tracesSampleRate;
+  final bool enableAutoPerformanceTracking;
+  final bool enableUserInteractionTracing;
+  final bool enableAssetsInstrumentation;
+
+  const SentryConfig({
+    required this.dsn,
+    this.autoAppStart = true,
+    this.tracesSampleRate = 0.6,
+    this.enableAutoPerformanceTracking = true,
+    this.enableUserInteractionTracing = true,
+    this.enableAssetsInstrumentation = true,
+  });
+
+  SentryConfig copyWith({
+    String? dsn,
+    bool? autoAppStart,
+    double? tracesSampleRate,
+    bool? enableAutoPerformanceTracking,
+    bool? enableUserInteractionTracing,
+    bool? enableAssetsInstrumentation,
+  }) {
+    return SentryConfig(
+      dsn: dsn ?? this.dsn,
+      autoAppStart: autoAppStart ?? this.autoAppStart,
+      tracesSampleRate: tracesSampleRate ?? this.tracesSampleRate,
+      enableAutoPerformanceTracking:
+          enableAutoPerformanceTracking ?? this.enableAutoPerformanceTracking,
+      enableUserInteractionTracing:
+          enableUserInteractionTracing ?? this.enableUserInteractionTracing,
+      enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
     );
   }
 }
