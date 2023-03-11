@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './components/buttons/buttons.dart';
 import './components/inputs/inputs.dart';
 import './components/themecolors.dart';
 import '../../../vaahextendflutter/app_theme.dart';
@@ -42,6 +43,8 @@ class _UIPageState extends BaseStateful<UIPage> {
               AppThemeColors(),
               verticalMargin24,
               AppInputs(),
+              verticalMargin24,
+              Buttons(),
               verticalMargin24,
             ],
           ),
