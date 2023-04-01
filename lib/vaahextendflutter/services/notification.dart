@@ -44,10 +44,11 @@ abstract class AppNotification {
     required List<String> playerIds,
     String? heading,
     required String content,
-    List<OSActionButton>? buttons,
     String? payloadPath,
     dynamic payloadData,
     dynamic payloadAuth,
+    List<OSActionButton>? buttons,
+    String? imageURL,
   }) async {
     assert(playerIds.isNotEmpty);
     assert(content.trim().isNotEmpty);
@@ -56,7 +57,6 @@ abstract class AppNotification {
         playerIds: playerIds,
         heading: heading,
         content: content,
-        buttons: buttons,
         additionalData: {
           'payload': {
             'path': payloadPath,
@@ -64,6 +64,13 @@ abstract class AppNotification {
             'auth': payloadAuth,
           },
         },
+        buttons: buttons,
+        bigPicture: imageURL,
+        iosAttachments: imageURL == null
+            ? null
+            : {
+                'image': imageURL,
+              },
       ),
     );
   }
