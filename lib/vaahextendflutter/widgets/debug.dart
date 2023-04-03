@@ -7,11 +7,16 @@
 // assigned with some values when material app is build.
 // *****************************************
 
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import './atoms/app_expansion_panel.dart';
+import '../app_theme.dart';
 import '../env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
+import '../services/dynamic_links.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -158,8 +163,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                         right: defaultPadding,
                                       ),
                                       children: [
-                                        ..._showDetails(
-                                          [
+                                        _ShowDetails(
+                                          details: [
                                             'App Title: ${_environmentConfig.appTitle}',
                                             'App Title Short: ${_environmentConfig.appTitleShort}',
                                             _environmentConfig.envType,
@@ -168,8 +173,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                           ],
                                         ),
                                         verticalMargin24,
-                                        ..._showDetails(
-                                          [
+                                        _ShowDetails(
+                                          details: [
                                             'Backend URL: ${_environmentConfig.backendUrl}',
                                             'API URL: ${_environmentConfig.apiUrl}',
                                             'Request and Response Timeout: ${(_environmentConfig.timeoutLimit) / 1000} Seconds',
@@ -187,6 +192,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                             'API Logs Interceptor: ${_environmentConfig.enableApiLogInterceptor}',
                                           ],
                                         ),
+                                        verticalMargin24,
+                                        const _StreamLinksSection(),
                                       ],
                                     );
                                   },
@@ -203,24 +210,6 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
             },
           )
         : widget.child;
-  }
-
-  List<Widget> _showDetails(List<String> details) {
-    return details
-        .map(
-          (detail) => Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SelectableText(
-                detail,
-                style: TextStyles.regular3,
-              ),
-              verticalMargin8,
-            ],
-          ),
-        )
-        .toList(growable: false);
   }
 }
 
@@ -377,5 +366,94 @@ class _PanelBorder extends ShapeBorder {
   @override
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
     //
+  }
+}
+
+class _ShowDetails extends StatefulWidget {
+  final List<String> details;
+  final bool hasLinks;
+
+  const _ShowDetails({
+    Key? key,
+    required this.details,
+    this.hasLinks = false,
+  }) : super(key: key);
+
+  @override
+  State<_ShowDetails> createState() => _ShowDetailsState();
+}
+
+class _ShowDetailsState extends State<_ShowDetails> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final detail in widget.details) ...[
+          SelectableText(
+            detail,
+            style: (widget.hasLinks && Uri.tryParse(detail) != null)
+                ? TextStyles.regular3?.copyWith(
+                    color: AppTheme.colors['success'],
+                    decoration: TextDecoration.underline,
+                  )
+                : TextStyles.regular3,
+            onTap: () => Clipboard.setData(ClipboardData(text: detail)),
+          ),
+          verticalMargin8,
+        ]
+      ],
+    );
+  }
+}
+
+class _StreamLinksSection extends StatefulWidget {
+  const _StreamLinksSection({Key? key}) : super(key: key);
+
+  @override
+  State<_StreamLinksSection> createState() => _StreamLinksSectionState();
+}
+
+class _StreamLinksSectionState extends State<_StreamLinksSection> {
+  final List<String> links = [];
+
+  @override
+  void initState() {
+    super.initState();
+    DynamicLinks.dynamicLinksStream.listen((PendingDynamicLinkData linkData) {
+      links.add(linkData.link.toString());
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return links.isEmpty
+        ? emptyWidget
+        : AppExpansionPanel(
+            padding: verticalPadding8,
+            headerBuilder: (BuildContext context, ExpansionControl control) {
+              return InkWell(
+                onTap: () {
+                  control.expanded = !control.expanded;
+                },
+                child: Row(
+                  children: const [
+                    Expanded(
+                      child: Text('Dynamic Links'),
+                    ),
+                    AppExpansionPanelIcon(color: Colors.white),
+                  ],
+                ),
+              );
+            },
+            backgroundColor: Colors.transparent,
+            children: [
+              verticalMargin8,
+              _ShowDetails(details: links, hasLinks: true),
+              verticalMargin8,
+            ],
+          );
   }
 }

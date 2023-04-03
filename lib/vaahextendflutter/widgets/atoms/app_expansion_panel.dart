@@ -143,7 +143,8 @@ class _AppExpansionPanelState extends State<AppExpansionPanel>
 
 @immutable
 class AppExpansionPanelIcon extends StatelessWidget {
-  const AppExpansionPanelIcon({Key? key}) : super(key: key);
+  final Color? color;
+  const AppExpansionPanelIcon({Key? key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -151,7 +152,7 @@ class AppExpansionPanelIcon extends StatelessWidget {
       turns: context.findAncestorStateOfType<_AppExpansionPanelState>()!._iconTurns,
       child: FaIcon(
         FontAwesomeIcons.angleDown,
-        color: AppTheme.colors['primary'],
+        color: color ?? AppTheme.colors['primary'],
       ),
     );
   }
