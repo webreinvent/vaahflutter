@@ -16,11 +16,14 @@ class BaseController extends GetxController {
     required Widget app,
     FirebaseOptions? firebaseOptions,
   }) async {
+    // Storage initialization to store some properties locally
     await GetStorage.init();
 
+    // Environment initialization
     EnvironmentConfig.setEnvConfig();
     final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
 
+    // Initialization of Firebase and Services
     if (firebaseOptions != null) {
       await Firebase.initializeApp(
         options: firebaseOptions,
@@ -28,9 +31,11 @@ class BaseController extends GetxController {
       DynamicLinks.init();
     }
 
+    // Other Local Initializations (Depends on your app)
     AppTheme.init();
     Api.init();
 
+    // Sentry Initialization (And/ Or) Running main app
     if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
       await SentryFlutter.init(
         (options) => options
@@ -55,8 +60,10 @@ class BaseController extends GetxController {
           child: child,
         );
       }
+      // Running main app
       runApp(child);
     } else {
+      // Running main app when sentry config is not there
       runApp(app);
     }
   }
