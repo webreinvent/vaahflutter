@@ -1,24 +1,35 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import '../../controllers/root_assets_controller.dart';
 import '../app_theme.dart';
 import '../env.dart';
 import '../services/api.dart';
+import '../services/dynamic_links.dart';
 
 class BaseController extends GetxController {
-  Future<void> init(Widget app) async {
+  Future<void> init({
+    required Widget app,
+    FirebaseOptions? firebaseOptions,
+  }) async {
     await GetStorage.init();
+
     EnvironmentConfig.setEnvConfig();
+    final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
+
+    if (firebaseOptions != null) {
+      await Firebase.initializeApp(
+        options: firebaseOptions,
+      );
+      DynamicLinks.init();
+    }
+
     AppTheme.init();
     Api.init();
-    Get.put(RootAssetsController());
-
-    final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
 
     if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
       await SentryFlutter.init(
