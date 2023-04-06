@@ -77,7 +77,7 @@ class Log {
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.danger(throwable.toString(), data);
+      Console.danger('$throwable\n$hint', data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
       final hintWithData = {
