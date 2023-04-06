@@ -54,7 +54,8 @@ abstract class DynamicLinks {
 
   static Future<void> _handleLink(PendingDynamicLinkData linkData) async {
     try {
-      final dynamic payload = jsonDecode(linkData.link.queryParameters['payload'].toString());
+      final Uri decodedLink = Uri.parse(Uri.decodeFull(linkData.link.toString()));
+      final dynamic payload = _decodePayload(decodedLink);
       _dynamicLinksStreamController.add(linkData);
       if (payload != null && payload['path'] != null) {
         Get.offAllNamed(
@@ -71,6 +72,19 @@ abstract class DynamicLinks {
         stackTrace: stackTrace,
         hint: "Error handling dynamic link! ${linkData.asMap()}",
       );
+    }
+  }
+
+  static dynamic _decodePayload(Uri link) {
+    try {
+      return jsonDecode(link.queryParameters['payload'].toString());
+    } catch (error, stackTrace) {
+      Log.exception(
+        error,
+        stackTrace: stackTrace,
+        hint: "Error decoding payload! $link",
+      );
+      return null;
     }
   }
 }
