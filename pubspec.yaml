@@ -25,6 +25,7 @@ dependencies:
   sentry_flutter: ^6.20.1
   firebase_dynamic_links: ^5.0.16
   firebase_core: ^2.7.1
+  onesignal_flutter: ^3.5.0
 
 dev_dependencies:
   flutter_test:
