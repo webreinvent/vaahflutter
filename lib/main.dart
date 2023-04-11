@@ -7,5 +7,7 @@ import './vaahextendflutter/base/base_controller.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   BaseController baseController = Get.put(BaseController());
-  await baseController.init(const AppConfig()); // Pass main app as argument in init method
+  await baseController.init(
+    app: const AppConfig(),
+  ); // Pass main app as argument in init method
 }

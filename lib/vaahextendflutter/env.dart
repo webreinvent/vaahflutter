@@ -26,7 +26,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   enableCloudLogs: true,
   enableApiLogInterceptor: true,
   showDebugPanel: true,
-  debugPanelColor: AppTheme.colors['black']!.withOpacity(0.7),
+  debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
 );
 
 // To add new configuration add new key, value pair in envConfigs

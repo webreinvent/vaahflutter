@@ -23,6 +23,8 @@ dependencies:
   file_picker: ^5.2.5
   font_awesome_flutter: ^10.4.0
   sentry_flutter: ^6.20.1
+  firebase_dynamic_links: ^5.0.16
+  firebase_core: ^2.7.1
 
 dev_dependencies:
   flutter_test:
