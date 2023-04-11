@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import './app_theme.dart';
 import './services/logging_library/logging_library.dart';
@@ -21,7 +22,6 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   backendUrl: '',
   apiUrl: '',
   timeoutLimit: 20 * 1000, // 20 seconds
-  firebaseId: '',
   enableLocalLogs: true,
   enableCloudLogs: true,
   enableApiLogInterceptor: true,
@@ -52,13 +52,14 @@ Map<String, EnvironmentConfig> _envConfigs = {
 };
 
 class EnvController extends GetxController {
+  final GetStorage _storage = GetStorage();
   late EnvironmentConfig _config;
+
   EnvironmentConfig get config => _config;
 
   EnvController(String environment) {
     try {
-      _config = getSpecificConfig(environment);
-      update();
+      _config = getSpecificConfig(environment).copyWith(openCount: _storage.read('open_count'));
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace: stackTrace);
       exit(0);
@@ -72,6 +73,11 @@ class EnvController extends GetxController {
     }
     throw Exception('Environment configuration not found for key: $key');
   }
+
+  Future<void> increaseOpenCount() async {
+    await _storage.write('open_count', _config.openCount + 1);
+    _config = _config.copyWith(openCount: _config.openCount + 1);
+  }
 }
 
 class EnvironmentConfig {
@@ -80,14 +86,16 @@ class EnvironmentConfig {
   final String envType;
   final String version;
   final String build;
+  final int openCount;
   final String backendUrl;
   final String apiUrl;
-  final String firebaseId;
+  final String? firebaseId;
   final int timeoutLimit;
   final bool enableLocalLogs;
   final bool enableCloudLogs;
   final SentryConfig? sentryConfig;
   final bool enableApiLogInterceptor;
+  final OneSignalConfig? oneSignalConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
 
@@ -97,14 +105,16 @@ class EnvironmentConfig {
     required this.envType,
     required this.version,
     required this.build,
+    this.openCount = 0,
     required this.backendUrl,
     required this.apiUrl,
-    required this.firebaseId,
+    this.firebaseId,
     required this.timeoutLimit,
     required this.enableLocalLogs,
     required this.enableCloudLogs,
     this.sentryConfig,
     required this.enableApiLogInterceptor,
+    this.oneSignalConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
   });
@@ -137,6 +147,7 @@ class EnvironmentConfig {
     String? envType,
     String? version,
     String? build,
+    int? openCount,
     String? backendUrl,
     String? apiUrl,
     String? firebaseId,
@@ -145,6 +156,7 @@ class EnvironmentConfig {
     bool? enableCloudLogs,
     SentryConfig? sentryConfig,
     bool? enableApiLogInterceptor,
+    OneSignalConfig? oneSignalConfig,
     bool? showDebugPanel,
     Color? debugPanelColor,
   }) {
@@ -154,6 +166,7 @@ class EnvironmentConfig {
       envType: envType ?? this.envType,
       version: version ?? this.version,
       build: build ?? this.build,
+      openCount: openCount ?? this.openCount,
       backendUrl: backendUrl ?? this.backendUrl,
       apiUrl: apiUrl ?? this.apiUrl,
       firebaseId: firebaseId ?? this.firebaseId,
@@ -162,9 +175,16 @@ class EnvironmentConfig {
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
       enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
+      oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
     );
+  }
+
+  Future<void> increaseOpenCount() async {
+    final bool envControllerExists = Get.isRegistered<EnvController>();
+    if (!envControllerExists) throw Exception('No EnvController Is Registered');
+    await Get.find<EnvController>().increaseOpenCount();
   }
 }
 
@@ -202,6 +222,22 @@ class SentryConfig {
       enableUserInteractionTracing:
           enableUserInteractionTracing ?? this.enableUserInteractionTracing,
       enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
+    );
+  }
+}
+
+class OneSignalConfig {
+  final String appId;
+
+  const OneSignalConfig({
+    required this.appId,
+  });
+
+  OneSignalConfig copyWith({
+    String? appId,
+  }) {
+    return OneSignalConfig(
+      appId: appId ?? this.appId,
     );
   }
 }
