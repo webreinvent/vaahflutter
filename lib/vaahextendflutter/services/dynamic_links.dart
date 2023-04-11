@@ -25,10 +25,9 @@ abstract class DynamicLinks {
   }
 
   static final FirebaseDynamicLinks _firebaseDynamicLinks = FirebaseDynamicLinks.instance;
-  static final StreamController<PendingDynamicLinkData> _dynamicLinksStreamController =
-      StreamController<PendingDynamicLinkData>.broadcast();
-  static final Stream<PendingDynamicLinkData> dynamicLinksStream =
-      _dynamicLinksStreamController.stream;
+  static final StreamController<DeepLink> _dynamicLinksStreamController =
+      StreamController<DeepLink>.broadcast();
+  static final Stream<DeepLink> dynamicLinksStream = _dynamicLinksStreamController.stream;
 
   static Future<ShortDynamicLink?> createLink({
     required String? path,
@@ -56,7 +55,16 @@ abstract class DynamicLinks {
     try {
       final Uri decodedLink = Uri.parse(Uri.decodeFull(linkData.link.toString()));
       final dynamic payload = _decodePayload(decodedLink);
-      _dynamicLinksStreamController.add(linkData);
+      _dynamicLinksStreamController.add(
+        DeepLink(
+          encoded: linkData.link.toString(),
+          decoded: "${linkData.link.host}${linkData.link.path}?payload=$payload",
+        ),
+      );
+      Log.success({
+        "encoded": linkData.link.toString(),
+        "decoded": "${linkData.link.host}${linkData.link.path}?payload=$payload",
+      });
       if (payload != null && payload['path'] != null) {
         Get.offAllNamed(
           payload['path'],
@@ -87,4 +95,14 @@ abstract class DynamicLinks {
       return null;
     }
   }
+}
+
+class DeepLink {
+  final String encoded;
+  final String decoded;
+
+  const DeepLink({
+    required this.encoded,
+    required this.decoded,
+  });
 }
