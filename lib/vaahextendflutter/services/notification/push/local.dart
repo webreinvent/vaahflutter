@@ -6,9 +6,9 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart';
 
 import './models/notification.dart';
-import '../logging_library/logging_library.dart';
+import '../../logging_library/logging_library.dart';
 
-abstract class LocalNotification {
+abstract class LocalNotifications {
   static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -32,6 +32,14 @@ abstract class LocalNotification {
   }
 
   static void dispose() {}
+
+  static Future<void> askPermission() async {
+    await _flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestPermission();
+  }
+
+  static Future<void> subscribe() async {}
 
   static Future<void> unsubscribe() async {}
 

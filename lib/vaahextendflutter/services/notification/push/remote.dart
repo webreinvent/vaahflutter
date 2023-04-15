@@ -5,12 +5,16 @@ import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import './models/notification.dart';
-import '../../env.dart';
-import '../logging_library/logging_library.dart';
+import '../../../env.dart';
+import '../../logging_library/logging_library.dart';
 
 const String _userIdKey = 'remote_notification_user_id';
+const Map<String, String> channels = {
+  //  Create a channel on One Signal and add id here
+  'Primary': 'channel_id'
+};
 
-abstract class RemoteNotification {
+abstract class RemoteNotifications {
   static final OneSignal _oneSignal = OneSignal.shared;
   static final EnvironmentConfig _env = EnvironmentConfig.getEnvConfig();
   static final GetStorage _storage = GetStorage();
@@ -29,12 +33,20 @@ abstract class RemoteNotification {
     _oneSignal.setSubscriptionObserver(_handleSubscriptionStateChanges);
     await _oneSignal.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
     await _oneSignal.setAppId(_env.oneSignalConfig!.appId);
-    await _oneSignal.promptUserForPushNotificationPermission();
     _oneSignal.setNotificationOpenedHandler(_handleNotification);
   }
 
   static void dispose() {
     _userIdStreamController.close();
+  }
+
+  static Future<void> askPermission() async {
+    if (_env.oneSignalConfig == null) return;
+    await _oneSignal.promptUserForPushNotificationPermission();
+  }
+
+  static Future<void> subscribe() async {
+    await _oneSignal.disablePush(false);
   }
 
   static Future<void> unsubscribe() async {
@@ -51,6 +63,7 @@ abstract class RemoteNotification {
     List<NotificationButton>? buttons,
     String? imageURL,
     DateTime? sendAfter,
+    String? channel,
   }) async {
     assert(playerIds.isNotEmpty);
     await _oneSignal.postNotification(
@@ -80,6 +93,7 @@ abstract class RemoteNotification {
             : {
                 'image': imageURL,
               },
+        androidChannelId: channels[channel],
         sendAfter: sendAfter,
       ),
     );

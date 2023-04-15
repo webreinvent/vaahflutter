@@ -10,7 +10,7 @@ import '../app_theme.dart';
 import '../env.dart';
 import '../services/api.dart';
 import '../services/dynamic_links.dart';
-import '../services/notification/notification.dart';
+import '../services/notification/push/notification.dart';
 
 class BaseController extends GetxController {
   Future<void> init({
@@ -37,7 +37,7 @@ class BaseController extends GetxController {
     Api.init();
 
     // Other Core Services
-    await AppNotification.init();
+    await PushNotifications.init();
 
     // Sentry Initialization (And/ Or) Running main app
     if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {

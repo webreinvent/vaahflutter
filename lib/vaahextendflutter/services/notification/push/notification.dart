@@ -6,23 +6,37 @@ import './remote.dart';
 
 export './models/notification.dart';
 
-abstract class AppNotification {
-  static final Stream<String> remoteUserIdStream = RemoteNotification.userIdStream;
-  static String? get remoteUserId => RemoteNotification.userId;
+abstract class PushNotifications {
+  static final Stream<String> remoteUserIdStream = RemoteNotifications.userIdStream;
+  static String? get remoteUserId => RemoteNotifications.userId;
 
   static Future<void> init() async {
-    await RemoteNotification.init();
-    await LocalNotification.init();
+    await RemoteNotifications.init();
+    await LocalNotifications.init();
   }
 
   static void dispose() {
-    RemoteNotification.dispose();
-    LocalNotification.dispose();
+    RemoteNotifications.dispose();
+    LocalNotifications.dispose();
+  }
+
+  static Future<void> askPermission() async {
+    // RemoteNotifications.askPermission only works if OneSignal config is there
+    // And if we call RemoteNotifications.askPermission and LocalNotifications.askPermission both then
+    // Two prompts will be shown to the user in case when user neither accepts nor rejects notification permission.
+
+    // Local notification permission always works even if project has no setup for onesignal
+    await LocalNotifications.askPermission();
+  }
+
+  static Future<void> subscribe() async {
+    await RemoteNotifications.subscribe();
+    await LocalNotifications.subscribe();
   }
 
   static Future<void> unsubscribe() async {
-    await RemoteNotification.unsubscribe();
-    await LocalNotification.unsubscribe();
+    await RemoteNotifications.unsubscribe();
+    await LocalNotifications.unsubscribe();
   }
 
   static Future<void> push({
@@ -39,7 +53,7 @@ abstract class AppNotification {
   }) async {
     assert(content.trim().isNotEmpty);
     if (NotificationType.local == type) {
-      await LocalNotification.push(
+      await LocalNotifications.push(
         heading: heading,
         content: content,
         payloadPath: payloadPath,
@@ -51,7 +65,7 @@ abstract class AppNotification {
       );
       return;
     }
-    await RemoteNotification.push(
+    await RemoteNotifications.push(
       playerIds: playerIds,
       heading: heading,
       content: content,
