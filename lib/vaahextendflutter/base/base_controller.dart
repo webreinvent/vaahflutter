@@ -10,7 +10,7 @@ import '../app_theme.dart';
 import '../env.dart';
 import '../services/api.dart';
 import '../services/dynamic_links.dart';
-import '../services/notification.dart';
+import '../services/notification/notification.dart';
 
 class BaseController extends GetxController {
   Future<void> init({

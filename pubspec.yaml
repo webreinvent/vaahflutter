@@ -26,6 +26,8 @@ dependencies:
   firebase_dynamic_links: ^5.0.16
   firebase_core: ^2.7.1
   onesignal_flutter: ^3.5.0
+  flutter_local_notifications: ^13.0.0
+  timezone: ^0.9.1
 
 dev_dependencies:
   flutter_test:

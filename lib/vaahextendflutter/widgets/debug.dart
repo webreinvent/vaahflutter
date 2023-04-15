@@ -15,7 +15,7 @@ import '../env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 import '../services/dynamic_links.dart';
-import '../services/notification.dart';
+import '../services/notification/notification.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -503,12 +503,12 @@ class _NotificationSection extends StatefulWidget {
 }
 
 class __NotificationSectionState extends State<_NotificationSection> {
-  String? userId = AppNotification.userId;
+  String? userId = AppNotification.remoteUserId;
 
   @override
   void initState() {
     super.initState();
-    AppNotification.userIdStream.listen((String updatedUserId) {
+    AppNotification.remoteUserIdStream.listen((String updatedUserId) {
       setState(() {
         userId = updatedUserId;
       });

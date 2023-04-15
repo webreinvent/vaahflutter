@@ -4,12 +4,13 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import './logging_library/logging_library.dart';
-import '../env.dart';
+import './models/notification.dart';
+import '../../env.dart';
+import '../logging_library/logging_library.dart';
 
-const String _userIdKey = 'notification_user_id';
+const String _userIdKey = 'remote_notification_user_id';
 
-abstract class AppNotification {
+abstract class RemoteNotification {
   static final OneSignal _oneSignal = OneSignal.shared;
   static final EnvironmentConfig _env = EnvironmentConfig.getEnvConfig();
   static final GetStorage _storage = GetStorage();
@@ -40,18 +41,18 @@ abstract class AppNotification {
     await _oneSignal.disablePush(true);
   }
 
-  static Future<void> post({
+  static Future<void> push({
     required List<String> playerIds,
     String? heading,
     required String content,
     String? payloadPath,
     dynamic payloadData,
     dynamic payloadAuth,
-    List<OSActionButton>? buttons,
+    List<NotificationButton>? buttons,
     String? imageURL,
+    DateTime? sendAfter,
   }) async {
     assert(playerIds.isNotEmpty);
-    assert(content.trim().isNotEmpty);
     await _oneSignal.postNotification(
       OSCreateNotification(
         playerIds: playerIds,
@@ -64,13 +65,22 @@ abstract class AppNotification {
             'auth': payloadAuth,
           },
         },
-        buttons: buttons,
+        buttons: buttons
+            ?.map(
+              (element) => OSActionButton(
+                id: element.id,
+                text: element.text,
+                icon: element.icon,
+              ),
+            )
+            .toList(),
         bigPicture: imageURL,
         iosAttachments: imageURL == null
             ? null
             : {
                 'image': imageURL,
               },
+        sendAfter: sendAfter,
       ),
     );
   }
