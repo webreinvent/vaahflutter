@@ -33,8 +33,8 @@ abstract class LocalNotifications {
 
   static void dispose() {}
 
-  static Future<void> askPermission() async {
-    await _flutterLocalNotificationsPlugin
+  static Future<bool?> askPermission() async {
+    return await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.requestPermission();
   }

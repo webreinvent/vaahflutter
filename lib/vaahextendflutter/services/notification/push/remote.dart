@@ -40,9 +40,9 @@ abstract class RemoteNotifications {
     _userIdStreamController.close();
   }
 
-  static Future<void> askPermission() async {
-    if (_env.oneSignalConfig == null) return;
-    await _oneSignal.promptUserForPushNotificationPermission();
+  static Future<bool?> askPermission() async {
+    if (_env.oneSignalConfig == null) return null;
+    return await _oneSignal.promptUserForPushNotificationPermission();
   }
 
   static Future<void> subscribe() async {
