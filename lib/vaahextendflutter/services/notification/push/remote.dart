@@ -118,7 +118,7 @@ abstract class RemoteNotifications {
     });
     final dynamic payload = openedResult.notification.additionalData?['payload'];
     if (payload != null && payload['path'] != null) {
-      Get.offAllNamed(
+      Get.to(
         payload['path'],
         arguments: <String, dynamic>{
           'data': payload['data'],
