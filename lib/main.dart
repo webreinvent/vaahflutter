@@ -9,5 +9,6 @@ Future<void> main() async {
   BaseController baseController = Get.put(BaseController());
   await baseController.init(
     app: const AppConfig(),
+    errorApp: const ErrorAppConfig(),
   ); // Pass main app as argument in init method
 }
