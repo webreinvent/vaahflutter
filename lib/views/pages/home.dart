@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaahflutter/vaahextendflutter/services/notification/internal/notification_view.dart';
 
 import './ui/index.dart';
 import '../../vaahextendflutter/base/base_stateful.dart';
@@ -31,7 +32,11 @@ class _HomePageState extends BaseStateful<HomePage> {
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: const [
+          InternalNotificationsBadge(),
+        ],
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

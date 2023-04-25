@@ -25,6 +25,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   enableLocalLogs: true,
   enableCloudLogs: true,
   enableApiLogInterceptor: true,
+  internalNotificationsServiceType: InternalNotificationsServiceType.none,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
 );
@@ -95,6 +96,7 @@ class EnvironmentConfig {
   final bool enableCloudLogs;
   final SentryConfig? sentryConfig;
   final bool enableApiLogInterceptor;
+  final InternalNotificationsServiceType internalNotificationsServiceType;
   final OneSignalConfig? oneSignalConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
@@ -114,6 +116,7 @@ class EnvironmentConfig {
     required this.enableCloudLogs,
     this.sentryConfig,
     required this.enableApiLogInterceptor,
+    required this.internalNotificationsServiceType,
     this.oneSignalConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
@@ -156,6 +159,7 @@ class EnvironmentConfig {
     bool? enableCloudLogs,
     SentryConfig? sentryConfig,
     bool? enableApiLogInterceptor,
+    InternalNotificationsServiceType? internalNotificationsServiceType,
     OneSignalConfig? oneSignalConfig,
     bool? showDebugPanel,
     Color? debugPanelColor,
@@ -175,6 +179,8 @@ class EnvironmentConfig {
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
       enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
+      internalNotificationsServiceType:
+          internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
@@ -241,3 +247,5 @@ class OneSignalConfig {
     );
   }
 }
+
+enum InternalNotificationsServiceType { pusher, firebase, custom, none }

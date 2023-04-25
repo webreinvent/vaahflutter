@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:vaahflutter/vaahextendflutter/services/notification/internal/notification.dart';
 
 import '../app_theme.dart';
 import '../env.dart';
@@ -41,6 +42,7 @@ class BaseController extends GetxController {
       // Other Core Services
       await PushNotifications.init();
       PushNotifications.askPermission();
+      await InternalNotifications.init();
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
