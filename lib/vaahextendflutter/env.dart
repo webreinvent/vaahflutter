@@ -98,6 +98,7 @@ class EnvironmentConfig {
   final bool enableApiLogInterceptor;
   final InternalNotificationsServiceType internalNotificationsServiceType;
   final OneSignalConfig? oneSignalConfig;
+  final PusherConfig? pusherConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
 
@@ -118,6 +119,7 @@ class EnvironmentConfig {
     required this.enableApiLogInterceptor,
     required this.internalNotificationsServiceType,
     this.oneSignalConfig,
+    this.pusherConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
   });
@@ -161,6 +163,7 @@ class EnvironmentConfig {
     bool? enableApiLogInterceptor,
     InternalNotificationsServiceType? internalNotificationsServiceType,
     OneSignalConfig? oneSignalConfig,
+    PusherConfig? pusherConfig,
     bool? showDebugPanel,
     Color? debugPanelColor,
   }) {
@@ -182,6 +185,7 @@ class EnvironmentConfig {
       internalNotificationsServiceType:
           internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
+      pusherConfig: pusherConfig ?? this.pusherConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
     );
@@ -249,3 +253,23 @@ class OneSignalConfig {
 }
 
 enum InternalNotificationsServiceType { pusher, firebase, custom, none }
+
+class PusherConfig {
+  final String apiKey;
+  final String cluster;
+
+  const PusherConfig({
+    required this.apiKey,
+    required this.cluster,
+  });
+
+  PusherConfig copyWith({
+    String? apiKey,
+    String? cluster,
+  }) {
+    return PusherConfig(
+      apiKey: apiKey ?? this.apiKey,
+      cluster: cluster ?? this.cluster,
+    );
+  }
+}
