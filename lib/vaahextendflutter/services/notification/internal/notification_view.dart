@@ -13,15 +13,6 @@ class InternalNotificationsBadge extends StatefulWidget {
 
 class _InternalNotificationsBadgeState extends State<InternalNotificationsBadge> {
   final EnvironmentConfig _environmentConfig = EnvironmentConfig.getEnvConfig();
-  int pendingNotificationsCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    InternalNotifications.pendingNotificationsCountStream.listen((count) {
-      pendingNotificationsCount = count;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +30,8 @@ class _InternalNotificationsBadgeState extends State<InternalNotificationsBadge>
                     onTap: () => Navigator.push(context, InternalNotificationsView.route()),
                     child: Center(
                       child: Badge(
-                        label: pendingNotificationsCount == 0
-                            ? null
-                            : Text(pendingNotificationsCount.toString()),
+                        isLabelVisible: snapshot.data != 0,
+                        label: Text(snapshot.data.toString()),
                         child: const Icon(Icons.notifications_none_rounded),
                       ),
                     ),
@@ -112,7 +102,7 @@ class _InternalNotificationsViewState extends State<InternalNotificationsView> {
                       ),
                       child: Column(
                         children: [
-                          if (snapshot.data![index].imageURL != null)
+                          if (snapshot.data![index].imageUrl != null)
                             ClipRRect(
                               borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(_borderRadius),
@@ -121,7 +111,7 @@ class _InternalNotificationsViewState extends State<InternalNotificationsView> {
                               child: AspectRatio(
                                 aspectRatio: 16 / 9,
                                 child: Image.network(
-                                  snapshot.data![index].imageURL!,
+                                  snapshot.data![index].imageUrl!,
                                   fit: BoxFit.cover,
                                 ),
                               ),

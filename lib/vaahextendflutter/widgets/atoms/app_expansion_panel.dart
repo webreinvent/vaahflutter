@@ -9,7 +9,7 @@ final _expansionTween = CurveTween(curve: Curves.fastOutSlowIn);
 final _iconTurnTween = Tween<double>(begin: 0.0, end: 0.5) //
     .chain(_expansionTween);
 
-abstract class ExpansionControl {
+mixin ExpansionControl {
   abstract bool expanded;
 }
 

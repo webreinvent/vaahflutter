@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import './models/notification.dart';
-import '../../../env.dart';
-import '../../logging_library/logging_library.dart';
+import '../../../../env.dart';
+import '../../../logging_library/logging_library.dart';
+import '../../models/notification.dart';
 
 const String _userIdKey = 'remote_notification_user_id';
 const Map<String, String> channels = {
@@ -54,31 +54,23 @@ abstract class RemoteNotifications {
   }
 
   static Future<void> push({
-    required List<String> playerIds,
-    String? heading,
-    required String content,
-    String? payloadPath,
-    dynamic payloadData,
-    dynamic payloadAuth,
-    List<NotificationButton>? buttons,
-    String? imageURL,
-    DateTime? sendAfter,
+    required PushNotification notification,
     String? channel,
   }) async {
-    assert(playerIds.isNotEmpty);
+    assert(notification.playerIds.isNotEmpty);
     await _oneSignal.postNotification(
       OSCreateNotification(
-        playerIds: playerIds,
-        heading: heading,
-        content: content,
+        playerIds: notification.playerIds,
+        heading: notification.heading,
+        content: notification.content,
         additionalData: {
           'payload': {
-            'path': payloadPath,
-            'data': payloadData,
-            'auth': payloadAuth,
+            'path': notification.payloadPath,
+            'data': notification.payloadData,
+            'auth': notification.payloadAuth,
           },
         },
-        buttons: buttons
+        buttons: notification.buttons
             ?.map(
               (element) => OSActionButton(
                 id: element.id,
@@ -87,14 +79,14 @@ abstract class RemoteNotifications {
               ),
             )
             .toList(),
-        bigPicture: imageURL,
-        iosAttachments: imageURL == null
+        bigPicture: notification.imageUrl,
+        iosAttachments: notification.imageUrl == null
             ? null
             : {
-                'image': imageURL,
+                'image': notification.imageUrl!,
               },
         androidChannelId: channels[channel],
-        sendAfter: sendAfter,
+        sendAfter: notification.sendAfter,
       ),
     );
   }

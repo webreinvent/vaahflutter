@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import './base_service.dart';
-import '../models/internal_notification.dart';
+import '../../models/notification.dart';
 
 class InternalNotificationsWithCustomService implements InternalNotificationsService {
   @override

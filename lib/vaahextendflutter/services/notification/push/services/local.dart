@@ -1,12 +1,11 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart';
 
-import './models/notification.dart';
-import '../../logging_library/logging_library.dart';
+import '../../../logging_library/logging_library.dart';
+import '../../models/notification.dart';
 
 abstract class LocalNotifications {
   static final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
@@ -44,20 +43,14 @@ abstract class LocalNotifications {
   static Future<void> unsubscribe() async {}
 
   static Future<void> push({
-    String? heading,
-    required String content,
-    String? payloadPath,
-    dynamic payloadData,
-    dynamic payloadAuth,
-    List<NotificationButton>? buttons,
-    String? imageURL,
-    DateTime? sendAfter,
+    required PushNotification notification,
   }) async {
-    final DateTime scheduledDate = sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
+    final DateTime scheduledDate =
+        notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
     _flutterLocalNotificationsPlugin.zonedSchedule(
-      Random().nextInt(50000) + 100000,
-      heading,
-      content,
+      notification.id,
+      notification.heading,
+      notification.content,
       TZDateTime(
         getLocation('Asia/Kolkata'),
         scheduledDate.year,
@@ -73,11 +66,11 @@ abstract class LocalNotifications {
         android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
       ),
       uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       payload: {
-        'path': payloadPath,
-        'data': payloadData,
-        'auth': payloadAuth,
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
       }.toString(),
     );
   }

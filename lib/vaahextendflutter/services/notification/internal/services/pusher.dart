@@ -1,20 +1,3 @@
-/*
-Pusher Advantages:
-- Users can establish private channels to communicate in real time.
-  (user-to-user + backend/pusher-to-user (usage example: for notifications))
-
-Pusher Limitations:
-- Pusher can not fetch old events, it can only listen to triggered live events
-- If user is offline and pusher triggered an event that won't be received by user.
-- If we implement code to store historical data locally, then the issue arise
-  when user uninstall the app and reinstall it, when user uses app on two devices.
-- https://support.pusher.com/hc/en-us/articles/4412239519249
-
-Possible simple fix:
-- To fix the above issues, we need to store events in
-  cloud database (using backend) prior to sending them via pusher.
-*/
-
 import 'dart:async';
 
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
@@ -22,7 +5,7 @@ import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 import './base_service.dart';
 import '../../../../env.dart';
 import '../../../logging_library/logging_library.dart';
-import '../models/internal_notification.dart';
+import '../../models/notification.dart';
 
 class InternalNotificationsWithPusher implements InternalNotificationsService {
   late final PusherChannelsFlutter _pusher;

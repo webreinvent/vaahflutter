@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import './local.dart';
-import './models/notification.dart';
-import './remote.dart';
-
-export './models/notification.dart';
+import './services/local.dart';
+import './services/remote.dart';
+import '../models/notification.dart';
 
 abstract class PushNotifications {
   static final Stream<String> remoteUserIdStream = RemoteNotifications.userIdStream;
@@ -40,41 +38,14 @@ abstract class PushNotifications {
   }
 
   static Future<void> push({
-    required NotificationType type,
-    required List<String> playerIds,
-    String? heading,
-    required String content,
-    String? payloadPath,
-    dynamic payloadData,
-    dynamic payloadAuth,
-    List<NotificationButton>? buttons,
-    String? imageURL,
-    DateTime? sendAfter,
+    required PushNotification notification,
+    String? channel,
   }) async {
-    assert(content.trim().isNotEmpty);
-    if (NotificationType.local == type) {
-      await LocalNotifications.push(
-        heading: heading,
-        content: content,
-        payloadPath: payloadPath,
-        payloadData: payloadData,
-        payloadAuth: payloadAuth,
-        buttons: buttons,
-        imageURL: imageURL,
-        sendAfter: sendAfter,
-      );
+    assert(notification.content.trim().isNotEmpty);
+    if (NotificationType.local == notification.type) {
+      await LocalNotifications.push(notification: notification);
       return;
     }
-    await RemoteNotifications.push(
-      playerIds: playerIds,
-      heading: heading,
-      content: content,
-      payloadPath: payloadPath,
-      payloadData: payloadData,
-      payloadAuth: payloadAuth,
-      buttons: buttons,
-      imageURL: imageURL,
-      sendAfter: sendAfter,
-    );
+    await RemoteNotifications.push(notification: notification, channel: channel);
   }
 }

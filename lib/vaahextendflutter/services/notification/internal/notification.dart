@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import './models/internal_notification.dart';
 import './services/base_service.dart';
 import './services/custom.dart';
 import './services/firebase.dart';
 import './services/no_service.dart';
 import './services/pusher.dart';
 import '../../../env.dart';
+import '../models/notification.dart';
 
 InternalNotificationsService get getService {
   final InternalNotificationsServiceType serviceType =

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../models/internal_notification.dart';
+import '../../models/notification.dart';
 
 abstract class InternalNotificationsService {
   final Stream<int> pendingNotificationsCountStream = const Stream.empty();

@@ -41,8 +41,8 @@ class BaseController extends GetxController {
 
       // Other Core Services
       await PushNotifications.init();
-      PushNotifications.askPermission();
       await InternalNotifications.init();
+      PushNotifications.askPermission();
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
