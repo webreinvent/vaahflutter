@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
@@ -22,12 +23,14 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
   @override
   late final Stream<List<InternalNotification>> notificationsStream;
 
-  List<InternalNotification> _notifications = [];
+  final List<InternalNotification> _notifications = [];
 
   @override
   List<InternalNotification> get notifications => _notifications;
 
   late final String userId;
+  final String _channelPrefix = 'client-';
+  String get _channelName => '$_channelPrefix$userId';
 
   @override
   Future<void> init() async {
@@ -44,18 +47,16 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
     await _pusher.init(
       apiKey: environmentConfig.pusherConfig!.apiKey,
       cluster: environmentConfig.pusherConfig!.cluster,
-      onAuthorizer: (String channelName, String socketId, dynamic options) {
-        // return {"shared_secret": "11518af14b1d4acbd3b9"};
-      },
+      onError: (message, code, error) => Log.exception(error, data: message),
+      onSubscriptionError: (message, error) => Log.exception(error, data: message),
+    );
+    await _pusher.connect();
+    await _pusher.subscribe(
+      channelName: _channelName,
       onEvent: (event) {
-        Log.warning(event);
-        if (event.data != null) {
-          _notificationsUpdated([event.data]);
-        }
+        _updateNotifications(event.data);
       },
     );
-    await _pusher.subscribe(channelName: 'private-$userId');
-    await _pusher.connect(); // Connect with cluster
   }
 
   @override
@@ -72,24 +73,29 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
     for (final id in userIds) {
       await _pusher.trigger(
         PusherEvent(
-          channelName: 'private-$id',
+          channelName: '$_channelPrefix$id',
           eventName: 'Internal Notification',
-          data: notification.toJson(),
+          data: jsonEncode(notification.toJson()),
         ),
       );
     }
   }
 
-  void _notificationsUpdated(List<Map<String, dynamic>> notifications) {
-    int count = 0;
-    final List<InternalNotification> updatedNotifications = [];
-    for (final jsonNotification in notifications) {
-      final InternalNotification notification = InternalNotification.fromJson(jsonNotification);
-      if (!notification.opened) count++;
-      updatedNotifications.add(notification);
+  void _updateNotifications(dynamic eventData) {
+    try {
+      final data = jsonDecode(eventData.toString());
+      if (data == null || data.isEmpty) return;
+      final InternalNotification notification = InternalNotification.fromJson(data);
+      _notifications.add(notification);
+      _notificationsStreamController.add(_notifications);
+      final int count = notifications.where((element) => element.opened == false).length;
+      _pendingNotificationsCountStreamController.add(count);
+    } catch (error, stackTrace) {
+      Log.exception(
+        error,
+        stackTrace: stackTrace,
+        hint: "Error parsing pusher internal notification",
+      );
     }
-    _pendingNotificationsCountStreamController.add(count);
-    _notificationsStreamController.add(updatedNotifications);
-    _notifications = updatedNotifications;
   }
 }
