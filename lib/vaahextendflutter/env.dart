@@ -25,6 +25,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   enableLocalLogs: true,
   enableCloudLogs: true,
   enableApiLogInterceptor: true,
+  pushNotificationsServiceType: PushNotificationsServiceType.none,
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
@@ -96,6 +97,7 @@ class EnvironmentConfig {
   final bool enableCloudLogs;
   final SentryConfig? sentryConfig;
   final bool enableApiLogInterceptor;
+  final PushNotificationsServiceType pushNotificationsServiceType;
   final InternalNotificationsServiceType internalNotificationsServiceType;
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
@@ -117,6 +119,7 @@ class EnvironmentConfig {
     required this.enableCloudLogs,
     this.sentryConfig,
     required this.enableApiLogInterceptor,
+    required this.pushNotificationsServiceType,
     required this.internalNotificationsServiceType,
     this.oneSignalConfig,
     this.pusherConfig,
@@ -161,6 +164,7 @@ class EnvironmentConfig {
     bool? enableCloudLogs,
     SentryConfig? sentryConfig,
     bool? enableApiLogInterceptor,
+    PushNotificationsServiceType? pushNotificationsServiceType,
     InternalNotificationsServiceType? internalNotificationsServiceType,
     OneSignalConfig? oneSignalConfig,
     PusherConfig? pusherConfig,
@@ -182,6 +186,8 @@ class EnvironmentConfig {
       enableCloudLogs: enableCloudLogs ?? this.enableCloudLogs,
       sentryConfig: sentryConfig ?? this.sentryConfig,
       enableApiLogInterceptor: enableApiLogInterceptor ?? this.enableApiLogInterceptor,
+      pushNotificationsServiceType:
+          pushNotificationsServiceType ?? this.pushNotificationsServiceType,
       internalNotificationsServiceType:
           internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
@@ -197,6 +203,10 @@ class EnvironmentConfig {
     await Get.find<EnvController>().increaseOpenCount();
   }
 }
+
+enum PushNotificationsServiceType { local, remote, both, none }
+
+enum InternalNotificationsServiceType { pusher, firebase, custom, none }
 
 class SentryConfig {
   final String dsn;
@@ -251,8 +261,6 @@ class OneSignalConfig {
     );
   }
 }
-
-enum InternalNotificationsServiceType { pusher, firebase, custom, none }
 
 class PusherConfig {
   final String apiKey;

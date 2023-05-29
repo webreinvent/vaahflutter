@@ -503,12 +503,12 @@ class _NotificationSection extends StatefulWidget {
 }
 
 class __NotificationSectionState extends State<_NotificationSection> {
-  String? userId = PushNotifications.remoteUserId;
+  String? userId = PushNotifications.userId;
 
   @override
   void initState() {
     super.initState();
-    PushNotifications.remoteUserIdStream.listen((String updatedUserId) {
+    PushNotifications.userIdStream.listen((String updatedUserId) {
       setState(() {
         userId = updatedUserId;
       });

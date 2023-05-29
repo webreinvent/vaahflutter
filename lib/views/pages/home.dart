@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vaahflutter/vaahextendflutter/services/notification/internal/notification_view.dart';
 
-import './ui/index.dart';
 import '../../vaahextendflutter/base/base_stateful.dart';
 import '../../vaahextendflutter/env.dart';
+import '../../vaahextendflutter/services/notification/internal/notification_view.dart';
+import 'ui/index.dart';
 
 class HomePage extends StatefulWidget {
   static const String routePath = '/home';
