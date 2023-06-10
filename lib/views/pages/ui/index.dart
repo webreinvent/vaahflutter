@@ -30,13 +30,13 @@ class _UIPageState extends State<UIPage> {
       appBar: AppBar(
         title: const Text('UI Page'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: horizontalPadding24,
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               verticalMargin24,
               AppThemeColors(),
               verticalMargin24,

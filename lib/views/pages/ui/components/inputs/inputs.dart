@@ -30,12 +30,12 @@ class _AppInputsState extends State<AppInputs> {
         children: [
           Text('Inputs', style: TextStyles.semiBold7),
           verticalMargin24,
-          TabOptions(
+          const TabOptions(
             tabs: [
               TabOption(
                 name: 'Preview',
                 tab: Column(
-                  children: const [
+                  children: [
                     InputTextPreview(),
                     verticalMargin24,
                     InputSizesPreview(),
@@ -55,7 +55,7 @@ class _AppInputsState extends State<AppInputs> {
               TabOption(
                 name: 'Code',
                 tab: Column(
-                  children: const [
+                  children: [
                     ExpansionPanelWrap(
                       title: 'Input Text',
                       child: InputTextCode(),
