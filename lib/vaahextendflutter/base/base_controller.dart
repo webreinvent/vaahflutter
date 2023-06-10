@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:vaahflutter/controllers/root_assets_controller.dart';
+import 'package:vaahflutter/vaahextendflutter/services/http_overrides.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
@@ -20,6 +22,8 @@ class BaseController extends GetxController {
     FirebaseOptions? firebaseOptions,
   }) async {
     try {
+      setupProxyOverrides();
+
       // Storage initialization to store some properties locally
       await GetStorage.init();
 
@@ -39,6 +43,7 @@ class BaseController extends GetxController {
       // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
+      Get.put(RootAssetsController());
 
       // Other Core Services
       await PushNotifications.init();

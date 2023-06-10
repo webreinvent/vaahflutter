@@ -9,6 +9,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:vaahflutter/controllers/root_assets_controller.dart';
+import 'package:vaahflutter/vaahextendflutter/helpers/enums.dart';
+import 'package:vaahflutter/vaahextendflutter/services/http_overrides.dart';
+import 'package:vaahflutter/vaahextendflutter/widgets/atoms/buttons.dart';
+import 'package:vaahflutter/vaahextendflutter/widgets/atoms/input_text.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
@@ -214,66 +220,28 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                             ? AppTheme.colors['success']
                                                             : AppTheme.colors['danger'],
                                                       ),
-                                                      if (null !=
-                                                          _environmentConfig.sentryConfig) ...{
-                                                        'Sentry DSN': Data(
-                                                          value:
-                                                              _environmentConfig.sentryConfig!.dsn,
-                                                        ),
-                                                        'Sentry Traces Sample Rate': Data(
-                                                          value: _environmentConfig
-                                                              .sentryConfig!.tracesSampleRate
-                                                              .toString(),
-                                                        ),
-                                                        'Sentry Auto App Start (Record Cold And Warm Start Time)':
-                                                            Data(
-                                                          value: _environmentConfig
-                                                                  .sentryConfig!.autoAppStart
-                                                              ? 'enabled'
-                                                              : 'disabled',
-                                                          color: _environmentConfig
-                                                                  .sentryConfig!.autoAppStart
-                                                              ? AppTheme.colors['success']
-                                                              : AppTheme.colors['danger'],
-                                                        ),
-                                                        'Sentry User Interaction Tracing': Data(
-                                                          value: _environmentConfig.sentryConfig!
-                                                                  .enableUserInteractionTracing
-                                                              ? 'enabled'
-                                                              : 'disabled',
-                                                          color: _environmentConfig.sentryConfig!
-                                                                  .enableUserInteractionTracing
-                                                              ? AppTheme.colors['success']
-                                                              : AppTheme.colors['danger'],
-                                                        ),
-                                                        'Sentry Auto Performance Tracking': Data(
-                                                          value: _environmentConfig.sentryConfig!
-                                                                  .enableAutoPerformanceTracing
-                                                              ? 'enabled'
-                                                              : 'disabled',
-                                                          color: _environmentConfig.sentryConfig!
-                                                                  .enableAutoPerformanceTracing
-                                                              ? AppTheme.colors['success']
-                                                              : AppTheme.colors['danger'],
-                                                        ),
-                                                        'Sentry Assets Instrumentation': Data(
-                                                          value: _environmentConfig.sentryConfig!
-                                                                  .enableAssetsInstrumentation
-                                                              ? 'enabled'
-                                                              : 'disabled',
-                                                          color: _environmentConfig.sentryConfig!
-                                                                  .enableAssetsInstrumentation
-                                                              ? AppTheme.colors['success']
-                                                              : AppTheme.colors['danger'],
-                                                        ),
-                                                      },
                                                     },
                                                   ),
                                                 ),
+                                                if (_environmentConfig.sentryConfig != null) ...[
+                                                  verticalMargin24,
+                                                  _SentrySection(
+                                                    sentryConfig: _environmentConfig.sentryConfig!,
+                                                  ),
+                                                ],
+                                                if (!(_environmentConfig.oneSignalConfig == null ||
+                                                    _environmentConfig
+                                                        .oneSignalConfig!.appId.isEmpty)) ...[
+                                                  verticalMargin24,
+                                                  _NotificationSection(
+                                                    oneSignalConfig:
+                                                        _environmentConfig.oneSignalConfig!,
+                                                  ),
+                                                ],
                                                 verticalMargin24,
                                                 const _StreamLinksSection(),
                                                 verticalMargin24,
-                                                _NotificationSection(config: _environmentConfig),
+                                                const _ProxySection(),
                                                 verticalMargin24,
                                               ],
                                             ),
@@ -454,6 +422,107 @@ class _PanelBorder extends ShapeBorder {
   }
 }
 
+class _SentrySection extends StatefulWidget {
+  const _SentrySection({
+    Key? key,
+    required this.sentryConfig,
+  }) : super(key: key);
+
+  final SentryConfig sentryConfig;
+
+  @override
+  State<_SentrySection> createState() => _SentrySectionState();
+}
+
+class _SentrySectionState extends State<_SentrySection> {
+  @override
+  Widget build(BuildContext context) {
+    return _ShowDetails(
+      contentHolder: PanelDataContentHolder(
+        content: {
+          'Sentry DSN': Data(
+            value: widget.sentryConfig.dsn,
+          ),
+          'Sentry Traces Sample Rate': Data(
+            value: widget.sentryConfig.tracesSampleRate.toString(),
+          ),
+          'Sentry Auto App Start (Record Cold And Warm Start Time)': Data(
+            value: widget.sentryConfig.autoAppStart ? 'enabled' : 'disabled',
+            color: widget.sentryConfig.autoAppStart
+                ? AppTheme.colors['success']
+                : AppTheme.colors['danger'],
+          ),
+          'Sentry User Interaction Tracing': Data(
+            value: widget.sentryConfig.enableUserInteractionTracing ? 'enabled' : 'disabled',
+            color: widget.sentryConfig.enableUserInteractionTracing
+                ? AppTheme.colors['success']
+                : AppTheme.colors['danger'],
+          ),
+          'Sentry Auto Performance Tracking': Data(
+            value: widget.sentryConfig.enableAutoPerformanceTracing ? 'enabled' : 'disabled',
+            color: widget.sentryConfig.enableAutoPerformanceTracing
+                ? AppTheme.colors['success']
+                : AppTheme.colors['danger'],
+          ),
+          'Sentry Assets Instrumentation': Data(
+            value: widget.sentryConfig.enableAssetsInstrumentation ? 'enabled' : 'disabled',
+            color: widget.sentryConfig.enableAssetsInstrumentation
+                ? AppTheme.colors['success']
+                : AppTheme.colors['danger'],
+          ),
+        },
+      ),
+    );
+  }
+}
+
+class _NotificationSection extends StatefulWidget {
+  final OneSignalConfig oneSignalConfig;
+
+  const _NotificationSection({
+    Key? key,
+    required this.oneSignalConfig,
+  }) : super(key: key);
+
+  @override
+  State<_NotificationSection> createState() => _NotificationSectionState();
+}
+
+class _NotificationSectionState extends State<_NotificationSection> {
+  String? userId = PushNotifications.userId;
+
+  @override
+  void initState() {
+    super.initState();
+    PushNotifications.userIdStream.listen((String updatedUserId) {
+      setState(() {
+        userId = updatedUserId;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Notification Section'),
+        verticalMargin8,
+        _ShowDetails(
+          contentHolder: PanelDataContentHolder(
+            content: {
+              'One Signal App Id': Data(value: widget.oneSignalConfig.appId),
+              'User Id': Data(value: userId),
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class _StreamLinksSection extends StatefulWidget {
   const _StreamLinksSection({Key? key}) : super(key: key);
 
@@ -490,49 +559,49 @@ class _StreamLinksSectionState extends State<_StreamLinksSection> {
   }
 }
 
-class _NotificationSection extends StatefulWidget {
-  final EnvironmentConfig config;
-
-  const _NotificationSection({Key? key, required this.config}) : super(key: key);
+class _ProxySection extends StatefulWidget {
+  const _ProxySection();
 
   @override
-  State<_NotificationSection> createState() => __NotificationSectionState();
+  State<_ProxySection> createState() => _ProxySectionState();
 }
 
-class __NotificationSectionState extends State<_NotificationSection> {
-  String? userId = PushNotifications.userId;
+class _ProxySectionState extends State<_ProxySection> {
+  final TextEditingController _controller = TextEditingController();
+  final RootAssetsController _assetController = Get.find<RootAssetsController>();
 
   @override
   void initState() {
     super.initState();
-    PushNotifications.userIdStream.listen((String updatedUserId) {
-      setState(() {
-        userId = updatedUserId;
-      });
-    });
+    _controller.text = _assetController.proxy ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.config.oneSignalConfig == null || widget.config.oneSignalConfig!.appId.isEmpty
-        ? emptyWidget
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Notification Section'),
-              verticalMargin8,
-              _ShowDetails(
-                contentHolder: PanelDataContentHolder(
-                  content: {
-                    'One Signal App Id': Data(value: widget.config.oneSignalConfig?.appId),
-                    'User Id': Data(value: userId),
-                  },
-                ),
-              ),
-            ],
-          );
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InputText(
+          controller: _controller,
+          label: 'Proxy',
+          onChanged: (value) => _assetController.proxy = value,
+        ),
+        verticalMargin8,
+        ButtonElevated(
+          text: 'Save',
+          buttonType: ButtonType.primary,
+          onPressed: () => setProxyService(_controller.text),
+        ),
+      ],
+    );
   }
 }
 
