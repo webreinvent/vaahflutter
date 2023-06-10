@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
-import 'package:vaahflutter/vaahextendflutter/services/notification/internal/notification.dart';
 
 import '../app_theme.dart';
 import '../env.dart';
 import '../services/api.dart';
 import '../services/dynamic_links.dart';
+import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
 
 class BaseController extends GetxController {
