@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import './timezone.dart';
+import 'timezone.dart';
 
 enum TimeZone { utc, local }
 

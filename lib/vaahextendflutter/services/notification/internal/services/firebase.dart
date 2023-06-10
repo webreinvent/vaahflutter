@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import './base_service.dart';
 import '../../models/notification.dart';
+import 'base_service.dart';
 
 class InternalNotificationsWithFirebase implements InternalNotificationsService {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;

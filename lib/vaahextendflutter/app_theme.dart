@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import './base/base_theme.dart';
+import 'base/base_theme.dart';
 
 class AppTheme {
   static final Map<String, MaterialColor> colors = Map.of(BaseTheme.colors);

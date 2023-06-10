@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import './notification.dart';
 import '../../../env.dart';
 import '../../../helpers/constants.dart';
+import 'notification.dart';
 
 class InternalNotificationsBadge extends StatefulWidget {
   const InternalNotificationsBadge({Key? key}) : super(key: key);

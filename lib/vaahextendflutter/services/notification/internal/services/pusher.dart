@@ -3,10 +3,10 @@ import 'dart:convert';
 
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
-import './base_service.dart';
 import '../../../../env.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
+import 'base_service.dart';
 
 class InternalNotificationsWithPusher implements InternalNotificationsService {
   late final PusherChannelsFlutter _pusher;

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:get/get.dart';
 
-import './logging_library/logging_library.dart';
+import 'logging_library/logging_library.dart';
 
 abstract class DynamicLinks {
   static void init() async {
