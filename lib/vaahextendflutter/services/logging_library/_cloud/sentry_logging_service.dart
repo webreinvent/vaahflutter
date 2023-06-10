@@ -1,7 +1,7 @@
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import './logging_service.dart';
 import '../models/log.dart';
+import 'logging_service.dart';
 
 abstract class SentryLoggingService implements LoggingService {
   static logEvent({

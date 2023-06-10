@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import './app_theme.dart';
-import './services/logging_library/logging_library.dart';
+import 'app_theme.dart';
+import 'services/logging_library/logging_library.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 

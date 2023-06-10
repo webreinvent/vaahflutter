@@ -1,5 +1,5 @@
-import './logging_service.dart';
 import '../models/log.dart';
+import 'logging_service.dart';
 
 abstract class FirebaseLoggingService implements LoggingService {
   static logEvent({

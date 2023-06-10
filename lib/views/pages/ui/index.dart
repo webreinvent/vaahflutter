@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import './components/buttons/buttons.dart';
-import './components/inputs/inputs.dart';
-import './components/themecolors.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import 'components/buttons/buttons.dart';
+import 'components/inputs/inputs.dart';
+import 'components/themecolors.dart';
 
 class UIPage extends StatefulWidget {
   static const String routePath = '/ui-page';
