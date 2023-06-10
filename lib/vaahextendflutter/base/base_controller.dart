@@ -51,7 +51,7 @@ class BaseController extends GetxController {
             ..dsn = config.sentryConfig!.dsn
             ..autoAppStart = config.sentryConfig!.autoAppStart
             ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
-            ..enableAutoPerformanceTracking = config.sentryConfig!.enableAutoPerformanceTracking
+            ..enableAutoPerformanceTracing = config.sentryConfig!.enableAutoPerformanceTracing
             ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
             ..environment = config.envType,
         );

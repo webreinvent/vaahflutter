@@ -212,7 +212,7 @@ class SentryConfig {
   final String dsn;
   final bool autoAppStart; // To record cold and warm start up time
   final double tracesSampleRate;
-  final bool enableAutoPerformanceTracking;
+  final bool enableAutoPerformanceTracing;
   final bool enableUserInteractionTracing;
   final bool enableAssetsInstrumentation;
 
@@ -220,7 +220,7 @@ class SentryConfig {
     required this.dsn,
     this.autoAppStart = true,
     this.tracesSampleRate = 0.6,
-    this.enableAutoPerformanceTracking = true,
+    this.enableAutoPerformanceTracing = true,
     this.enableUserInteractionTracing = true,
     this.enableAssetsInstrumentation = true,
   });
@@ -229,7 +229,7 @@ class SentryConfig {
     String? dsn,
     bool? autoAppStart,
     double? tracesSampleRate,
-    bool? enableAutoPerformanceTracking,
+    bool? enableAutoPerformanceTracing,
     bool? enableUserInteractionTracing,
     bool? enableAssetsInstrumentation,
   }) {
@@ -237,8 +237,8 @@ class SentryConfig {
       dsn: dsn ?? this.dsn,
       autoAppStart: autoAppStart ?? this.autoAppStart,
       tracesSampleRate: tracesSampleRate ?? this.tracesSampleRate,
-      enableAutoPerformanceTracking:
-          enableAutoPerformanceTracking ?? this.enableAutoPerformanceTracking,
+      enableAutoPerformanceTracing:
+          enableAutoPerformanceTracing ?? this.enableAutoPerformanceTracing,
       enableUserInteractionTracing:
           enableUserInteractionTracing ?? this.enableUserInteractionTracing,
       enableAssetsInstrumentation: enableAssetsInstrumentation ?? this.enableAssetsInstrumentation,
