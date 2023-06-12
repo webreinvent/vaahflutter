@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
-import './ui/index.dart';
 import '../../vaahextendflutter/base/base_stateful.dart';
+import '../../vaahextendflutter/env.dart';
+import '../../vaahextendflutter/services/notification/internal/notification_view.dart';
+import 'ui/index.dart';
 
 class HomePage extends StatefulWidget {
   static const String routePath = '/home';
@@ -21,10 +23,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends BaseStateful<HomePage> {
   @override
+  void initState() {
+    super.initState();
+    EnvironmentConfig.getEnvConfig().increaseOpenCount();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: const [
+          InternalNotificationsBadge(),
+        ],
+      ),
       body: Center(
         child: ElevatedButton(
           onPressed: () {

@@ -33,3 +33,22 @@ class AppConfig extends StatelessWidget {
     );
   }
 }
+
+class ErrorAppConfig extends StatelessWidget {
+  const ErrorAppConfig({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      theme: ThemeData(
+        primarySwatch: AppTheme.colors['primary'],
+      ),
+      home: Scaffold(
+        appBar: AppBar(),
+        body: const Center(
+          child: Text('Something Went Wrong!'),
+        ),
+      ),
+    );
+  }
+}

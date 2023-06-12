@@ -66,7 +66,7 @@ abstract class DynamicLinks {
         "decoded": "${linkData.link.host}${linkData.link.path}?payload=$payload",
       });
       if (payload != null && payload['path'] != null) {
-        Get.offAllNamed(
+        Get.to(
           payload['path'],
           arguments: <String, dynamic>{
             'data': payload['data'],

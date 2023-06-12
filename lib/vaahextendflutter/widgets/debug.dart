@@ -15,6 +15,7 @@ import '../env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 import '../services/dynamic_links.dart';
+import '../services/notification/push/notification.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -275,6 +276,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 const _StreamLinksSection(),
                                                 verticalMargin24,
+                                                _NotificationSection(config: _environmentConfig),
+                                                verticalMargin24,
                                               ],
                                             ),
                                           ),
@@ -482,9 +485,55 @@ class _StreamLinksSectionState extends State<_StreamLinksSection> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Dynamic Link'),
+              const Text('Dynamic Link Section'),
               verticalMargin8,
               _ShowDetails(contentHolder: PanelLinkContentHolder(content: link!)),
+            ],
+          );
+  }
+}
+
+class _NotificationSection extends StatefulWidget {
+  final EnvironmentConfig config;
+
+  const _NotificationSection({Key? key, required this.config}) : super(key: key);
+
+  @override
+  State<_NotificationSection> createState() => __NotificationSectionState();
+}
+
+class __NotificationSectionState extends State<_NotificationSection> {
+  String? userId = PushNotifications.userId;
+
+  @override
+  void initState() {
+    super.initState();
+    PushNotifications.userIdStream.listen((String updatedUserId) {
+      setState(() {
+        userId = updatedUserId;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.config.oneSignalConfig == null || widget.config.oneSignalConfig!.appId.isEmpty
+        ? emptyWidget
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Notification Section'),
+              verticalMargin8,
+              _ShowDetails(
+                contentHolder: PanelDataContentHolder(
+                  content: {
+                    'One Signal App Id': Data(value: widget.config.oneSignalConfig?.appId),
+                    'User Id': Data(value: userId),
+                  },
+                ),
+              ),
             ],
           );
   }

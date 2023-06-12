@@ -15,7 +15,7 @@ import '../helpers/constants.dart';
 
 // alertType : 'dialog', 'toast',
 
-class Api {
+abstract class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
   static late final EnvironmentConfig _config;
 
