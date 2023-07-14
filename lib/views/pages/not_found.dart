@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../vaahextendflutter/base/base_stateless.dart';
-
-class NotFoundPage extends BaseStateless {
+class NotFoundPage extends StatelessWidget {
   static const String routePath = '/page-not-found';
 
   static Route<void> route() {
@@ -16,7 +14,6 @@ class NotFoundPage extends BaseStateless {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(),
       body: const Center(

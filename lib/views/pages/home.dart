@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../vaahextendflutter/base/base_stateful.dart';
 import '../../vaahextendflutter/env.dart';
 import '../../vaahextendflutter/services/notification/internal/notification_view.dart';
 import 'ui/index.dart';
@@ -21,7 +20,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends BaseStateful<HomePage> {
+class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +29,6 @@ class _HomePageState extends BaseStateful<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(
         actions: const [
