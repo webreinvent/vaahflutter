@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../vaahextendflutter/base/base_stateless.dart';
-
-class PermissionDeniedPage extends BaseStateless {
+class PermissionDeniedPage extends StatelessWidget {
   static const String routePath = '/permission-denied';
 
   static Route<void> route() {
@@ -16,7 +14,6 @@ class PermissionDeniedPage extends BaseStateless {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       appBar: AppBar(),
       body: const Center(

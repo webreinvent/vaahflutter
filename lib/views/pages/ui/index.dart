@@ -4,7 +4,6 @@ import './components/buttons/buttons.dart';
 import './components/inputs/inputs.dart';
 import './components/themecolors.dart';
 import '../../../vaahextendflutter/app_theme.dart';
-import '../../../vaahextendflutter/base/base_stateful.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
 
 class UIPage extends StatefulWidget {
@@ -23,10 +22,9 @@ class UIPage extends StatefulWidget {
   State<UIPage> createState() => _UIPageState();
 }
 
-class _UIPageState extends BaseStateful<UIPage> {
+class _UIPageState extends State<UIPage> {
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Scaffold(
       backgroundColor: AppTheme.colors['black']?.shade100,
       appBar: AppBar(
