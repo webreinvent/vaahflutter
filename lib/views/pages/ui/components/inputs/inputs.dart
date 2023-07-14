@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import './complex.dart';
-import './defaults.dart';
-import './icons.dart';
-import './sizes.dart';
 import '../../../../../vaahextendflutter/app_theme.dart';
 import '../../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/tab_options.dart';
+import 'complex.dart';
+import 'defaults.dart';
+import 'icons.dart';
+import 'sizes.dart';
 
 class AppInputs extends StatefulWidget {
   const AppInputs({Key? key}) : super(key: key);
@@ -30,12 +30,12 @@ class _AppInputsState extends State<AppInputs> {
         children: [
           Text('Inputs', style: TextStyles.semiBold7),
           verticalMargin24,
-          TabOptions(
+          const TabOptions(
             tabs: [
               TabOption(
                 name: 'Preview',
                 tab: Column(
-                  children: const [
+                  children: [
                     InputTextPreview(),
                     verticalMargin24,
                     InputSizesPreview(),
@@ -55,7 +55,7 @@ class _AppInputsState extends State<AppInputs> {
               TabOption(
                 name: 'Code',
                 tab: Column(
-                  children: const [
+                  children: [
                     ExpansionPanelWrap(
                       title: 'Input Text',
                       child: InputTextCode(),

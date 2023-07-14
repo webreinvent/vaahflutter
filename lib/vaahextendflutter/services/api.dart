@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
-import './logging_library/logging_library.dart';
 import '../app_theme.dart';
 import '../env.dart';
 import '../helpers/alerts.dart';
 import '../helpers/constants.dart';
+import 'logging_library/logging_library.dart';
 
 // alertType : 'dialog', 'toast',
 
@@ -98,7 +98,7 @@ abstract class Api {
       }
 
       // All errors other than dio error eg. typeError
-      if (error is! DioError) {
+      if (error is! DioException) {
         if (callback != null) {
           await callback(null, null);
         }
@@ -106,8 +106,8 @@ abstract class Api {
       }
 
       // Timeout Error
-      else if (error.type == DioErrorType.sendTimeout ||
-          error.type == DioErrorType.receiveTimeout) {
+      else if (error.type == DioExceptionType.sendTimeout ||
+          error.type == DioExceptionType.receiveTimeout) {
         await _handleTimeoutError(
           error,
           showAlert,
@@ -126,7 +126,7 @@ abstract class Api {
       }
 
       // Here response error means server sends error response. eg 401: unauthorised
-      else if (error.type == DioErrorType.badResponse) {
+      else if (error.type == DioExceptionType.badResponse) {
         await _handleResponseError(
           error,
           showAlert,
@@ -344,7 +344,7 @@ abstract class Api {
   }
 
   static Future<void> _handleTimeoutError(
-    DioError error,
+    DioException error,
     bool showAlert,
     String alertType,
   ) async {
@@ -378,7 +378,7 @@ abstract class Api {
   }
 
   static Future<void> _handleResponseError(
-    DioError error,
+    DioException error,
     bool showAlert,
     String alertType,
   ) async {
@@ -387,7 +387,7 @@ abstract class Api {
       // By pass dio header error code to get response content
       // Try to return response
       if (response == null) {
-        throw DioError(
+        throw DioException(
           requestOptions: error.requestOptions,
           response: error.response,
           type: error.type,
@@ -404,7 +404,7 @@ abstract class Api {
         redirects: response.redirects,
         extra: response.extra,
       );
-      throw DioError(
+      throw DioException(
         requestOptions: error.requestOptions,
         response: res,
         type: error.type,

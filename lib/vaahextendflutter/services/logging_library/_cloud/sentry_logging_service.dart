@@ -1,7 +1,7 @@
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import './logging_service.dart';
 import '../models/log.dart';
+import 'logging_service.dart';
 
 abstract class SentryLoggingService implements LoggingService {
   static logEvent({
@@ -12,7 +12,7 @@ abstract class SentryLoggingService implements LoggingService {
     final SentryEvent event = SentryEvent(message: SentryMessage(message), level: level);
     Sentry.captureEvent(
       event,
-      hint: data,
+      hint: data == null ? null : Hint.withMap({'data': data}),
     );
   }
 

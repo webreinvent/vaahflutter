@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
-import './routes/middleware.dart';
-import './vaahextendflutter/app_theme.dart';
-import './vaahextendflutter/env.dart';
-import './vaahextendflutter/widgets/debug.dart';
+import 'routes/middleware.dart';
+import 'vaahextendflutter/app_theme.dart';
+import 'vaahextendflutter/env.dart';
+import 'vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 

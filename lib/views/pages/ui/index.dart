@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import './components/buttons/buttons.dart';
-import './components/inputs/inputs.dart';
-import './components/themecolors.dart';
 import '../../../vaahextendflutter/app_theme.dart';
 import '../../../vaahextendflutter/helpers/constants.dart';
+import 'components/buttons/buttons.dart';
+import 'components/inputs/inputs.dart';
+import 'components/themecolors.dart';
 
 class UIPage extends StatefulWidget {
   static const String routePath = '/ui-page';
@@ -30,13 +30,13 @@ class _UIPageState extends State<UIPage> {
       appBar: AppBar(
         title: const Text('UI Page'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: horizontalPadding24,
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+          physics: BouncingScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: const [
+            children: [
               verticalMargin24,
               AppThemeColors(),
               verticalMargin24,

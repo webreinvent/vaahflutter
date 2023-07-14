@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import './code_preview.dart';
 import '../../../../vaahextendflutter/app_theme.dart';
 import '../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../vaahextendflutter/widgets/atoms/app_expansion_panel.dart';
 import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_border.dart';
 import '../../../../vaahextendflutter/widgets/atoms/tab_options.dart';
+import 'code_preview.dart';
 
 class AppThemeColors extends StatefulWidget {
   const AppThemeColors({Key? key}) : super(key: key);
