@@ -7,7 +7,7 @@ version: 1.0.0
 
 environment:
   sdk: ">=3.0.3"
-  flutter: ">=3.10.4"
+  flutter: ">=3.13.1"
 
 dependencies:
   flutter:
@@ -18,7 +18,7 @@ dependencies:
   # Console
   colorize: ^3.0.0
   # Log and Performance
-  sentry_flutter: ^7.8.0
+  sentry_flutter: ^7.9.0
   # State Management
   get: ^4.6.5
   # Api
