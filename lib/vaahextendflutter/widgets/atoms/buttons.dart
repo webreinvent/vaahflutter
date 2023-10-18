@@ -354,6 +354,7 @@ class ButtonIcon extends StatelessWidget {
   final IconData? iconData;
   final ButtonType? buttonType;
   final Color? color;
+  final Color? backgroundColor;
   final double? iconSize;
   final bool enableBorder;
   final double? borderRadius;
@@ -369,6 +370,7 @@ class ButtonIcon extends StatelessWidget {
     this.enableBorder = true,
     this.borderRadius,
     this.padding,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -384,6 +386,7 @@ class ButtonIcon extends StatelessWidget {
                   color: color ?? getColorForButtonType(buttonType ?? ButtonType.primary)!,
                 ),
           shape: BoxShape.circle,
+          color: backgroundColor,
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(borderRadius ?? 1000.0),
