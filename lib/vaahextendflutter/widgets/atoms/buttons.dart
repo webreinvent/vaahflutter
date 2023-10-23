@@ -294,10 +294,10 @@ class ButtonText extends StatelessWidget {
   }
 }
 
-class ButtonTextWithLeading extends StatelessWidget {
+class ButtonTextWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final Widget? leading;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -305,13 +305,12 @@ class ButtonTextWithLeading extends StatelessWidget {
   final double? iconSize;
   final double? borderRadius;
   final EdgeInsets? padding;
-  final String? assetPath;
 
-  const ButtonTextWithLeading._({
+  const ButtonTextWithIcon({
     Key? key,
     required this.onPressed,
     required this.text,
-    this.iconData,
+    this.leading,
     this.style,
     this.buttonType,
     this.foregroundColor,
@@ -319,60 +318,7 @@ class ButtonTextWithLeading extends StatelessWidget {
     this.iconSize = 16,
     this.borderRadius,
     this.padding,
-    this.assetPath,
   }) : super(key: key);
-
-  factory ButtonTextWithLeading.asset({
-    required OnPressed onPressed,
-    required String text,
-    required String? assetPath,
-    ButtonStyle? style,
-    ButtonType? buttonType,
-    Color? foregroundColor,
-    double? fontSize,
-    double? iconSize,
-    double? borderRadius,
-    EdgeInsets? padding,
-  }) {
-    return ButtonTextWithLeading._(
-      onPressed: onPressed,
-      text: text,
-      style: style,
-      assetPath: assetPath,
-      borderRadius: borderRadius,
-      buttonType: buttonType,
-      fontSize: fontSize,
-      foregroundColor: foregroundColor,
-      iconSize: iconSize,
-      padding: padding,
-    );
-  }
-
-  factory ButtonTextWithLeading.icon({
-    required OnPressed onPressed,
-    required String text,
-    required IconData? iconData,
-    ButtonStyle? style,
-    ButtonType? buttonType,
-    Color? foregroundColor,
-    double? fontSize,
-    double? iconSize,
-    double? borderRadius,
-    EdgeInsets? padding,
-  }) {
-    return ButtonTextWithLeading._(
-      iconData: iconData,
-      onPressed: onPressed,
-      text: text,
-      style: style,
-      borderRadius: borderRadius,
-      buttonType: buttonType,
-      fontSize: fontSize,
-      foregroundColor: foregroundColor,
-      iconSize: iconSize,
-      padding: padding,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -395,12 +341,7 @@ class ButtonTextWithLeading extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: assetPath != null
-          ? Image.asset(assetPath!)
-          : FaIcon(
-              iconData,
-              size: iconSize,
-            ),
+      icon: leading!,
     );
   }
 }

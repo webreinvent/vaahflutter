@@ -31,10 +31,10 @@ class ButtonIconLabelPreview extends StatelessWidget {
               text: "Icon Button",
               iconData: FontAwesomeIcons.user,
             ),
-            ButtonTextWithLeading.icon(
+            ButtonTextWithIcon(
               onPressed: () {},
               text: "Icon Button",
-              iconData: FontAwesomeIcons.user,
+              leading: const Icon(FontAwesomeIcons.user),
             ),
           ],
         ),
