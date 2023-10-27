@@ -24,7 +24,7 @@ class ButtonIconLabelPreview extends StatelessWidget {
             ButtonElevatedWithIcon(
               onPressed: () {},
               text: "Icon Button",
-              iconData: FontAwesomeIcons.user,
+              leading: const Icon(FontAwesomeIcons.user),
             ),
             ButtonOutlinedWithIcon(
               onPressed: () {},
