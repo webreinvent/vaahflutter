@@ -297,7 +297,7 @@ class ButtonText extends StatelessWidget {
 class ButtonTextWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final Widget? leading;
+  final Widget leading;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -310,7 +310,7 @@ class ButtonTextWithIcon extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.text,
-    this.leading,
+    required this.leading,
     this.style,
     this.buttonType,
     this.foregroundColor,
@@ -341,7 +341,7 @@ class ButtonTextWithIcon extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: leading!,
+      icon: leading,
     );
   }
 }
