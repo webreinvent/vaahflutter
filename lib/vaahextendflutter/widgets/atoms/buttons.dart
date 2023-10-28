@@ -82,7 +82,7 @@ class ButtonElevated extends StatelessWidget {
 class ButtonElevatedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final Widget leading;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? backgroundColor;
@@ -96,7 +96,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.text,
-    required this.iconData,
+    required this.leading,
     this.style,
     this.buttonType,
     this.backgroundColor,
@@ -129,10 +129,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: FaIcon(
-        iconData,
-        size: iconSize,
-      ),
+      icon: leading,
     );
   }
 }
