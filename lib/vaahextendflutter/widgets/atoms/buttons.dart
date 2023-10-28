@@ -82,7 +82,7 @@ class ButtonElevated extends StatelessWidget {
 class ButtonElevatedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final Widget? leading;
+  final Widget leading;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? backgroundColor;
@@ -129,7 +129,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: leading!,
+      icon: leading,
     );
   }
 }
