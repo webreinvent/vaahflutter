@@ -1,3 +1,5 @@
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 import '../../env.dart';
 import '_cloud/firebase_logging_service.dart';
 import '_cloud/sentry_logging_service.dart';
@@ -80,9 +82,9 @@ class Log {
       Console.danger('$throwable\n$hint', data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      final hintWithData = {
-        'hint': hint,
-        'data': data,
+      final hintWithData = <String, Object>{
+        'hint': hint ?? {},
+        'data': data ?? {},
       };
       for (final service in _services) {
         switch (service) {
@@ -90,14 +92,14 @@ class Log {
             SentryLoggingService.logException(
               throwable,
               stackTrace: stackTrace,
-              hint: hintWithData,
+              hint: Hint.withMap(hintWithData),
             );
             return;
           case FirebaseLoggingService:
             FirebaseLoggingService.logException(
               throwable,
               stackTrace: stackTrace,
-              hint: hintWithData,
+              hint: Hint.withMap(hintWithData),
             );
             return;
           default:
