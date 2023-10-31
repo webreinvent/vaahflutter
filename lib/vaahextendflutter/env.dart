@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'app_theme.dart';
 import 'services/logging_library/logging_library.dart';
+import '././helpers/assets.dart';
 
 // After changing any const you will need to restart the app (Hot-reload won't work).
 
@@ -31,49 +33,47 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
 );
 
-// To add new configuration add new key, value pair in envConfigs
-Map<String, EnvironmentConfig> _envConfigs = {
-  // Do not remove default config
-  'default': defaultConfig.copyWith(
-    envType: 'default',
-  ),
-  'develop': defaultConfig.copyWith(
-    envType: 'develop',
-    enableCloudLogs: false,
-  ),
-  'stage': defaultConfig.copyWith(
-    envType: 'stage',
-    enableCloudLogs: true,
-  ),
-  'production': defaultConfig.copyWith(
-    envType: 'production',
-    enableLocalLogs: false,
-    enableApiLogInterceptor: false,
-    showDebugPanel: false,
-  ),
-};
-
 class EnvController extends GetxController {
   final GetStorage _storage = GetStorage();
-  late EnvironmentConfig _config;
+  EnvironmentConfig _config = defaultConfig;
 
   EnvironmentConfig get config => _config;
 
   EnvController(String environment) {
+    getSpecificConfig(environment);
+  }
+
+  void getSpecificConfig(String environment) async {
     try {
-      _config = getSpecificConfig(environment).copyWith(openCount: _storage.read('open_count'));
+      await getConfigFromJson(environment);
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace: stackTrace);
       exit(0);
     }
   }
 
-  EnvironmentConfig getSpecificConfig(String key) {
-    bool configExists = _envConfigs.containsKey(key);
-    if (configExists) {
-      return _envConfigs[key]!;
+  Future<void> getConfigFromJson(String key) async {
+    final String envJson = await rootBundle.loadString(DataAssets.envJson(key));
+    if (envJson.isNotEmpty) {
+      final Map<String, dynamic> json = jsonDecode(envJson);
+      final result = EnvironmentConfig.fromJson(json);
+      _config = defaultConfig.copyWith(
+          appTitle: result.appTitle,
+          appTitleShort: result.appTitleShort,
+          envType: result.envType,
+          version: result.version,
+          build: result.build,
+          backendUrl: result.backendUrl,
+          apiUrl: result.apiUrl,
+          timeoutLimit: result.timeoutLimit,
+          enableLocalLogs: result.enableLocalLogs,
+          enableCloudLogs: result.enableCloudLogs,
+          enableApiLogInterceptor: result.enableApiLogInterceptor,
+          showDebugPanel: result.showDebugPanel,
+          openCount: _storage.read('open_count'));
+    } else {
+      throw Exception('Environment configuration not found for key: $key');
     }
-    throw Exception('Environment configuration not found for key: $key');
   }
 
   Future<void> increaseOpenCount() async {
@@ -130,13 +130,13 @@ class EnvironmentConfig {
   static EnvironmentConfig getEnvConfig() {
     final bool envControllerExists = Get.isRegistered<EnvController>();
     if (!envControllerExists) {
-      setEnvConfig();
+      return setEnvConfig();
     }
     EnvController envController = Get.find<EnvController>();
     return envController.config;
   }
 
-  static void setEnvConfig() {
+  static EnvironmentConfig setEnvConfig() {
     String environment = const String.fromEnvironment('environment', defaultValue: 'default');
     final EnvController envController = Get.put(EnvController(environment));
     Log.info(
@@ -146,6 +146,29 @@ class EnvironmentConfig {
     Log.info(
       'Version: ${envController.config.version}+${envController.config.build}',
       disableCloudLogging: true,
+    );
+    return envController.config;
+  }
+
+  factory EnvironmentConfig.fromJson(Map<String, dynamic> json) {
+    return EnvironmentConfig(
+      appTitle: json["app_title"],
+      appTitleShort: json["app_title_short"],
+      envType: json["env_type"],
+      version: json["version"],
+      build: json["build"],
+      openCount: json["open_count"],
+      backendUrl: json["backend_url"],
+      apiUrl: json["api_url"],
+      firebaseId: json["firebase_id"],
+      timeoutLimit: json["timeout_limit"],
+      enableLocalLogs: json["enable_local_logs"],
+      enableCloudLogs: json["enable_cloud_logs"],
+      enableApiLogInterceptor: json["enable_api_log_interceptor"],
+      pushNotificationsServiceType: PushNotificationsServiceType.none,
+      internalNotificationsServiceType: InternalNotificationsServiceType.none,
+      showDebugPanel: json["show_debug_panel"],
+      debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
     );
   }
 
