@@ -27,6 +27,7 @@ class InputText extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final InputBorderType inputBorder;
+  final FocusNode? focusNode;
 
   const InputText({
     super.key,
@@ -50,6 +51,7 @@ class InputText extends StatelessWidget {
     this.minLines,
     this.maxLines,
     this.inputBorder = InputBorderType.outline,
+    this.focusNode,
   });
 
   @override
@@ -122,6 +124,7 @@ class InputText extends StatelessWidget {
       autovalidateMode: autoValidateMode,
       minLines: minLines,
       maxLines: maxLines,
+      focusNode: focusNode,
     );
   }
 
