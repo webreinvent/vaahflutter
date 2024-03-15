@@ -199,6 +199,7 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
   final double? iconSize;
   final double? borderRadius;
   final EdgeInsets? padding;
+  final Color? borderColor;
 
   const ButtonOutlinedWithIcon({
     Key? key,
@@ -212,6 +213,7 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
     this.iconSize = 16,
     this.borderRadius,
     this.padding,
+    this.borderColor,
   }) : super(key: key);
 
   @override
@@ -222,7 +224,7 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
           OutlinedButton.styleFrom(
             side: BorderSide(
               width: 2.0,
-              color: foregroundColor ?? getColorForButtonType(buttonType ?? ButtonType.primary)!,
+              color: borderColor ?? foregroundColor ?? getColorForButtonType(buttonType ?? ButtonType.primary)!,
             ),
             foregroundColor:
                 foregroundColor ?? (buttonType == null ? null : getColorForButtonType(buttonType!)),
