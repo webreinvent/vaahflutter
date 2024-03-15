@@ -76,11 +76,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Info",',
             '    buttonType: ButtonType.info,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -88,11 +88,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Success",',
             '    buttonType: ButtonType.success,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -100,11 +100,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Warning",',
             '    buttonType: ButtonType.warning,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -112,11 +112,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Danger",',
             '    buttonType: ButtonType.danger,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -124,11 +124,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Help",',
             '    buttonType: ButtonType.help,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -136,11 +136,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Primary",',
             '    buttonType: ButtonType.primary,',
-            '),"'
+            '),'
           ],
         ),
         verticalMargin8,
@@ -148,11 +148,11 @@ class ButtonTextCode extends StatelessWidget {
         verticalMargin4,
         const CodePreview(
           code: [
-            'ButtonText(",',
+            'ButtonText(',
             '    onPressed: () {},',
             '    text: "Secondary",',
             '    buttonType: ButtonType.secondary,',
-            '),"'
+            '),'
           ],
         ),
       ],
