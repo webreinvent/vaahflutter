@@ -26,7 +26,6 @@ class InputText extends StatelessWidget {
   final Function()? suffixOnTap;
   final int? minLines;
   final int? maxLines;
-  final InputBorderType inputBorder;
 
   const InputText({
     super.key,
@@ -49,7 +48,6 @@ class InputText extends StatelessWidget {
     this.suffixOnTap,
     this.minLines,
     this.maxLines,
-    this.inputBorder = InputBorderType.outline,
   });
 
   @override
@@ -57,12 +55,12 @@ class InputText extends StatelessWidget {
     return TextFormField(
       decoration: InputDecoration(
         contentPadding: padding,
-        border: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        enabledBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        disabledBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        focusedBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        errorBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        focusedErrorBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
+        border: border(AppTheme.colors['black']!.shade400),
+        enabledBorder: border(AppTheme.colors['black']!.shade400),
+        disabledBorder: border(AppTheme.colors['black']!.shade300),
+        focusedBorder: border(AppTheme.colors['black']!.shade400),
+        errorBorder: border(AppTheme.colors['danger']!.shade400),
+        focusedErrorBorder: border(AppTheme.colors['danger']!.shade400),
         errorStyle: TextStyle(color: AppTheme.colors['danger']!.shade400),
         hintText: label,
         hintStyle: TextStyle(
@@ -125,29 +123,14 @@ class InputText extends StatelessWidget {
     );
   }
 
-  InputBorder getInputBorder(InputBorderType inputBorderType, Color color) {
-    switch (inputBorderType) {
-      case InputBorderType.none:
-        return InputBorder.none;
-
-      case InputBorderType.underline:
-        return UnderlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: BorderSide(
-            width: 1,
-            color: color,
-          ),
-        );
-
-      case InputBorderType.outline:
-        return OutlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-          borderSide: BorderSide(
-            width: 1,
-            color: color,
-          ),
-        );
-    }
+  OutlineInputBorder border(Color color) {
+    return OutlineInputBorder(
+      borderRadius: BorderRadius.circular(borderRadius),
+      borderSide: BorderSide(
+        width: 1,
+        color: color,
+      ),
+    );
   }
 
   double getFontSize() {
@@ -164,10 +147,4 @@ class InputText extends StatelessWidget {
         return AppTheme.medium;
     }
   }
-}
-
-enum InputBorderType {
-  underline,
-  outline,
-  none,
 }
