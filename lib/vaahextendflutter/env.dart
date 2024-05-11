@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:datadog_flutter_plugin/datadog_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -101,6 +102,7 @@ class EnvironmentConfig {
   final InternalNotificationsServiceType internalNotificationsServiceType;
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
+  final DatadogConfig? datadogConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
 
@@ -123,6 +125,7 @@ class EnvironmentConfig {
     required this.internalNotificationsServiceType,
     this.oneSignalConfig,
     this.pusherConfig,
+    this.datadogConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
   });
@@ -192,6 +195,7 @@ class EnvironmentConfig {
           internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       pusherConfig: pusherConfig ?? this.pusherConfig,
+      datadogConfig: datadogConfig ?? this.datadogConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
     );
@@ -278,6 +282,35 @@ class PusherConfig {
     return PusherConfig(
       apiKey: apiKey ?? this.apiKey,
       cluster: cluster ?? this.cluster,
+    );
+  }
+}
+
+class DatadogConfig {
+  final String clientToken;
+  final String env;
+  final DatadogSite site;
+  final bool nativeCrashReportEnabled;
+  final DatadogRumConfiguration rumConfiguration;
+
+  DatadogConfig({
+    required this.clientToken,
+    required this.env,
+    required this.site,
+    this.nativeCrashReportEnabled = true,
+    required this.rumConfiguration,
+  });
+
+  DatadogConfig copyWith({
+    String? clientToken,
+    String? env,
+    DatadogSite? site,
+  }) {
+    return DatadogConfig(
+      clientToken: clientToken ?? this.clientToken,
+      env: env ?? this.env,
+      site: site ?? this.site,
+      rumConfiguration: rumConfiguration,
     );
   }
 }

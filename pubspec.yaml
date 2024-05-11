@@ -41,6 +41,7 @@ dependencies:
   # Icons
   cupertino_icons: ^1.0.5
   font_awesome_flutter: ^10.5.0
+  datadog_flutter_plugin: ^2.4.0
 
 dev_dependencies:
   flutter_test:

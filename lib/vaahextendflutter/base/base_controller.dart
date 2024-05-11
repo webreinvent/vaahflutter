@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:datadog_flutter_plugin/datadog_flutter_plugin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,6 +44,13 @@ class BaseController extends GetxController {
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
+
+      //Initialize datadog logging service
+      DatadogSdk? datadogSdk;
+
+      if (config.datadogConfig != null) {
+        final configuration = DatadogConfiguration(clientToken: clientToken, env: env, site: site)
+      }
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
