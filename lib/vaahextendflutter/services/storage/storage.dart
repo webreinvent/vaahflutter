@@ -10,6 +10,16 @@ abstract class Storage {
   ///The argument [name] is used to open Hive box with that name.
   ///
   ///If you don't provide [name], 'default' will be used.
+  ///
+  ///Usage:
+  ///```dart
+  ///import 'path/to/storage.dart';
+  /// //...
+  ///
+  /// final Storage storage = Storage.createLocal('users');
+  /// storage.create(key: 'john', value: 'John Doe');
+  ///
+  /// ```
   factory Storage.createLocal({String? name}) {
     switch (_envConfig.localStorageType) {
       case LocalStorageType.hive:
@@ -40,6 +50,10 @@ abstract class Storage {
   ///
   ///In case of Hive you can only provide the value as Map<String, String> where Map's key will be used as
   ///[key] and Map's value will be used as [value].
+  ///
+  ///```dart
+  /// storage.create(key: 'john', value: 'John Doe');
+  /// ```
   Future<void> create({dynamic key, dynamic value});
 
   ///Reads the value of the item with [key] from the database and returns the value according to type of [key]
@@ -49,18 +63,27 @@ abstract class Storage {
   ///If the [key] is List of String it will return [value] as List of String.
   ///
   ///When the key is not provided it will return all the values from that [Storage] as Map<[key], [value]>
+  ///```dart
+  /// storage.read(key: 'john');
+  /// ```
   Future<dynamic> read({dynamic key});
 
   ///Updates an item with the [key], and [value].
   ///for data types refer [create].
+  ///```dart
+  /// storage.update(key: 'john', value: 'Changed value');
+  /// ```
   Future<dynamic> update({dynamic key, dynamic value});
 
   ///Deletes an item matching with the [key].
   ///for data types refer [read].
+  ///```dart
+  /// storage.delete(key: 'john');
+  /// ```
   void delete({dynamic key});
 }
 
-///A placeholder storage class when StorageType.none is selected.
+///A placeholder storage class when [LocalStorageType.none] is selected in env.dart.
 class NullStorage implements Storage {
   @override
   void delete({dynamic key}) {}
