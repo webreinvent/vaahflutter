@@ -45,11 +45,31 @@ class BaseController extends GetxController {
       await InternalNotifications.init();
       PushNotifications.askPermission();
 
-      //Initialize datadog logging service
-      DatadogSdk? datadogSdk;
-
+      // datadog configuration
       if (config.datadogConfig != null) {
-        final configuration = DatadogConfiguration(clientToken: clientToken, env: env, site: site)
+        final datadogSdk = DatadogSdk.instance;
+
+        final datadogConfig = DatadogConfiguration(
+          clientToken: config.datadogConfig!.clientToken,
+          env: config.envType,
+          site: config.datadogConfig!.site,
+          rumConfiguration: DatadogRumConfiguration(
+            applicationId: config.datadogConfig!.rumApplicationId,
+            sessionSamplingRate: 50.0,
+          ),
+          nativeCrashReportEnabled: config.datadogConfig!.nativeCrashReportEnabled,
+        );
+
+        final datadogLoggerConfiguration = DatadogLoggerConfiguration(
+          networkInfoEnabled: true,
+        );
+
+        datadogSdk.logs?.createLogger(datadogLoggerConfiguration);
+
+        await datadogSdk.initialize(
+          datadogConfig,
+          TrackingConsent.granted,
+        );
       }
 
       // Sentry Initialization (And/ Or) Running main app

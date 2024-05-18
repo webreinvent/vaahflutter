@@ -195,7 +195,7 @@ class EnvironmentConfig {
           internalNotificationsServiceType ?? this.internalNotificationsServiceType,
       oneSignalConfig: oneSignalConfig ?? this.oneSignalConfig,
       pusherConfig: pusherConfig ?? this.pusherConfig,
-      datadogConfig: datadogConfig ?? this.datadogConfig,
+      datadogConfig: datadogConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
     );
@@ -288,29 +288,26 @@ class PusherConfig {
 
 class DatadogConfig {
   final String clientToken;
-  final String env;
   final DatadogSite site;
   final bool nativeCrashReportEnabled;
-  final DatadogRumConfiguration rumConfiguration;
+  final String rumApplicationId;
 
   DatadogConfig({
     required this.clientToken,
-    required this.env,
-    required this.site,
+    this.site = DatadogSite.us1,
     this.nativeCrashReportEnabled = true,
-    required this.rumConfiguration,
+    required this.rumApplicationId,
   });
 
   DatadogConfig copyWith({
     String? clientToken,
-    String? env,
     DatadogSite? site,
+    String? applicationId,
   }) {
     return DatadogConfig(
       clientToken: clientToken ?? this.clientToken,
-      env: env ?? this.env,
-      site: site ?? this.site,
-      rumConfiguration: rumConfiguration,
+      site: site ?? DatadogSite.us1,
+      rumApplicationId: rumApplicationId,
     );
   }
 }
