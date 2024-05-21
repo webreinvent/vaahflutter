@@ -27,6 +27,12 @@ class InputText extends StatelessWidget {
   final int? minLines;
   final int? maxLines;
   final InputBorderType inputBorder;
+  final TextAlign textAlign;
+  final double borderWidth;
+  final Color? focusedBorderColor;
+  final Color? inputColor;
+  final Color? labelColor;
+  final Color? enabledBorderColor;
   final FocusNode? focusNode;
 
   const InputText({
@@ -51,26 +57,34 @@ class InputText extends StatelessWidget {
     this.minLines,
     this.maxLines,
     this.inputBorder = InputBorderType.outline,
+    this.textAlign = TextAlign.start,
+    this.borderWidth = 1,
+    this.focusedBorderColor,
+    this.inputColor,
+    this.labelColor,
+    this.enabledBorderColor,
     this.focusNode,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textAlign: textAlign,
       decoration: InputDecoration(
         contentPadding: padding,
         border: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
-        enabledBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
+        enabledBorder:
+            getInputBorder(inputBorder, enabledBorderColor ?? AppTheme.colors['black']!.shade400),
         disabledBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade300),
-        focusedBorder: getInputBorder(inputBorder, AppTheme.colors['black']!.shade400),
+        focusedBorder:
+            getInputBorder(inputBorder, focusedBorderColor ?? AppTheme.colors['black']!.shade400),
         errorBorder: getInputBorder(inputBorder, AppTheme.colors['danger']!.shade400),
         focusedErrorBorder: getInputBorder(inputBorder, AppTheme.colors['danger']!.shade400),
         errorStyle: TextStyle(color: AppTheme.colors['danger']!.shade400),
         hintText: label,
         hintStyle: TextStyle(
           fontSize: getFontSize(),
-          color:
-              isEnabled ? AppTheme.colors['black']!.shade400 : AppTheme.colors['black']!.shade300,
+          color: isEnabled ? labelColor : AppTheme.colors['black']!.shade300,
         ),
         prefixIcon: prefixIcon != null
             ? InkWell(
@@ -118,7 +132,7 @@ class InputText extends StatelessWidget {
       onChanged: onChanged,
       style: TextStyle(
         fontSize: getFontSize(),
-        color: AppTheme.colors['black']!.shade400,
+        color: isEnabled ? inputColor : AppTheme.colors['black']!.shade400,
       ),
       enabled: isEnabled,
       autovalidateMode: autoValidateMode,
@@ -135,9 +149,9 @@ class InputText extends StatelessWidget {
 
       case InputBorderType.underline:
         return UnderlineInputBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.zero,
           borderSide: BorderSide(
-            width: 1,
+            width: borderWidth,
             color: color,
           ),
         );
@@ -146,7 +160,7 @@ class InputText extends StatelessWidget {
         return OutlineInputBorder(
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(
-            width: 1,
+            width: borderWidth,
             color: color,
           ),
         );
