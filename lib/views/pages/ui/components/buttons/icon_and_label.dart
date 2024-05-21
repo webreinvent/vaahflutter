@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import '../../../../../vaahextendflutter/app_theme.dart';
 import '../../../../../vaahextendflutter/helpers/constants.dart';
 import '../../../../../vaahextendflutter/helpers/styles.dart';
 import '../../../../../vaahextendflutter/widgets/atoms/buttons.dart';
@@ -35,6 +35,12 @@ class ButtonIconLabelPreview extends StatelessWidget {
               onPressed: () {},
               text: "Icon Button",
               leading: const Icon(FontAwesomeIcons.user),
+            ),
+            ButtonOutlinedWithIcon(
+              onPressed: () {},
+              borderColor: AppTheme.colors['info'],
+              text: "Border Color",
+              iconData: FontAwesomeIcons.user,
             ),
           ],
         ),
@@ -84,6 +90,19 @@ class ButtonIconLabelCode extends StatelessWidget {
             '    onPressed: () {},',
             '    text: "Icon Button",',
             '    iconData: FontAwesomeIcons.user,',
+            '),',
+          ],
+        ),
+        verticalMargin8,
+        Text('Outlined Button With Icon & Border Color', style: TextStyles.regular2),
+        verticalMargin4,
+        const CodePreview(
+          code: [
+            'ButtonOutlinedWithIcon(',
+            '    onPressed: () {},',
+            '    text: "Border Color",',
+            '    iconData: FontAwesomeIcons.user,',
+            '''    borderColor: AppTheme.colors['warning'],''',
             '),',
           ],
         ),
