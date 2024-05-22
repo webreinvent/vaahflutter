@@ -8,7 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart' as getx;
 
 import '../app_theme.dart';
-import '../env.dart';
+import '../env/env.dart';
 import '../helpers/alerts.dart';
 import '../helpers/constants.dart';
 import 'logging_library/logging_library.dart';
@@ -153,7 +153,7 @@ abstract class Api {
 
   static void init() {
     // get env controller to get variable apiUrl
-    _config = EnvironmentConfig.getEnvConfig();
+    _config = EnvironmentConfig.getConfig;
     _apiBaseUrl = _config.apiUrl;
     if (_config.enableApiLogInterceptor) {
       _dio.interceptors.add(

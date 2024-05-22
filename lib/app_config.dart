@@ -4,7 +4,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'routes/middleware.dart';
 import 'vaahextendflutter/app_theme.dart';
-import 'vaahextendflutter/env.dart';
+import 'vaahextendflutter/env/env.dart';
 import 'vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
@@ -14,7 +14,7 @@ class AppConfig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EnvironmentConfig env = EnvironmentConfig.getEnvConfig();
+    EnvironmentConfig env = EnvironmentConfig.getConfig;
     return GetMaterialApp(
       title: env.appTitle,
       theme: ThemeData(
