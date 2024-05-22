@@ -3,51 +3,51 @@ description: VaahFlutter, essentials for every flutter app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0
+version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.3"
-  flutter: ">=3.10.4"
+  sdk: ">=3.4.0"
+  flutter: ">=3.22.0"
 
 dependencies:
   flutter:
     sdk: flutter
   # Annotations
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
   copy_with_extension: ^5.0.4
   # Console
   colorize: ^3.0.0
   # Log and Performance
-  sentry_flutter: ^7.8.0
+  sentry_flutter: ^8.2.0
   # State Management
-  get: ^4.6.5
+  get: ^4.6.6
   # Api
-  dio: ^5.2.1+1
+  dio: ^5.4.3+1
   # Utilities
-  intl: ^0.18.1
-  fluttertoast: ^8.2.2
-  file_picker: ^5.3.2
+  intl: ^0.19.0
+  fluttertoast: ^8.2.5
+  file_picker: ^8.0.3
   # Firebase
-  firebase_core: ^2.14.0
-  cloud_firestore: ^4.8.2
-  firebase_dynamic_links: ^5.3.3
+  firebase_core: ^2.31.1
+  cloud_firestore: ^4.17.4
+  firebase_dynamic_links: ^5.5.6
   # Notifications
-  onesignal_flutter: ^3.5.1
-  flutter_local_notifications: ^15.1.0+1
-  pusher_channels_flutter: ^2.1.2
-  timezone: ^0.9.2
+  onesignal_flutter: ^5.2.0
+  flutter_local_notifications: ^17.1.2
+  pusher_channels_flutter: ^2.2.1
+  timezone: ^0.9.3
   # Storage
   get_storage: ^2.1.1
   # Icons
-  cupertino_icons: ^1.0.5
-  font_awesome_flutter: ^10.5.0
+  cupertino_icons: ^1.0.8
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.2
-  build_runner: ^2.4.6
-  json_serializable: ^6.7.1
+  flutter_lints: ^4.0.0
+  build_runner: ^2.4.10
+  json_serializable: ^6.8.0
   copy_with_extension_gen: ^5.0.4
 
 flutter:
