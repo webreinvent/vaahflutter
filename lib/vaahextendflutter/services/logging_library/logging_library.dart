@@ -88,14 +88,14 @@ class Log {
       };
       for (final service in _services) {
         switch (service) {
-          case SentryLoggingService:
+          case SentryLoggingService _:
             SentryLoggingService.logException(
               throwable,
               stackTrace: stackTrace,
               hint: Hint.withMap(hintWithData),
             );
             return;
-          case FirebaseLoggingService:
+          case FirebaseLoggingService _:
             FirebaseLoggingService.logException(
               throwable,
               stackTrace: stackTrace,
@@ -121,13 +121,13 @@ class Log {
     if (_config.enableCloudLogs && !disableCloudLogging) {
       for (final service in _services) {
         switch (service) {
-          case SentryLoggingService:
+          case SentryLoggingService _:
             SentryLoggingService.logTransaction(
               execute: execute,
               details: details,
             );
             return;
-          case FirebaseLoggingService:
+          case FirebaseLoggingService _:
             FirebaseLoggingService.logTransaction(
               execute: execute,
               details: details,
@@ -147,14 +147,14 @@ class Log {
   }) {
     for (final service in _services) {
       switch (service) {
-        case SentryLoggingService:
+        case SentryLoggingService _:
           SentryLoggingService.logEvent(
             message: text,
             level: type?.toSentryLevel,
             data: data,
           );
           return;
-        case FirebaseLoggingService:
+        case FirebaseLoggingService _:
           FirebaseLoggingService.logEvent(
             message: text,
             type: type,
