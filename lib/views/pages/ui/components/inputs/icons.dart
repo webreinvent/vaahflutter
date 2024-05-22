@@ -11,7 +11,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class InputIconsPreview extends StatelessWidget {
-  const InputIconsPreview({Key? key}) : super(key: key);
+  const InputIconsPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +63,7 @@ class InputIconsPreview extends StatelessWidget {
 }
 
 class InputIconsCode extends StatelessWidget {
-  const InputIconsCode({Key? key}) : super(key: key);
+  const InputIconsCode({super.key});
 
   @override
   Widget build(BuildContext context) {

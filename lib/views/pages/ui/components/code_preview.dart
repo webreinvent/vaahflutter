@@ -8,7 +8,10 @@ import '../../../../vaahextendflutter/widgets/atoms/container_with_rounded_borde
 class CodePreview extends StatelessWidget {
   final List<String> code;
 
-  const CodePreview({Key? key, required this.code}) : super(key: key);
+  const CodePreview({
+    super.key,
+    required this.code,
+  });
 
   @override
   Widget build(BuildContext context) {

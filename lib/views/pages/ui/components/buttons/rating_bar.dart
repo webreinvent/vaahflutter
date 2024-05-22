@@ -7,7 +7,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class RatingBarPreview extends StatelessWidget {
-  const RatingBarPreview({Key? key}) : super(key: key);
+  const RatingBarPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class RatingBarPreview extends StatelessWidget {
 }
 
 class RatingBarCode extends StatelessWidget {
-  const RatingBarCode({Key? key}) : super(key: key);
+  const RatingBarCode({super.key});
 
   @override
   Widget build(BuildContext context) {

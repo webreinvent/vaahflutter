@@ -23,10 +23,10 @@ const double constHandleHeight = 38.0; // tag handle height
 @immutable
 class DebugWidget extends StatefulWidget {
   const DebugWidget({
-    Key? key,
+    super.key,
     required this.navigatorKey,
     required this.child,
-  }) : super(key: key);
+  });
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
@@ -301,12 +301,11 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
 @immutable
 class _EnvPanel extends StatelessWidget {
   const _EnvPanel({
-    Key? key,
     required this.handleHeight,
     required this.onHandlePressed,
     required this.config,
     required this.child,
-  }) : super(key: key);
+  });
 
   final double handleHeight;
   final VoidCallback onHandlePressed;
@@ -455,7 +454,7 @@ class _PanelBorder extends ShapeBorder {
 }
 
 class _StreamLinksSection extends StatefulWidget {
-  const _StreamLinksSection({Key? key}) : super(key: key);
+  const _StreamLinksSection();
 
   @override
   State<_StreamLinksSection> createState() => _StreamLinksSectionState();
@@ -493,7 +492,9 @@ class _StreamLinksSectionState extends State<_StreamLinksSection> {
 class _NotificationSection extends StatefulWidget {
   final EnvironmentConfig config;
 
-  const _NotificationSection({Key? key, required this.config}) : super(key: key);
+  const _NotificationSection({
+    required this.config,
+  });
 
   @override
   State<_NotificationSection> createState() => __NotificationSectionState();
@@ -540,9 +541,8 @@ class _ShowDetails extends StatefulWidget {
   final PanelContentHolder contentHolder;
 
   const _ShowDetails({
-    Key? key,
     required this.contentHolder,
-  }) : super(key: key);
+  });
 
   @override
   State<_ShowDetails> createState() => _ShowDetailsState();

@@ -9,7 +9,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class ButtonIconPreview extends StatelessWidget {
-  const ButtonIconPreview({Key? key}) : super(key: key);
+  const ButtonIconPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class ButtonIconPreview extends StatelessWidget {
 }
 
 class ButtonIconCode extends StatelessWidget {
-  const ButtonIconCode({Key? key}) : super(key: key);
+  const ButtonIconCode({super.key});
 
   @override
   Widget build(BuildContext context) {

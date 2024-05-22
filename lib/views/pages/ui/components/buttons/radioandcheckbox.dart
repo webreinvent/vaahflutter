@@ -8,7 +8,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class ButtonRadioAndCheckboxPreview extends StatelessWidget {
-  const ButtonRadioAndCheckboxPreview({Key? key}) : super(key: key);
+  const ButtonRadioAndCheckboxPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class ButtonRadioAndCheckboxPreview extends StatelessWidget {
 }
 
 class ButtonRadioAndCheckboxCode extends StatelessWidget {
-  const ButtonRadioAndCheckboxCode({Key? key}) : super(key: key);
+  const ButtonRadioAndCheckboxCode({super.key});
 
   @override
   Widget build(BuildContext context) {

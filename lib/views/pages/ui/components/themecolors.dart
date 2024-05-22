@@ -9,7 +9,7 @@ import '../../../../vaahextendflutter/widgets/atoms/tab_options.dart';
 import 'code_preview.dart';
 
 class AppThemeColors extends StatefulWidget {
-  const AppThemeColors({Key? key}) : super(key: key);
+  const AppThemeColors({super.key});
 
   @override
   State<AppThemeColors> createState() => _AppThemeColorsState();
@@ -78,7 +78,11 @@ class _AppThemeColorsState extends State<AppThemeColors> {
 }
 
 class ColorPalette extends StatelessWidget {
-  const ColorPalette({Key? key, required this.title, required this.color}) : super(key: key);
+  const ColorPalette({
+    super.key,
+    required this.title,
+    required this.color,
+  });
 
   final String title;
   final MaterialColor color;
@@ -125,10 +129,10 @@ class ColorPalette extends StatelessWidget {
 @immutable
 class ColorCodes extends StatelessWidget {
   const ColorCodes({
-    Key? key,
+    super.key,
     required this.title,
     required this.color,
-  }) : super(key: key);
+  });
 
   final String title;
   final MaterialColor? color;

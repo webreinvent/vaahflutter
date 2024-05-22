@@ -6,7 +6,7 @@ import '../../../helpers/constants.dart';
 import 'notification.dart';
 
 class InternalNotificationsBadge extends StatefulWidget {
-  const InternalNotificationsBadge({Key? key}) : super(key: key);
+  const InternalNotificationsBadge({super.key});
 
   @override
   State<InternalNotificationsBadge> createState() => _InternalNotificationsBadgeState();
@@ -55,7 +55,7 @@ class InternalNotificationsView extends StatefulWidget {
     );
   }
 
-  const InternalNotificationsView({Key? key}) : super(key: key);
+  const InternalNotificationsView({super.key});
 
   @override
   State<InternalNotificationsView> createState() => _InternalNotificationsViewState();

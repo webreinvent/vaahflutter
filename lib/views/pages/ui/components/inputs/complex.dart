@@ -12,7 +12,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class InputDateTimePreview extends StatelessWidget {
-  const InputDateTimePreview({Key? key}) : super(key: key);
+  const InputDateTimePreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +50,7 @@ class InputDateTimePreview extends StatelessWidget {
 }
 
 class InputDateTimeCode extends StatelessWidget {
-  const InputDateTimeCode({Key? key}) : super(key: key);
+  const InputDateTimeCode({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +105,7 @@ class InputDateTimeCode extends StatelessWidget {
 }
 
 class InputSliderPreview extends StatelessWidget {
-  const InputSliderPreview({Key? key}) : super(key: key);
+  const InputSliderPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -168,7 +168,7 @@ class InputSliderPreview extends StatelessWidget {
 }
 
 class InputSliderCode extends StatelessWidget {
-  const InputSliderCode({Key? key}) : super(key: key);
+  const InputSliderCode({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +261,7 @@ class InputSliderCode extends StatelessWidget {
 }
 
 class InputFilePickerPreview extends StatelessWidget {
-  const InputFilePickerPreview({Key? key}) : super(key: key);
+  const InputFilePickerPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -286,7 +286,7 @@ class InputFilePickerPreview extends StatelessWidget {
 }
 
 class InputFilePickerCode extends StatelessWidget {
-  const InputFilePickerCode({Key? key}) : super(key: key);
+  const InputFilePickerCode({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -316,7 +316,7 @@ class InputFilePickerCode extends StatelessWidget {
 }
 
 class InputAutoCompletePreview extends StatelessWidget {
-  const InputAutoCompletePreview({Key? key}) : super(key: key);
+  const InputAutoCompletePreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +344,7 @@ class InputAutoCompletePreview extends StatelessWidget {
 }
 
 class InputAutoCompleteCode extends StatelessWidget {
-  const InputAutoCompleteCode({Key? key}) : super(key: key);
+  const InputAutoCompleteCode({super.key});
 
   @override
   Widget build(BuildContext context) {

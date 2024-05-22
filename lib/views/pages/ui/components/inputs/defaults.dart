@@ -7,7 +7,7 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class InputTextPreview extends StatelessWidget {
-  const InputTextPreview({Key? key}) : super(key: key);
+  const InputTextPreview({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class InputTextPreview extends StatelessWidget {
 }
 
 class InputTextCode extends StatelessWidget {
-  const InputTextCode({Key? key}) : super(key: key);
+  const InputTextCode({super.key});
 
   @override
   Widget build(BuildContext context) {

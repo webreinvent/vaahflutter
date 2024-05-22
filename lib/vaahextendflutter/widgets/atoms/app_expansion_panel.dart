@@ -18,7 +18,7 @@ typedef ExpansionHeaderBuilder = Widget Function(BuildContext context, Expansion
 @immutable
 class AppExpansionPanel extends StatefulWidget {
   const AppExpansionPanel({
-    Key? key,
+    super.key,
     this.headerBuilder,
     this.heading,
     required this.children,
@@ -27,7 +27,7 @@ class AppExpansionPanel extends StatefulWidget {
     this.border = true,
     this.backgroundColor,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   final ExpansionHeaderBuilder? headerBuilder;
   final String? heading;
@@ -144,7 +144,10 @@ class _AppExpansionPanelState extends State<AppExpansionPanel>
 @immutable
 class AppExpansionPanelIcon extends StatelessWidget {
   final Color? color;
-  const AppExpansionPanelIcon({Key? key, this.color}) : super(key: key);
+  const AppExpansionPanelIcon({
+    super.key,
+    this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
