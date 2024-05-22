@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../app_theme.dart';
-import '../env.dart';
+import '../env/env.dart';
 import '../services/api.dart';
 import '../services/dynamic_links.dart';
 import '../services/notification/internal/notification.dart';
@@ -24,8 +24,9 @@ class BaseController extends GetxController {
       await GetStorage.init();
 
       // Environment initialization
-      EnvironmentConfig.setEnvConfig();
-      final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
+      final envController = Get.put(EnvController());
+      await envController.initialize();
+      final EnvironmentConfig config = EnvironmentConfig.getConfig;
 
       // Initialization of Firebase and Services
       if (firebaseOptions != null) {

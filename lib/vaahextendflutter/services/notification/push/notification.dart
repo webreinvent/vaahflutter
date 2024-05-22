@@ -1,13 +1,14 @@
 import 'dart:async';
 
-import '../../../env.dart';
+import '../../../env/env.dart';
+import '../../../env/notification.dart';
 import '../models/notification.dart';
 import 'services/local.dart';
 import 'services/remote.dart';
 
 abstract class PushNotifications {
   static final PushNotificationsServiceType _pushNotificationsServiceType =
-      EnvironmentConfig.getEnvConfig().pushNotificationsServiceType;
+      EnvironmentConfig.getConfig.pushNotificationsServiceType;
 
   static late final Stream<String> userIdStream;
   static late String? userId;

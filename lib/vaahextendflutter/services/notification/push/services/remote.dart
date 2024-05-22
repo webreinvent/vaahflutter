@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import '../../../../env.dart';
+import '../../../../env/env.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
@@ -16,7 +16,7 @@ const Map<String, String> channels = {
 
 abstract class RemoteNotifications {
   static final OneSignal _oneSignal = OneSignal.shared;
-  static final EnvironmentConfig _env = EnvironmentConfig.getEnvConfig();
+  static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
   static final GetStorage _storage = GetStorage();
 
   static final StreamController<String> _userIdStreamController =
