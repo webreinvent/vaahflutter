@@ -44,6 +44,9 @@ class BaseController extends GetxController {
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
+      if (config.hiveConfig != null) {
+        await config.hiveConfig!.init();
+      }
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
