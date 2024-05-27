@@ -47,8 +47,8 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
     await _pusher.init(
       apiKey: environmentConfig.pusherConfig!.apiKey,
       cluster: environmentConfig.pusherConfig!.cluster,
-      onError: (message, code, error) => Log.exception(error, data: message),
-      onSubscriptionError: (message, error) => Log.exception(error, data: message),
+      onError: (message, code, error) => Log.exception(message, throwable: error),
+      onSubscriptionError: (message, error) => Log.exception(message, throwable: error),
     );
     await _pusher.connect();
     await _pusher.subscribe(
@@ -92,9 +92,9 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
       _pendingNotificationsCountStreamController.add(count);
     } catch (error, stackTrace) {
       Log.exception(
-        error,
+        "Error parsing pusher internal notification",
+        throwable: error,
         stackTrace: stackTrace,
-        hint: "Error parsing pusher internal notification",
       );
     }
   }
