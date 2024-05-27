@@ -12,6 +12,7 @@ import '../services/api.dart';
 import '../services/dynamic_links.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
+import 'root_assets_controller.dart';
 
 class BaseController extends GetxController {
   Future<void> init({
@@ -39,6 +40,9 @@ class BaseController extends GetxController {
       // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
+
+      // RootAssets
+      Get.put(RootAssetsController());
 
       // Other Core Services
       await PushNotifications.init();

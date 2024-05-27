@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
+
+import '../../../../models/user.dart';
+import '../../../base/root_assets_controller.dart';
 import '../../../env/env.dart';
 import '../../../env/notification.dart';
 import '../models/notification.dart';
@@ -17,14 +21,29 @@ abstract class PushNotifications {
         return;
       case PushNotificationsServiceType.remote:
         await RemoteNotifications.init();
+        _listen();
         return;
       case PushNotificationsServiceType.both:
         await RemoteNotifications.init();
         await LocalNotifications.init();
+        _listen();
         return;
       case PushNotificationsServiceType.none:
         return;
     }
+  }
+
+  static void _listen() {
+    final RootAssetsController assetController = Get.find<RootAssetsController>();
+    assetController.userStream.listen(
+      (User? user) {
+        if (user == null) {
+          unsubscribe();
+        } else {
+          subscribe(userid: user.id);
+        }
+      },
+    );
   }
 
   static void dispose() {
