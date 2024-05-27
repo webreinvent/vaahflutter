@@ -117,7 +117,7 @@ class InputSliderPreview extends StatelessWidget {
         Text('basic slider', style: normal),
         InputSlider(
           initialValue: 0.8,
-          onChanged: (value) => Log.info(value, disableCloudLogging: true),
+          onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
         ),
         Text('with input slider', style: normal),
         InputSlider(
@@ -126,7 +126,7 @@ class InputSliderPreview extends StatelessWidget {
           initialValue: 50,
           step: 2,
           forceInputBox: true,
-          onChanged: (value) => Log.info(value, disableCloudLogging: true),
+          onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
         ),
         Text('step', style: normal),
         InputSlider(
@@ -134,7 +134,7 @@ class InputSliderPreview extends StatelessWidget {
           min: 0,
           max: 100,
           step: 20,
-          onChanged: (value) => Log.info(value, disableCloudLogging: true),
+          onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
         ),
         Text('decimal step', style: normal),
         InputSlider(
@@ -142,14 +142,14 @@ class InputSliderPreview extends StatelessWidget {
           min: 0,
           max: 10,
           step: 0.5,
-          onChanged: (value) => Log.info(value, disableCloudLogging: true),
+          onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
         ),
         Text('vertical slider', style: normal),
         Padding(
           padding: verticalPadding24,
           child: InputSlider(
             initialValue: 0,
-            onChanged: (value) => Log.info(value, disableCloudLogging: true),
+            onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
             forceVertical: true,
           ),
         ),
@@ -159,7 +159,7 @@ class InputSliderPreview extends StatelessWidget {
           max: 10,
           initialValues: const RangeValues(2, 6),
           step: 0.1,
-          onChanged: (value) => Log.info(value, disableCloudLogging: true),
+          onChanged: (value) => Log.info("Slider Value: $value", disableCloudLogging: true),
           precision: 1,
         ),
       ],

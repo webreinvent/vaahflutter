@@ -63,7 +63,11 @@ class EnvController extends GetxController {
     try {
       _config = getSpecificConfig(environment).copyWith(openCount: _storage.read('open_count'));
     } catch (error, stackTrace) {
-      Log.exception(error, stackTrace: stackTrace);
+      Log.exception(
+        "Error occured while initializing EnvController",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
       exit(0);
     }
   }

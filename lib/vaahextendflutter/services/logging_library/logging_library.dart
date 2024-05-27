@@ -13,91 +13,94 @@ class Log {
   ];
 
   static void log(
-    dynamic text, {
+    String message, {
     Object? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.log(text.toString(), data);
+      Console.log(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(text.toString(), data: data, type: EventType.log);
+      _logEvent(message, data: data, type: EventType.log);
     }
   }
 
   static void info(
-    dynamic text, {
+    String message, {
     Object? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.info(text.toString(), data);
+      Console.info(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(text.toString(), data: data, type: EventType.info);
+      _logEvent(message, data: data, type: EventType.info);
     }
   }
 
   static void success(
-    dynamic text, {
+    String message, {
     Object? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.success(text.toString(), data);
+      Console.success(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(text.toString(), data: data, type: EventType.success);
+      _logEvent(message, data: data, type: EventType.success);
     }
   }
 
   static void warning(
-    dynamic text, {
+    String message, {
     Object? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.warning(text.toString(), data);
+      Console.warning(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(text.toString(), data: data, type: EventType.warning);
+      _logEvent(message, data: data, type: EventType.warning);
     }
   }
 
   static void exception(
-    dynamic throwable, {
-    Object? data,
-    dynamic stackTrace,
+    String message, {
+    Object? throwable,
+    StackTrace? stackTrace,
     dynamic hint,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
     if (_config.enableLocalLogs && !disableLocalLogging) {
-      Console.danger('$throwable\n$hint', data);
+      Console.danger(
+        message,
+        throwable: throwable,
+        stackTrace: stackTrace,
+        hint: hint,
+      );
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      final hintWithData = {
-        'hint': hint,
-        'data': data,
-      };
       for (final service in _services) {
         switch (service) {
           case SentryLoggingService:
             SentryLoggingService.logException(
-              throwable,
+              message,
+              throwable: throwable,
               stackTrace: stackTrace,
-              hint: hintWithData,
+              hint: hint,
             );
             return;
           case FirebaseLoggingService:
             FirebaseLoggingService.logException(
-              throwable,
+              message,
+              throwable: throwable,
               stackTrace: stackTrace,
-              hint: hintWithData,
+              hint: hint,
             );
             return;
           default:
@@ -139,7 +142,7 @@ class Log {
   }
 
   static void _logEvent(
-    String text, {
+    String message, {
     Object? data,
     EventType? type,
   }) {
@@ -147,16 +150,16 @@ class Log {
       switch (service) {
         case SentryLoggingService:
           SentryLoggingService.logEvent(
-            message: text,
-            level: type?.toSentryLevel,
+            message,
             data: data,
+            level: type?.toSentryLevel,
           );
           return;
         case FirebaseLoggingService:
           FirebaseLoggingService.logEvent(
-            message: text,
-            type: type,
+            message,
             data: data,
+            type: type,
           );
           return;
         default:
