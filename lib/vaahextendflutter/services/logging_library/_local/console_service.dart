@@ -10,15 +10,10 @@ class Console {
     final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((RegExpMatch match) {
       if (logStyle == null || logStyle.isEmpty) {
-        return debugPrint(
-          match.group(0),
-        );
+        return debugPrint(match.group(0));
       }
-
       Colorize chunk = Colorize(match.group(0).toString()).apply(logStyle.first);
-      return debugPrint(
-        '$chunk',
-      );
+      return debugPrint('$chunk');
     });
   }
 
@@ -32,61 +27,98 @@ class Console {
     }
   }
 
-  static void log(String text, [Object? data]) {
-    _printLog(text);
+  static void log(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(message);
 
     if (data != null) {
-      _printLog(_parseData(data), {
-        Styles.WHITE,
-      });
+      _printLog(_parseData(data));
     }
   }
 
-  static void info(String text, [Object? data]) {
-    _printLog(text, {
-      Styles.BLUE,
-    });
+  static void info(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.BLUE},
+    );
 
     if (data != null) {
-      _printLog(_parseData(data), {
-        Styles.BLUE,
-      });
+      _printLog(
+        _parseData(data),
+        {Styles.BLUE},
+      );
     }
   }
 
-  static void success(String text, [Object? data]) {
-    _printLog(text, {
-      Styles.GREEN,
-    });
+  static void success(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.GREEN},
+    );
 
     if (data != null) {
-      _printLog(_parseData(data), {
-        Styles.GREEN,
-      });
+      _printLog(
+        _parseData(data),
+        {Styles.GREEN},
+      );
     }
   }
 
-  static void warning(String text, [Object? data]) {
-    _printLog(text, {
-      Styles.YELLOW,
-    });
+  static void warning(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.YELLOW},
+    );
 
     if (data != null) {
-      _printLog(_parseData(data), {
-        Styles.YELLOW,
-      });
+      _printLog(
+        _parseData(data),
+        {Styles.YELLOW},
+      );
     }
   }
 
-  static void danger(String text, [Object? data]) {
-    _printLog(text, {
-      Styles.RED,
-    });
+  static void danger(
+    String message, {
+    Object? throwable,
+    StackTrace? stackTrace,
+    dynamic hint,
+  }) {
+    _printLog(
+      message,
+      {Styles.RED},
+    );
 
-    if (data != null) {
-      _printLog(_parseData(data), {
-        Styles.RED,
-      });
+    if (throwable != null) {
+      _printLog(
+        _parseData(throwable),
+        {Styles.RED},
+      );
+    }
+
+    if (stackTrace != null) {
+      _printLog(
+        stackTrace.toString(),
+        {Styles.RED},
+      );
+    }
+
+    if (hint != null) {
+      _printLog(
+        _parseData(hint),
+        {Styles.RED},
+      );
     }
   }
 

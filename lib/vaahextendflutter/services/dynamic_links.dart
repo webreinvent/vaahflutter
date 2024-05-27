@@ -46,7 +46,7 @@ abstract class DynamicLinks {
         shortLinkType: ShortDynamicLinkType.unguessable,
       );
     } catch (error, stackTrace) {
-      Log.exception(error, stackTrace: stackTrace, hint: "Error creating dynamic link!");
+      Log.exception("Error creating dynamic link!", throwable: error, stackTrace: stackTrace);
       return null;
     }
   }
@@ -61,10 +61,13 @@ abstract class DynamicLinks {
           decoded: "${linkData.link.host}${linkData.link.path}?payload=$payload",
         ),
       );
-      Log.success({
-        "encoded": linkData.link.toString(),
-        "decoded": "${linkData.link.host}${linkData.link.path}?payload=$payload",
-      });
+      Log.success(
+        "Handle Deeplink",
+        data: {
+          "encoded": linkData.link.toString(),
+          "decoded": "${linkData.link.host}${linkData.link.path}?payload=$payload",
+        },
+      );
       if (payload != null && payload['path'] != null) {
         Get.to(
           payload['path'],
@@ -76,9 +79,9 @@ abstract class DynamicLinks {
       }
     } catch (error, stackTrace) {
       Log.exception(
-        error,
+        "Error handling dynamic link! ${linkData.asMap()}",
+        throwable: error,
         stackTrace: stackTrace,
-        hint: "Error handling dynamic link! ${linkData.asMap()}",
       );
     }
   }
@@ -88,9 +91,9 @@ abstract class DynamicLinks {
       return jsonDecode(link.queryParameters['payload'].toString());
     } catch (error, stackTrace) {
       Log.exception(
-        error,
+        "Error decoding payload! $link",
+        throwable: error,
         stackTrace: stackTrace,
-        hint: "Error decoding payload! $link",
       );
       return null;
     }
