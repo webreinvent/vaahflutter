@@ -15,7 +15,6 @@ import '../env/env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 import '../services/dynamic_links.dart';
-import '../services/notification/push/notification.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -489,7 +488,7 @@ class _StreamLinksSectionState extends State<_StreamLinksSection> {
   }
 }
 
-class _NotificationSection extends StatefulWidget {
+class _NotificationSection extends StatelessWidget {
   final EnvironmentConfig config;
 
   const _NotificationSection({
@@ -497,25 +496,8 @@ class _NotificationSection extends StatefulWidget {
   });
 
   @override
-  State<_NotificationSection> createState() => __NotificationSectionState();
-}
-
-class __NotificationSectionState extends State<_NotificationSection> {
-  String? userId = PushNotifications.userId;
-
-  @override
-  void initState() {
-    super.initState();
-    PushNotifications.userIdStream.listen((String updatedUserId) {
-      setState(() {
-        userId = updatedUserId;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return widget.config.oneSignalConfig == null || widget.config.oneSignalConfig!.appId.isEmpty
+    return config.oneSignalConfig == null || config.oneSignalConfig!.appId.isEmpty
         ? emptyWidget
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -527,8 +509,7 @@ class __NotificationSectionState extends State<_NotificationSection> {
               _ShowDetails(
                 contentHolder: PanelDataContentHolder(
                   content: {
-                    'One Signal App Id': Data(value: widget.config.oneSignalConfig?.appId),
-                    'User Id': Data(value: userId),
+                    'One Signal App Id': Data(value: config.oneSignalConfig?.appId),
                   },
                 ),
               ),

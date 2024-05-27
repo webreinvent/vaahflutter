@@ -2,12 +2,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class RootAssetsController extends GetxController {
-
-  RootAssetsController() {
-    if(storage.read('apiToken') != null){
-      // get user by token User.byToken(); USE WEBHOOKS and SOCKETS
-    }
-  }
+  RootAssetsController();
 
   final storage = GetStorage();
 
