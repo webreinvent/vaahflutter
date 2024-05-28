@@ -723,10 +723,11 @@ packages:
   pusher_channels_flutter:
     dependency: "direct main"
     description:
-      name: pusher_channels_flutter
-      sha256: a678f20dfcd3b023a6ba37f4a77e2f7b0a0bb88bf0623593b2c5837dfa8ac36e
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: addb0dcaa2bc61d9ae0b45134e6c8afdf564a363
+      url: "https://github.com/kishormainali/pusher-channels-flutter.git"
+    source: git
     version: "2.2.1"
   sentry:
     dependency: transitive
