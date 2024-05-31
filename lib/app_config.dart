@@ -5,7 +5,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'routes/middleware.dart';
 import 'vaahextendflutter/app_theme.dart';
 import 'vaahextendflutter/env/env.dart';
-import 'vaahextendflutter/widgets/debug.dart';
+import 'vaahextendflutter/widgets/debug/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
 
