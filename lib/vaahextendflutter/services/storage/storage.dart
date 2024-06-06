@@ -19,7 +19,7 @@ abstract class Storage {
       case LocalStorageType.flutterSecureStorage:
         return FlutterSecureStorageImpl();
       default:
-        return NullStorage();
+        return NoOpStorage();
     }
   }
 
@@ -104,37 +104,29 @@ abstract class Storage {
 }
 
 ///A placeholder storage class when [LocalStorageType.none] is selected in env.dart.
-class NullStorage implements Storage {
+class NoOpStorage implements Storage {
   @override
   Future<void> init() async {}
 
   @override
-  Future<void> create({required String key, required String value}) {
-    throw UnimplementedError();
+  Future<void> create({required String key, required String value}) async {}
+
+  @override
+  Future<void> createAll({required Map<String, String> values}) async {}
+
+  @override
+  Future<String?> read({required String key}) async {
+    return null;
   }
 
   @override
-  Future<void> createAll({required Map<String, String> values}) {
-    throw UnimplementedError();
+  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
+    return <String, String?>{};
   }
 
   @override
-  Future<String?> read({required String key}) {
-    throw UnimplementedError();
-  }
+  Future<void> delete({required String key}) async {}
 
   @override
-  Future<Map<String, String?>> readAll({List<String> keys = const []}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> delete({required String key}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> deleteAll({List<String> keys = const []}) {
-    throw UnimplementedError();
-  }
+  Future<void> deleteAll({List<String> keys = const []}) async {}
 }
