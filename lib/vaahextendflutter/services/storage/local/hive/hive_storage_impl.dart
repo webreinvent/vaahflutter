@@ -8,7 +8,7 @@ class HiveStorageImpl implements Storage {
 
   Box? _box;
 
-  HiveStorageImpl({required this.name});
+  HiveStorageImpl({this.name = 'vaah_flutter_hive_box'});
 
   @override
   Future<void> init() async {

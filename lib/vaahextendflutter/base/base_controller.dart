@@ -1,9 +1,12 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../app_theme.dart';
@@ -44,8 +47,14 @@ class BaseController extends GetxController {
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
-      if (config.hiveConfig != null) {
-        await config.hiveConfig!.init();
+
+      if (config.localStorageType == LocalStorageType.hive) {
+        final Directory appDocDirectory = await getApplicationDocumentsDirectory();
+        await Directory('${appDocDirectory.path}/vaahflutterdir')
+            .create(recursive: true)
+            .then((Directory directory) async {
+          Hive.init(directory.path);
+        });
       }
 
       // Sentry Initialization (And/ Or) Running main app
