@@ -16,14 +16,14 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<void> create({required String key, required String value}) async {
+  Future<void> save({required String key, required String value}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
     _box!.put(key, value);
   }
 
   @override
-  Future<void> createAll({required Map<String, String> values}) async {
+  Future<void> saveMany({required Map<String, String> values}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
     for (String k in values.keys) {
@@ -40,14 +40,10 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
+  Future<Map<String, String?>> readMany({required List<String> keys}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
-    if (keys.isEmpty) {
-      Map<String, String?> result =
-          _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
-      return result;
-    } else {
+    if (keys.isNotEmpty) {
       Map<String, String?> result = {};
       for (String k in keys) {
         if (_box!.containsKey(k)) {
@@ -55,7 +51,18 @@ class HiveStorageImpl implements Storage {
         }
       }
       return result;
+    } else {
+      return {};
     }
+  }
+
+  @override
+  Future<Map<String, String?>> readAll() async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    Map<String, String?> result =
+        _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
+    return result;
   }
 
   @override
@@ -66,13 +73,18 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<void> deleteAll({List<String> keys = const []}) async {
+  Future<void> deleteMany({List<String> keys = const []}) async {
     assert(_box != null, 'Box is null, not initiized.');
 
-    if (keys.isEmpty) {
-      await _box!.clear();
-    } else {
+    if (keys.isNotEmpty) {
       _box!.deleteAll(keys);
     }
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    await _box!.clear();
   }
 }

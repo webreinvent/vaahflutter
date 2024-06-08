@@ -29,9 +29,9 @@ abstract class Storage {
   ///
   /// Example:
   /// ```dart
-  /// Storage.createLocal('name')
+  /// storage.init();
   /// ```
-  Future<void> init();
+  Future<void> init() async {}
 
   /// Creates or updates new item in the [Storage].
   ///
@@ -41,9 +41,9 @@ abstract class Storage {
   ///
   /// Example:
   /// ```dart
-  /// await storage.create(key: 'key', value: 'value');
+  /// await storage.save(key: 'key', value: 'value');
   /// ```
-  Future<void> create({required String key, required String value});
+  Future<void> save({required String key, required String value});
 
   /// Creates new items in the [Storage].
   /// If you want to save multiple entries pass the [values] as a Map<String, String>, then it will
@@ -53,7 +53,7 @@ abstract class Storage {
   ///
   /// Example:
   /// ```dart
-  /// await storage.createAll(values: {
+  /// await storage.saveMany(values: {
   ///     'key1': 'Value1',
   ///     'key2': 'Value2',
   ///     'key3': 'Value3',
@@ -63,7 +63,7 @@ abstract class Storage {
   ///   },
   /// );
   /// ```
-  Future<void> createAll({required Map<String, String> values});
+  Future<void> saveMany({required Map<String, String> values});
 
   /// Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
@@ -78,9 +78,6 @@ abstract class Storage {
   /// Reads multiple values, pass the List of [keys] as argument. It will return the value as
   /// Map<String, String?>.
   ///
-  /// When the keys is not passed it will return all the values from that [Storage] as
-  /// Map<String, String?>.
-  ///
   /// Example:
   /// ```dart
   /// await storage.readAll(keys: [
@@ -90,7 +87,10 @@ abstract class Storage {
   ///   ],
   /// );
   /// ```
-  Future<Map<String, String?>> readAll({List<String> keys = const []});
+  Future<Map<String, String?>> readMany({required List<String> keys});
+
+  /// It will return all the values from that [Storage] as Map<String, String?>.
+  Future<Map<String, String?>> readAll();
 
   /// Deletes an item at [key].
   ///
@@ -100,8 +100,7 @@ abstract class Storage {
   /// ```
   Future<void> delete({required String key});
 
-  /// Deletes item at a key present in [keys], if keys is not passed all the values will be deleted
-  /// from that [Storage].
+  /// Deletes item at a key present in [keys], from that [Storage].
   ///
   /// Example:
   /// ```dart
@@ -112,7 +111,10 @@ abstract class Storage {
   ///   ],
   /// );
   /// ```
-  Future<void> deleteAll({List<String> keys = const []});
+  Future<void> deleteMany({List<String> keys = const []});
+
+  /// Deletes all the values from that [Storage]
+  Future<void> deleteAll();
 }
 
 /// A placeholder storage class when [LocalStorageType.none] is selected in env.dart.
@@ -121,10 +123,10 @@ class NoOpStorage implements Storage {
   Future<void> init() async {}
 
   @override
-  Future<void> create({required String key, required String value}) async {}
+  Future<void> save({required String key, required String value}) async {}
 
   @override
-  Future<void> createAll({required Map<String, String> values}) async {}
+  Future<void> saveMany({required Map<String, String> values}) async {}
 
   @override
   Future<String?> read({required String key}) async {
@@ -132,13 +134,21 @@ class NoOpStorage implements Storage {
   }
 
   @override
-  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
-    return <String, String?>{};
+  Future<Map<String, String?>> readMany({required List<String> keys}) async {
+    return {};
+  }
+
+  @override
+  Future<Map<String, String?>> readAll() async {
+    return {};
   }
 
   @override
   Future<void> delete({required String key}) async {}
 
   @override
-  Future<void> deleteAll({List<String> keys = const []}) async {}
+  Future<void> deleteMany({List<String> keys = const []}) async {}
+
+  @override
+  Future<void> deleteAll() async {}
 }

@@ -9,12 +9,12 @@ class FlutterSecureStorageImpl implements Storage {
   Future<void> init() async {}
 
   @override
-  Future<void> create({required String key, required String value}) async {
+  Future<void> save({required String key, required String value}) async {
     await _storage.write(key: key, value: value);
   }
 
   @override
-  Future<void> createAll({required Map<String, String> values}) async {
+  Future<void> saveMany({required Map<String, String> values}) async {
     for (String k in values.keys) {
       await _storage.write(key: k, value: values[k]);
     }
@@ -27,17 +27,22 @@ class FlutterSecureStorageImpl implements Storage {
   }
 
   @override
-  Future<Map<String, String?>> readAll({List<String> keys = const []}) async {
-    if (keys.isEmpty) {
-      final Map<String, String> result = await _storage.readAll();
-      return result;
-    } else {
+  Future<Map<String, String?>> readMany({required List<String> keys}) async {
+    if (keys.isNotEmpty) {
       Map<String, String?> result = {};
       for (String k in keys) {
         result[k] = await _storage.read(key: k);
       }
       return result;
+    } else {
+      return {};
     }
+  }
+
+  @override
+  Future<Map<String, String?>> readAll() async {
+    final Map<String, String> result = await _storage.readAll();
+    return result;
   }
 
   @override
@@ -46,13 +51,16 @@ class FlutterSecureStorageImpl implements Storage {
   }
 
   @override
-  Future<void> deleteAll({List<String> keys = const []}) async {
-    if (keys.isEmpty) {
-      await _storage.deleteAll();
-    } else {
+  Future<void> deleteMany({List<String> keys = const []}) async {
+    if (keys.isNotEmpty) {
       for (String k in keys) {
         await _storage.delete(key: k);
       }
     }
+  }
+
+  @override
+  Future<void> deleteAll() async {
+    await _storage.deleteAll();
   }
 }
