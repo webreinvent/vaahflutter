@@ -16,18 +16,17 @@ class HiveStorageImpl implements Storage {
   }
 
   @override
-  Future<void> save({required String key, required String value}) async {
+  Future<void> create({required String key, required String value}) async {
     assert(_box != null, 'Box is null, not initiized.');
+    assert(_box!.containsKey(key), 'The key ($key) already exists.');
 
     _box!.put(key, value);
   }
 
   @override
-  Future<void> saveMany({required Map<String, String> values}) async {
-    assert(_box != null, 'Box is null, not initiized.');
-
+  Future<void> createMany({required Map<String, String> values}) async {
     for (String k in values.keys) {
-      await _box!.put(k, values[k]);
+      await create(key: k, value: values[k]!);
     }
   }
 
@@ -63,6 +62,35 @@ class HiveStorageImpl implements Storage {
     Map<String, String?> result =
         _box!.toMap().map((key, value) => MapEntry(key.toString(), value?.toString()));
     return result;
+  }
+
+  @override
+  Future<void> update({required String key, required String value}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+    assert(!_box!.containsKey(key), 'The key ($key) does not exist.');
+
+    _box!.put(key, value);
+  }
+
+  @override
+  Future<void> updateMany({required Map<String, String> values}) async {
+    for (String k in values.keys) {
+      await update(key: k, value: values[k]!);
+    }
+  }
+
+  @override
+  Future<void> createOrUpdate({required String key, required String value}) async {
+    assert(_box != null, 'Box is null, not initiized.');
+
+    _box!.put(key, value);
+  }
+
+  @override
+  Future<void> createOrUpdateMany({required Map<String, String> values}) async {
+    for (String k in values.keys) {
+      await createOrUpdate(key: k, value: values[k]!);
+    }
   }
 
   @override

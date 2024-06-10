@@ -31,29 +31,29 @@ abstract class Storage {
   /// ```dart
   /// storage.init();
   /// ```
-  Future<void> init() async {}
+  Future<void> init();
 
-  /// Creates or updates new item in the [Storage].
+  /// Creates a new item in the [Storage].
   ///
-  /// To save or update a single key-value pair pass [key] as String, and the [value] as String, the
+  /// To create a single key-value pair pass the [key] and the [value] as String, the
   /// String could be a JSON String or a simple text according to your requirement.
   /// If the key is already present in the [Storage] it's vlaue will be overwritten.
   ///
   /// Example:
   /// ```dart
-  /// await storage.save(key: 'key', value: 'value');
+  /// await storage.create(key: 'key', value: 'value');
   /// ```
-  Future<void> save({required String key, required String value});
+  Future<void> create({required String key, required String value});
 
   /// Creates new items in the [Storage].
-  /// If you want to save multiple entries pass the [values] as a Map<String, String>, then it will
-  /// save all the key-value pairs in the [values] map.
+  /// If you want to create multiple entries pass the [values] as a Map<String, String>, then it
+  /// will create all the key-value pairs from the [values] map.
   /// If any key from the [values] is already present in the [Storage] it's value will be
   /// overwritten.
   ///
   /// Example:
   /// ```dart
-  /// await storage.saveMany(values: {
+  /// await storage.createMany(values: {
   ///     'key1': 'Value1',
   ///     'key2': 'Value2',
   ///     'key3': 'Value3',
@@ -63,7 +63,7 @@ abstract class Storage {
   ///   },
   /// );
   /// ```
-  Future<void> saveMany({required Map<String, String> values});
+  Future<void> createMany({required Map<String, String> values});
 
   /// Reads the value of the item at [key] from the [Storage] and returns the value.
   ///
@@ -80,7 +80,7 @@ abstract class Storage {
   ///
   /// Example:
   /// ```dart
-  /// await storage.readAll(keys: [
+  /// await storage.readMany(keys: [
   ///     'key1',
   ///     'key2',
   ///     //...
@@ -91,6 +91,65 @@ abstract class Storage {
 
   /// It will return all the values from that [Storage] as Map<String, String?>.
   Future<Map<String, String?>> readAll();
+
+  /// Updates an item in the [Storage].
+  ///
+  /// To update a single key-value pair pass the [key] and the [value] as String, the
+  ///
+  /// Example:
+  /// ```dart
+  /// await storage.update(key: 'key', value: 'value');
+  /// ```
+  Future<void> update({required String key, required String value});
+
+  /// Updates items in the [Storage].
+  /// If you want to update multiple entries pass the [values] as a Map<String, String>, then it
+  /// will update all the key-value pairs in the [values] map.
+  ///
+  /// Example:
+  /// ```dart
+  /// await storage.updateMany(values: {
+  ///     'key1': 'Value1',
+  ///     'key2': 'Value2',
+  ///     'key3': 'Value3',
+  ///     'key4': 'Value4',
+  ///     'key5': 'Value5',
+  ///     //...
+  ///   },
+  /// );
+  /// ```
+  Future<void> updateMany({required Map<String, String> values});
+
+  /// Creates or updates an item in the [Storage].
+  ///
+  /// To create or update a single key-value pair pass the [key] and the [value] as String, the
+  /// If the [key] is already present in the [Storage] it's value will be overwritten.
+  ///
+  /// Example:
+  /// ```dart
+  /// await storage.createOrUpdate(key: 'key', value: 'value');
+  /// ```
+  Future<void> createOrUpdate({required String key, required String value});
+
+  /// Creates or updates items in the [Storage].
+  /// If you want to create or update multiple entries pass the [values] as a Map<String, String>, then it
+  /// will create all the key-value pairs from the [values] map.
+  /// If any key from the [values] is already present in the [Storage] it's value will be
+  /// overwritten.
+  ///
+  /// Example:
+  /// ```dart
+  /// await storage.createOrUpdateMany(values: {
+  ///     'key1': 'Value1',
+  ///     'key2': 'Value2',
+  ///     'key3': 'Value3',
+  ///     'key4': 'Value4',
+  ///     'key5': 'Value5',
+  ///     //...
+  ///   },
+  /// );
+  /// ```
+  Future<void> createOrUpdateMany({required Map<String, String> values});
 
   /// Deletes an item at [key].
   ///
@@ -104,7 +163,7 @@ abstract class Storage {
   ///
   /// Example:
   /// ```dart
-  /// await storage.deleteAll(keys: [
+  /// await storage.deleteMany(keys: [
   ///     'key1',
   ///     'key2',
   ///     //...
@@ -123,10 +182,10 @@ class NoOpStorage implements Storage {
   Future<void> init() async {}
 
   @override
-  Future<void> save({required String key, required String value}) async {}
+  Future<void> create({required String key, required String value}) async {}
 
   @override
-  Future<void> saveMany({required Map<String, String> values}) async {}
+  Future<void> createMany({required Map<String, String> values}) async {}
 
   @override
   Future<String?> read({required String key}) async {
@@ -144,6 +203,18 @@ class NoOpStorage implements Storage {
   }
 
   @override
+  Future<void> update({required String key, required String value}) async {}
+
+  @override
+  Future<void> updateMany({required Map<String, String> values}) async {}
+
+  @override
+  Future<void> createOrUpdate({required String key, required String value}) async {}
+
+  @override
+  Future<void> createOrUpdateMany({required Map<String, String> values}) async {}
+
+  @override
   Future<void> delete({required String key}) async {}
 
   @override
@@ -151,4 +222,10 @@ class NoOpStorage implements Storage {
 
   @override
   Future<void> deleteAll() async {}
+}
+
+class InvalidStorageException implements Exception {
+  final String message =
+      'The Selected storage is not valid please select a valid storage in environment '
+      'configuration via any config json file.';
 }

@@ -9,14 +9,16 @@ class FlutterSecureStorageImpl implements Storage {
   Future<void> init() async {}
 
   @override
-  Future<void> save({required String key, required String value}) async {
+  Future<void> create({required String key, required String value}) async {
+    assert(!(await _storage.containsKey(key: key)), 'The key "$key" already exists.');
+
     await _storage.write(key: key, value: value);
   }
 
   @override
-  Future<void> saveMany({required Map<String, String> values}) async {
+  Future<void> createMany({required Map<String, String> values}) async {
     for (String k in values.keys) {
-      await _storage.write(key: k, value: values[k]);
+      await create(key: k, value: values[k]!);
     }
   }
 
@@ -43,6 +45,32 @@ class FlutterSecureStorageImpl implements Storage {
   Future<Map<String, String?>> readAll() async {
     final Map<String, String> result = await _storage.readAll();
     return result;
+  }
+
+  @override
+  Future<void> update({required String key, required String value}) async {
+    assert(await _storage.containsKey(key: key), 'The key "$key" does not exists.');
+
+    await _storage.write(key: key, value: value);
+  }
+
+  @override
+  Future<void> updateMany({required Map<String, String> values}) async {
+    for (String k in values.keys) {
+      await update(key: k, value: values[k]!);
+    }
+  }
+
+  @override
+  Future<void> createOrUpdate({required String key, required String value}) async {
+    await _storage.write(key: key, value: value);
+  }
+
+  @override
+  Future<void> createOrUpdateMany({required Map<String, String> values}) async {
+    for (String k in values.keys) {
+      await createOrUpdate(key: k, value: values[k]!);
+    }
   }
 
   @override
