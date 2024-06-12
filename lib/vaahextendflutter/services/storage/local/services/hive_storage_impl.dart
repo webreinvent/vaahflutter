@@ -1,9 +1,10 @@
 import 'package:hive/hive.dart';
 
-import '../../storage.dart';
+import '../storage.dart';
+import 'base_service.dart';
 
 /// A class implementing Storage interface using Hive as storage backend.
-class HiveStorageImpl implements Storage {
+class HiveStorageImpl implements LocalStorageService {
   final String name;
 
   Box? _box;
