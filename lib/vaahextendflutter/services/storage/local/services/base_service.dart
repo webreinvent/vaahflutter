@@ -1,27 +1,27 @@
 abstract class LocalStorageService {
-  Future<void> init();
+  Future<void> add(String collectionName);
 
-  Future<void> create({required String key, required String value});
+  Future<void> create({String collectionName, required String key, required String value});
 
-  Future<void> createMany({required Map<String, String> values});
+  Future<void> createMany({String collectionName, required Map<String, String> values});
 
-  Future<String?> read({required String key});
+  Future<String?> read({String collectionName, required String key});
 
-  Future<Map<String, String?>> readMany({required List<String> keys});
+  Future<Map<String, String?>> readMany({String collectionName, required List<String> keys});
 
-  Future<Map<String, String?>> readAll();
+  Future<Map<String, String?>> readAll({String collectionName});
 
-  Future<void> update({required String key, required String value});
+  Future<void> update({String collectionName, required String key, required String value});
 
-  Future<void> updateMany({required Map<String, String> values});
+  Future<void> updateMany({String collectionName, required Map<String, String> values});
 
-  Future<void> createOrUpdate({required String key, required String value});
+  Future<void> createOrUpdate({String collectionName, required String key, required String value});
 
-  Future<void> createOrUpdateMany({required Map<String, String> values});
+  Future<void> createOrUpdateMany({String collectionName, required Map<String, String> values});
 
-  Future<void> delete({required String key});
+  Future<void> delete({String collectionName, required String key});
 
-  Future<void> deleteMany({List<String> keys = const []});
+  Future<void> deleteMany({String collectionName, List<String> keys = const []});
 
-  Future<void> deleteAll();
+  Future<void> deleteAll({String collectionName});
 }

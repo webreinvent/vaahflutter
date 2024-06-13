@@ -1,16 +1,16 @@
 import '../../../env.dart';
 import 'services/base_service.dart';
-import 'services/flutter_secure_storage_impl.dart';
-import 'services/hive_storage_impl.dart';
+import 'services/flutter_secure_storage.dart';
+import 'services/hive.dart';
 import 'services/no_op_storage.dart';
 
 LocalStorageService get instanceLocal {
   final EnvironmentConfig envConfig = EnvironmentConfig.getEnvConfig();
   switch (envConfig.localStorageType) {
     case LocalStorageType.hive:
-      return HiveStorageImpl();
+      return LocalStorageWithHive();
     case LocalStorageType.flutterSecureStorage:
-      return FlutterSecureStorageImpl();
+      return LocalStorageWithFlutterSecureStorage();
     default:
       return NoOpStorage();
   }
@@ -20,10 +20,10 @@ abstract class LocalStorage {
   static final LocalStorageService _instanceLocal = instanceLocal;
 
   /// Initializes the [LocalStorage].
-  /// In the case of [HiveStorageImpl], it creates a [Directory] using the path_provide package,
+  /// In the case of [LocalStorageWithHive], it creates a [Directory] using the path_provide package,
   /// initializes hive at that directory and opens a box with name [name] provided during [LocalStorage]
   /// creation.
-  /// It's not required in the case of [FlutterSecureStorageImpl].
+  /// It's not required in the case of [LocalStorageWithFlutterSecureStorage].
   ///
   /// Example:
   /// ```dart
