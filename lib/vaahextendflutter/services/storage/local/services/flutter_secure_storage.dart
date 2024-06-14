@@ -8,7 +8,7 @@ class LocalStorageWithFlutterSecureStorage implements LocalStorageService {
   final _storage = const FlutterSecureStorage();
 
   @override
-  Future<void> add(String name) async {}
+  void add(String name) {}
 
   @override
   Future<void> create({

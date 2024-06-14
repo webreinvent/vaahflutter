@@ -3,7 +3,7 @@ import 'base_service.dart';
 /// A placeholder storage class when [LocalStorageType.none] is selected in env.dart.
 class NoOpStorage implements LocalStorageService {
   @override
-  Future<void> add(String name) async {}
+  void add(String name) {}
 
   @override
   Future<void> create({

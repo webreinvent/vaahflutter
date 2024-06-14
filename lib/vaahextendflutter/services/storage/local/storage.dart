@@ -24,12 +24,14 @@ abstract class LocalStorage {
   ///
   /// It's not required in the case of [LocalStorageWithFlutterSecureStorage].
   ///
+  /// Throws an assertion error if [collectionName] exists already.
+  ///
   /// Example:
   /// ```dart
   /// LocalStorage.add('posts');
   /// //used only with Hive
   /// ```
-  Future<void> add(String collectionName) {
+  void add(String collectionName) {
     return _instanceLocal.add(collectionName);
   }
 
@@ -37,7 +39,11 @@ abstract class LocalStorage {
   ///
   /// To create a single key-value pair pass the [key] and the [value] as String, the
   /// String could be a JSON String or a simple text according to your requirement.
-  /// If the key is already present in the [LocalStorage] an assertion error will be thrown.
+  ///
+  /// Throws an assertion error if the key is already present in the [LocalStorage] or
+  /// [collectionName] is not added.
+  ///
+  /// Try [LocalStorage.createOrUpdate], [LocalStorage.update].
   ///
   /// Example:
   ///
@@ -60,8 +66,11 @@ abstract class LocalStorage {
   /// Creates new items in the[collectionName] of [LocalStorage].
   /// If you want to create multiple entries pass the [values] as a Map<String, String>, then it
   /// will create all the key-value pairs from the [values] map.
-  /// If any key from the [values] is already present in the [LocalStorage] an assertion error will
-  /// be thrown.
+  ///
+  /// Throws an assertion error if the key is already present in the [LocalStorage] or
+  /// [collectionName] is not added.
+  ///
+  /// Try [LocalStorage.createOrUpdateMany], [LocalStorage.updateMany].
   ///
   /// Example:
   ///
@@ -101,7 +110,10 @@ abstract class LocalStorage {
   /// Reads the value of the item at [key] from the [LocalStorage] and returns the value.
   ///
   /// Read a single value by passing [key] as String, it will return the value as String?.
-  /// If the [key] already exists an assertion error will be thrown.
+  ///
+  /// Throws an assertion error if [key] already exists or [collectionName] is not added.
+  ///
+  /// Try [LocalStorage.createOrUpdateMany], [LocalStorage.updateMany].
   ///
   /// Example:
   /// ```dart
@@ -148,7 +160,11 @@ abstract class LocalStorage {
 
   /// Updates an item in [collectionName] of the [LocalStorage].
   ///
-  /// To update a single key-value pair pass the [key] and the [value] as String, the
+  /// To update a single key-value pair pass the [key] and the [value] as String.
+  ///
+  /// Throws asserstion error if [key] does not exists or [collectionName] is not added.
+  ///
+  /// Try [LocalStorage.createOrUpdate], [LocalStorage.create].
   ///
   /// Example:
   /// ```dart
@@ -166,6 +182,10 @@ abstract class LocalStorage {
   /// Updates items in [collectionName] of [LocalStorage].
   /// If you want to update multiple entries pass the [values] as a Map<String, String>, then it
   /// will update all the key-value pairs in the [values] map.
+  ///
+  /// Throws asserstion error if [key] does not exists or [collectionName] is not added.
+  ///
+  /// Try [LocalStorage.createOrUpdateMany], [LocalStorage.createMany].
   ///
   /// Example:
   /// ```dart
@@ -191,8 +211,7 @@ abstract class LocalStorage {
 
   /// Creates or updates an item in [collectionName] of [LocalStorage].
   ///
-  /// To create or update a single key-value pair pass the [key] and the [value] as String, the
-  /// If the [key] is already present in the [LocalStorage] it's value will be overwritten.
+  /// To create or update a single key-value pair pass the [key] and the [value] as String.
   ///
   /// Example:
   /// ```dart
@@ -210,7 +229,7 @@ abstract class LocalStorage {
   /// Creates or updates items in [collectionName] of [LocalStorage].
   /// If you want to create or update multiple entries pass the [values] as a Map<String, String>, then it
   /// will create all the key-value pairs from the [values] map.
-  /// If any key from the [values] is already present in the [LocalStorage] it's value will be
+  /// If any key from the [values] is already present in the [collectionName] of [LocalStorage] it's value will be
   /// overwritten.
   ///
   /// Example:

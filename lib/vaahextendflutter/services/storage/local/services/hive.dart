@@ -4,13 +4,13 @@ import 'base_service.dart';
 
 /// A class implementing LocalStorageService interface using Hive as storage backend.
 class LocalStorageWithHive implements LocalStorageService {
-  final Map<String, Box> _collections = {};
+  final Map<String, Future<Box>> _collections = {};
 
   @override
-  Future<void> add(String collectionName) async {
+  void add(String collectionName) {
     assert(!_collections.containsKey(collectionName), 'The Box "$collectionName" already exists');
 
-    _collections[collectionName] = await Hive.openBox(collectionName);
+    _collections[collectionName] = Hive.openBox(collectionName);
   }
 
   @override
@@ -20,9 +20,11 @@ class LocalStorageWithHive implements LocalStorageService {
     required String value,
   }) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
-    assert(_collections[collectionName]!.containsKey(key), 'The key ($key) already exists.');
 
-    await _collections[collectionName]!.put(key, value);
+    Box box = await _collections[collectionName]!;
+    assert(!box.containsKey(key), 'The key "$key" already exists.');
+
+    await box.put(key, value);
   }
 
   @override
@@ -36,7 +38,8 @@ class LocalStorageWithHive implements LocalStorageService {
   Future<String?> read({String collectionName = '', required String key}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
-    String? result = _collections[collectionName]!.get(key);
+    Box box = await _collections[collectionName]!;
+    String? result = box.get(key);
     return result;
   }
 
@@ -45,8 +48,6 @@ class LocalStorageWithHive implements LocalStorageService {
     String collectionName = '',
     required List<String> keys,
   }) async {
-    assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
-
     if (keys.isNotEmpty) {
       Map<String, String?> result = {};
       for (String k in keys) {
@@ -62,9 +63,13 @@ class LocalStorageWithHive implements LocalStorageService {
   Future<Map<String, String?>> readAll({String collectionName = ''}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
-    Map<String, String?> result = _collections[collectionName]!
-        .toMap()
-        .map((key, value) => MapEntry(key.toString(), value?.toString()));
+    Box box = await _collections[collectionName]!;
+    Map<String, String?> result = box.toMap().map(
+          (key, value) => MapEntry(
+            key.toString(),
+            value?.toString(),
+          ),
+        );
     return result;
   }
 
@@ -75,9 +80,11 @@ class LocalStorageWithHive implements LocalStorageService {
     required String value,
   }) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
-    assert(!_collections[collectionName]!.containsKey(key), 'The key ($key) does not exist.');
 
-    _collections[collectionName]!.put(key, value);
+    Box box = await _collections[collectionName]!;
+    assert(box.containsKey(key), 'The key "$key" does not exist.');
+
+    box.put(key, value);
   }
 
   @override
@@ -95,7 +102,8 @@ class LocalStorageWithHive implements LocalStorageService {
   }) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
-    _collections[collectionName]!.put(key, value);
+    Box box = await _collections[collectionName]!;
+    box.put(key, value);
   }
 
   @override
@@ -112,15 +120,17 @@ class LocalStorageWithHive implements LocalStorageService {
   Future<void> delete({String collectionName = '', dynamic key}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
-    await _collections[collectionName]!.delete(key);
+    Box box = await _collections[collectionName]!;
+    await box.delete(key);
   }
 
   @override
   Future<void> deleteMany({String collectionName = '', List<String> keys = const []}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
+    Box box = await _collections[collectionName]!;
     if (keys.isNotEmpty) {
-      _collections[collectionName]!.deleteAll(keys);
+      await box.deleteAll(keys);
     }
   }
 
@@ -128,6 +138,7 @@ class LocalStorageWithHive implements LocalStorageService {
   Future<void> deleteAll({String collectionName = ''}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
-    await _collections[collectionName]!.clear();
+    Box box = await _collections[collectionName]!;
+    await box.clear();
   }
 }

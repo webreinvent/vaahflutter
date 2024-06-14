@@ -1,5 +1,5 @@
 abstract class LocalStorageService {
-  Future<void> add(String collectionName);
+  void add(String collectionName);
 
   Future<void> create({String collectionName, required String key, required String value});
 
