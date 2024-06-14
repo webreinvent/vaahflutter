@@ -19,43 +19,69 @@ LocalStorageService get instanceLocal {
 abstract class LocalStorage {
   static final LocalStorageService _instanceLocal = instanceLocal;
 
-  /// Initializes the [LocalStorage].
-  /// In the case of [LocalStorageWithHive], it creates a [Directory] using the path_provide package,
-  /// initializes hive at that directory and opens a box with name [name] provided during [LocalStorage]
-  /// creation.
+  /// Adds a new collection (which is basically a Hive Box) with [collectionName] in [LocalStorage].
+  /// In the case of [LocalStorageWithHive], it opens a box with name [collectionName] provided.
+  ///
   /// It's not required in the case of [LocalStorageWithFlutterSecureStorage].
   ///
   /// Example:
   /// ```dart
-  /// Storage.init();
+  /// LocalStorage.add('posts');
+  /// //used only with Hive
   /// ```
-  static Future<void> init() {
-    return _instanceLocal.init();
+  Future<void> add(String collectionName) {
+    return _instanceLocal.add(collectionName);
   }
 
-  /// Creates a new item in the [LocalStorage].
+  /// Creates a new item in the [collectionName] of [LocalStorage].
   ///
   /// To create a single key-value pair pass the [key] and the [value] as String, the
   /// String could be a JSON String or a simple text according to your requirement.
-  /// If the key is already present in the [LocalStorage] it's vlaue will be overwritten.
+  /// If the key is already present in the [LocalStorage] an assertion error will be thrown.
   ///
   /// Example:
+  ///
+  /// Hive
   /// ```dart
-  /// await Storage.create(key: 'key', value: 'value');
+  /// await LocalStorage.create(collectionName: 'posts',key: 'key', value: 'value');
   /// ```
-  static Future<void> create(String name, {required String key, required String value}) {
-    return _instanceLocal.create(key: key, value: value);
+  /// Flutter Secure Storage
+  /// ```dart
+  /// await LocalStorage.create(key: 'key', value: 'value');
+  /// ```
+  static Future<void> create({
+    String collectionName = 'vaah-flutter-box',
+    required String key,
+    required String value,
+  }) {
+    return _instanceLocal.create(collectionName: collectionName, key: key, value: value);
   }
 
-  /// Creates new items in the [LocalStorage].
+  /// Creates new items in the[collectionName] of [LocalStorage].
   /// If you want to create multiple entries pass the [values] as a Map<String, String>, then it
   /// will create all the key-value pairs from the [values] map.
-  /// If any key from the [values] is already present in the [LocalStorage] it's value will be
-  /// overwritten.
+  /// If any key from the [values] is already present in the [LocalStorage] an assertion error will
+  /// be thrown.
   ///
   /// Example:
+  ///
+  /// Hive
   /// ```dart
-  /// await Storage.createMany(values: {
+  /// await LocalStorage.createMany(
+  ///   collectionName: 'posts',
+  ///   values: {
+  ///       'key1': 'Value1',
+  ///       'key2': 'Value2',
+  ///       'key3': 'Value3',
+  ///       'key4': 'Value4',
+  ///       'key5': 'Value5',
+  ///       //...
+  ///   },
+  /// );
+  /// ```
+  /// Flutter Secure Storage
+  /// ```dart
+  /// await LocalStorage.createMany(values: {
   ///     'key1': 'Value1',
   ///     'key2': 'Value2',
   ///     'key3': 'Value3',
@@ -65,62 +91,87 @@ abstract class LocalStorage {
   ///   },
   /// );
   /// ```
-  static Future<void> createMany({required Map<String, String> values}) {
-    return _instanceLocal.createMany(values: values);
+  static Future<void> createMany({
+    String collectionName = 'vaah-flutter-box',
+    required Map<String, String> values,
+  }) {
+    return _instanceLocal.createMany(collectionName: collectionName, values: values);
   }
 
   /// Reads the value of the item at [key] from the [LocalStorage] and returns the value.
   ///
   /// Read a single value by passing [key] as String, it will return the value as String?.
+  /// If the [key] already exists an assertion error will be thrown.
   ///
   /// Example:
   /// ```dart
-  /// await Storage.read(key: 'key');
+  /// await LocalStorage.read(collectionName: 'posts', key: 'key');
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<String?> read({required String key}) {
-    return _instanceLocal.read(key: key);
+  static Future<String?> read({String collectionName = 'vaah-flutter-box', required String key}) {
+    return _instanceLocal.read(collectionName: collectionName, key: key);
   }
 
-  /// Reads multiple values, pass the List of [keys] as argument. It will return the value as
-  /// Map<String, String?>.
+  /// Reads multiple values from [collectionName], pass the List of [keys] as argument. It will
+  /// return the value as Map<String, String?>.
   ///
   /// Example:
   /// ```dart
-  /// await Storage.readMany(keys: [
+  /// await LocalStorage.readMany(
+  ///   collectionName: 'posts',
+  ///   keys: [
   ///     'key1',
   ///     'key2',
   ///     //...
   ///   ],
   /// );
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<Map<String, String?>> readMany({required List<String> keys}) {
-    return _instanceLocal.readMany(keys: keys);
+  static Future<Map<String, String?>> readMany({
+    String collectionName = 'vaah-flutter-box',
+    required List<String> keys,
+  }) {
+    return _instanceLocal.readMany(collectionName: collectionName, keys: keys);
   }
 
-  /// It will return all the values from that [LocalStorage] as Map<String, String?>.
-  static Future<Map<String, String?>> readAll() {
-    return _instanceLocal.readAll();
+  /// It will return all the values from that collection [collectionName] of [LocalStorage] as
+  /// Map<String, String?>.
+  ///
+  /// Exapmle:
+  /// ```dart
+  /// await LocalStorage.readAll(collectionName: 'posts');
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
+  /// ```
+  static Future<Map<String, String?>> readAll({String collectionName = 'vaah-flutter-box'}) {
+    return _instanceLocal.readAll(collectionName: collectionName);
   }
 
-  /// Updates an item in the [LocalStorage].
+  /// Updates an item in [collectionName] of the [LocalStorage].
   ///
   /// To update a single key-value pair pass the [key] and the [value] as String, the
   ///
   /// Example:
   /// ```dart
-  /// await Storage.update(key: 'key', value: 'value');
+  /// await LocalStorage.update(collectionName: 'posts', key: 'key', value: 'value');
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> update({required String key, required String value}) {
-    return _instanceLocal.update(key: key, value: value);
+  static Future<void> update({
+    String collectionName = 'vaah-flutter-box',
+    required String key,
+    required String value,
+  }) {
+    return _instanceLocal.update(collectionName: collectionName, key: key, value: value);
   }
 
-  /// Updates items in the [LocalStorage].
+  /// Updates items in [collectionName] of [LocalStorage].
   /// If you want to update multiple entries pass the [values] as a Map<String, String>, then it
   /// will update all the key-value pairs in the [values] map.
   ///
   /// Example:
   /// ```dart
-  /// await Storage.updateMany(values: {
+  /// await LocalStorage.updateMany(
+  ///   collectionName: 'posts',
+  ///   values: {
   ///     'key1': 'Value1',
   ///     'key2': 'Value2',
   ///     'key3': 'Value3',
@@ -129,25 +180,34 @@ abstract class LocalStorage {
   ///     //...
   ///   },
   /// );
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> updateMany({required Map<String, String> values}) {
-    return _instanceLocal.updateMany(values: values);
+  static Future<void> updateMany({
+    String collectionName = 'vaah-flutter-box',
+    required Map<String, String> values,
+  }) {
+    return _instanceLocal.updateMany(collectionName: collectionName, values: values);
   }
 
-  /// Creates or updates an item in the [LocalStorage].
+  /// Creates or updates an item in [collectionName] of [LocalStorage].
   ///
   /// To create or update a single key-value pair pass the [key] and the [value] as String, the
   /// If the [key] is already present in the [LocalStorage] it's value will be overwritten.
   ///
   /// Example:
   /// ```dart
-  /// await Storage.createOrUpdate(key: 'key', value: 'value');
+  /// await LocalStorage.createOrUpdate(collectionName:'posts', key: 'key', value: 'value');
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> createOrUpdate({required String key, required String value}) {
-    return _instanceLocal.createOrUpdate(key: key, value: value);
+  static Future<void> createOrUpdate({
+    String collectionName = 'vaah-flutter-box',
+    required String key,
+    required String value,
+  }) {
+    return _instanceLocal.createOrUpdate(collectionName: collectionName, key: key, value: value);
   }
 
-  /// Creates or updates items in the [LocalStorage].
+  /// Creates or updates items in [collectionName] of [LocalStorage].
   /// If you want to create or update multiple entries pass the [values] as a Map<String, String>, then it
   /// will create all the key-value pairs from the [values] map.
   /// If any key from the [values] is already present in the [LocalStorage] it's value will be
@@ -155,7 +215,9 @@ abstract class LocalStorage {
   ///
   /// Example:
   /// ```dart
-  /// await Storage.createOrUpdateMany(values: {
+  /// await LocalStorage.createOrUpdateMany(
+  ///   collectionName:'posts',
+  ///   values: {
   ///     'key1': 'Value1',
   ///     'key2': 'Value2',
   ///     'key3': 'Value3',
@@ -164,38 +226,65 @@ abstract class LocalStorage {
   ///     //...
   ///   },
   /// );
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> createOrUpdateMany({required Map<String, String> values}) {
-    return _instanceLocal.createOrUpdateMany(values: values);
+  static Future<void> createOrUpdateMany({
+    String collectionName = 'vaah-flutter-box',
+    required Map<String, String> values,
+  }) {
+    return _instanceLocal.createOrUpdateMany(collectionName: collectionName, values: values);
   }
 
-  /// Deletes an item at [key].
+  /// Deletes an item at [key] from [collectionName] in [LocalStorage].
   ///
   /// Example:
   /// ```dart
-  /// await Storage.delete(key: 'key');
+  /// await LocalStorage.delete(collectionName:'posts', key: 'key');
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> delete({required String key}) {
-    return _instanceLocal.delete(key: key);
+  static Future<void> delete({
+    String collectionName = 'vaah-flutter-box',
+    required String key,
+  }) {
+    return _instanceLocal.delete(collectionName: collectionName, key: key);
   }
 
-  /// Deletes item at a key present in [keys], from that [LocalStorage].
+  /// Deletes item at a key present in [keys], from [collectionName] in [LocalStorage].
   ///
   /// Example:
   /// ```dart
-  /// await Storage.deleteMany(keys: [
+  /// await LocalStorage.deleteMany(
+  ///   collectionName:'posts',
+  ///   keys: [
   ///     'key1',
   ///     'key2',
   ///     //...
   ///   ],
   /// );
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> deleteMany({List<String> keys = const []}) {
-    return _instanceLocal.deleteMany(keys: keys);
+  static Future<void> deleteMany({
+    String collectionName = 'vaah-flutter-box',
+    List<String> keys = const [],
+  }) {
+    return _instanceLocal.deleteMany(collectionName: collectionName, keys: keys);
   }
 
-  /// Deletes all the values from that [LocalStorage]
-  static Future<void> deleteAll() {
-    return _instanceLocal.deleteAll();
+  /// Deletes all the values from [collectionName] in [LocalStorage].
+  ///
+  /// Example:
+  /// ```dart
+  /// await LocalStorage.deleteMany(
+  ///   collectionName:'posts',
+  ///   keys: [
+  ///     'key1',
+  ///     'key2',
+  ///     //...
+  ///   ],
+  /// );
+  /// // Do not provide the collectionName in case of Flutter Secure Storage.
+  /// ```
+  static Future<void> deleteAll({String collectionName = 'vaah-flutter-box'}) {
+    return _instanceLocal.deleteAll(collectionName: collectionName);
   }
 }
