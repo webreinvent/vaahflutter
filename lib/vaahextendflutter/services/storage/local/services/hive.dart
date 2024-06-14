@@ -15,7 +15,7 @@ class LocalStorageWithHive implements LocalStorageService {
 
   @override
   Future<void> create({
-    String collectionName = 'vaah-flutter-hive-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) async {
@@ -26,20 +26,14 @@ class LocalStorageWithHive implements LocalStorageService {
   }
 
   @override
-  Future<void> createMany({
-    String collectionName = 'vaah-flutter-hive-box',
-    required Map<String, String> values,
-  }) async {
+  Future<void> createMany({String collectionName = '', required Map<String, String> values}) async {
     for (String k in values.keys) {
       await create(collectionName: collectionName, key: k, value: values[k]!);
     }
   }
 
   @override
-  Future<String?> read({
-    String collectionName = 'vaah-flutter-hive-box',
-    required String key,
-  }) async {
+  Future<String?> read({String collectionName = '', required String key}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
     String? result = _collections[collectionName]!.get(key);
@@ -48,7 +42,7 @@ class LocalStorageWithHive implements LocalStorageService {
 
   @override
   Future<Map<String, String?>> readMany({
-    String collectionName = 'vaah-flutter-hive-box',
+    String collectionName = '',
     required List<String> keys,
   }) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
@@ -65,7 +59,7 @@ class LocalStorageWithHive implements LocalStorageService {
   }
 
   @override
-  Future<Map<String, String?>> readAll({String collectionName = 'vaah-flutter-hive-box'}) async {
+  Future<Map<String, String?>> readAll({String collectionName = ''}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
     Map<String, String?> result = _collections[collectionName]!
@@ -76,7 +70,7 @@ class LocalStorageWithHive implements LocalStorageService {
 
   @override
   Future<void> update({
-    String collectionName = 'vaah-flutter-hive-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) async {
@@ -87,10 +81,7 @@ class LocalStorageWithHive implements LocalStorageService {
   }
 
   @override
-  Future<void> updateMany({
-    String collectionName = 'vaah-flutter-hive-box',
-    required Map<String, String> values,
-  }) async {
+  Future<void> updateMany({String collectionName = '', required Map<String, String> values}) async {
     for (String k in values.keys) {
       await update(collectionName: collectionName, key: k, value: values[k]!);
     }
@@ -98,7 +89,7 @@ class LocalStorageWithHive implements LocalStorageService {
 
   @override
   Future<void> createOrUpdate({
-    String collectionName = 'vaah-flutter-hive-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) async {
@@ -109,7 +100,7 @@ class LocalStorageWithHive implements LocalStorageService {
 
   @override
   Future<void> createOrUpdateMany({
-    String collectionName = 'vaah-flutter-hive-box',
+    String collectionName = '',
     required Map<String, String> values,
   }) async {
     for (String k in values.keys) {
@@ -118,17 +109,14 @@ class LocalStorageWithHive implements LocalStorageService {
   }
 
   @override
-  Future<void> delete({String collectionName = 'vaah-flutter-hive-box', dynamic key}) async {
+  Future<void> delete({String collectionName = '', dynamic key}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
     await _collections[collectionName]!.delete(key);
   }
 
   @override
-  Future<void> deleteMany({
-    String collectionName = 'vaah-flutter-hive-box',
-    List<String> keys = const [],
-  }) async {
+  Future<void> deleteMany({String collectionName = '', List<String> keys = const []}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
     if (keys.isNotEmpty) {
@@ -137,7 +125,7 @@ class LocalStorageWithHive implements LocalStorageService {
   }
 
   @override
-  Future<void> deleteAll({String collectionName = 'vaah-flutter-hive-box'}) async {
+  Future<void> deleteAll({String collectionName = ''}) async {
     assert(_collections.containsKey(collectionName), 'The Box "$collectionName" does not exists.');
 
     await _collections[collectionName]!.clear();
