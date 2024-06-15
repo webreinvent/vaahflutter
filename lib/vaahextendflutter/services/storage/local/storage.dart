@@ -24,7 +24,7 @@ abstract class LocalStorage {
   ///
   /// It's not required in the case of [LocalStorageWithFlutterSecureStorage].
   ///
-  /// Throws an assertion error if [collectionName] exists already.
+  /// Throws an assertion error if [collectionName] exists already or empty [collectionName : ''].
   ///
   /// Example:
   /// ```dart
@@ -56,7 +56,7 @@ abstract class LocalStorage {
   /// await LocalStorage.create(key: 'key', value: 'value');
   /// ```
   static Future<void> create({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) {
@@ -101,7 +101,7 @@ abstract class LocalStorage {
   /// );
   /// ```
   static Future<void> createMany({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required Map<String, String> values,
   }) {
     return _instanceLocal.createMany(collectionName: collectionName, values: values);
@@ -120,7 +120,7 @@ abstract class LocalStorage {
   /// await LocalStorage.read(collectionName: 'posts', key: 'key');
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<String?> read({String collectionName = 'vaah-flutter-box', required String key}) {
+  static Future<String?> read({String collectionName = '', required String key}) {
     return _instanceLocal.read(collectionName: collectionName, key: key);
   }
 
@@ -140,7 +140,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<Map<String, String?>> readMany({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required List<String> keys,
   }) {
     return _instanceLocal.readMany(collectionName: collectionName, keys: keys);
@@ -154,7 +154,7 @@ abstract class LocalStorage {
   /// await LocalStorage.readAll(collectionName: 'posts');
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<Map<String, String?>> readAll({String collectionName = 'vaah-flutter-box'}) {
+  static Future<Map<String, String?>> readAll({String collectionName = ''}) {
     return _instanceLocal.readAll(collectionName: collectionName);
   }
 
@@ -172,7 +172,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> update({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) {
@@ -203,7 +203,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> updateMany({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required Map<String, String> values,
   }) {
     return _instanceLocal.updateMany(collectionName: collectionName, values: values);
@@ -219,7 +219,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> createOrUpdate({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required String key,
     required String value,
   }) {
@@ -248,7 +248,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> createOrUpdateMany({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required Map<String, String> values,
   }) {
     return _instanceLocal.createOrUpdateMany(collectionName: collectionName, values: values);
@@ -262,7 +262,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> delete({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     required String key,
   }) {
     return _instanceLocal.delete(collectionName: collectionName, key: key);
@@ -283,7 +283,7 @@ abstract class LocalStorage {
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
   static Future<void> deleteMany({
-    String collectionName = 'vaah-flutter-box',
+    String collectionName = '',
     List<String> keys = const [],
   }) {
     return _instanceLocal.deleteMany(collectionName: collectionName, keys: keys);
@@ -303,7 +303,7 @@ abstract class LocalStorage {
   /// );
   /// // Do not provide the collectionName in case of Flutter Secure Storage.
   /// ```
-  static Future<void> deleteAll({String collectionName = 'vaah-flutter-box'}) {
+  static Future<void> deleteAll({String collectionName = ''}) {
     return _instanceLocal.deleteAll(collectionName: collectionName);
   }
 }
