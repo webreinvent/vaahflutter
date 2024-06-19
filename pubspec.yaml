@@ -31,6 +31,7 @@ dependencies:
   firebase_core: ^2.14.0
   cloud_firestore: ^4.8.2
   firebase_dynamic_links: ^5.3.3
+  firebase_auth: ^4.17.9
   # Notifications
   onesignal_flutter: ^3.5.1
   flutter_local_notifications: ^15.1.0+1

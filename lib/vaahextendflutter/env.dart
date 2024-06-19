@@ -29,6 +29,7 @@ final EnvironmentConfig defaultConfig = EnvironmentConfig(
   internalNotificationsServiceType: InternalNotificationsServiceType.none,
   showDebugPanel: true,
   debugPanelColor: AppTheme.colors['black']!.withOpacity(0.8),
+  networkStorageType: NetworkStorageType.none,
 );
 
 // To add new configuration add new key, value pair in envConfigs
@@ -103,6 +104,7 @@ class EnvironmentConfig {
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
   final Color debugPanelColor;
+  final NetworkStorageType networkStorageType;
 
   const EnvironmentConfig({
     required this.appTitle,
@@ -125,6 +127,7 @@ class EnvironmentConfig {
     this.pusherConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
+    required this.networkStorageType,
   });
 
   static EnvironmentConfig getEnvConfig() {
@@ -170,6 +173,7 @@ class EnvironmentConfig {
     PusherConfig? pusherConfig,
     bool? showDebugPanel,
     Color? debugPanelColor,
+    NetworkStorageType? networkStorageType,
   }) {
     return EnvironmentConfig(
       appTitle: appTitle ?? this.appTitle,
@@ -194,6 +198,7 @@ class EnvironmentConfig {
       pusherConfig: pusherConfig ?? this.pusherConfig,
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
+      networkStorageType: networkStorageType ?? this.networkStorageType,
     );
   }
 
@@ -207,6 +212,8 @@ class EnvironmentConfig {
 enum PushNotificationsServiceType { local, remote, both, none }
 
 enum InternalNotificationsServiceType { pusher, firebase, custom, none }
+
+enum NetworkStorageType { firebase, supabase, none }
 
 class SentryConfig {
   final String dsn;
