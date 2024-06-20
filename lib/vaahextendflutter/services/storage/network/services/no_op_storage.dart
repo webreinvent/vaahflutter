@@ -6,19 +6,19 @@ class NoOpNetworkStorage implements NetworkStorageService {
 
   @override
   Future<void> create({
-    String collectionName = '',
+    required String collectionName,
     required String key,
     required String value,
   }) async {}
 
   @override
   Future<void> createMany({
-    String collectionName = '',
+    required String collectionName,
     required Map<String, String> values,
   }) async {}
 
   @override
-  Future<String?> read({String collectionName = '', required String key}) async {
+  Future<String?> read({required String collectionName, required String key}) async {
     return null;
   }
 
@@ -31,5 +31,43 @@ class NoOpNetworkStorage implements NetworkStorageService {
   }
 
   @override
+  Future<Map<String, String?>> readAll({
+    required String collectionName,
+  }) async {
+    return {};
+  }
+
+  @override
+  Future<void> update({
+    required String collectionName,
+    required String key,
+    required String value,
+  }) async {}
+
+  @override
+  Future<void> updateMany({
+    required String collectionName,
+    required Map<String, String> values,
+  }) async {}
+
+  @override
+  Future<void> createOrUpdate({
+    required String collectionName,
+    required String key,
+    required String value,
+  }) async {}
+
+  @override
+  Future<void> createOrUpdateMany({
+    required String collectionName,
+    required Map<String, String> values,
+  }) async {}
+  @override
   Future<void> delete({required String collectionName, required String key}) async {}
+
+  @override
+  Future<void> deleteMany({required String collectionName, required List<String> keys}) async {}
+
+  @override
+  Future<void> deleteAll({required String collectionName}) async {}
 }

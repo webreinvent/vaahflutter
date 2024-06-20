@@ -24,7 +24,7 @@ abstract class NetworkStorage {
   }
 
   static Future<void> create({
-    String collectionName = '',
+    String collectionName = 'vaah-flutter-collection',
     required String key,
     required String value,
   }) async {
@@ -52,10 +52,59 @@ abstract class NetworkStorage {
     return _instanceNetwork.readMany(collectionName: collectionName, keys: keys);
   }
 
+  static Future<Map<String, String?>> readAll({
+    String collectionName = 'vaah-flutter-collection',
+  }) {
+    return _instanceNetwork.readAll(collectionName: collectionName);
+  }
+
+  static Future<void> update({
+    String collectionName = 'vaah-flutter-collection',
+    required String key,
+    required String value,
+  }) async {
+    return _instanceNetwork.update(collectionName: collectionName, key: key, value: value);
+  }
+
+  static Future<void> updateMany({
+    String collectionName = 'vaah-flutter-collection',
+    required Map<String, String> values,
+  }) async {
+    return _instanceNetwork.updateMany(collectionName: collectionName, values: values);
+  }
+
+  static Future<void> createOrUpdate({
+    String collectionName = 'vaah-flutter-collection',
+    required String key,
+    required String value,
+  }) async {
+    return _instanceNetwork.createOrUpdate(collectionName: collectionName, key: key, value: value);
+  }
+
+  static Future<void> createOrUpdateMany({
+    String collectionName = 'vaah-flutter-collection',
+    required Map<String, String> values,
+  }) async {
+    return _instanceNetwork.createOrUpdateMany(collectionName: collectionName, values: values);
+  }
+
   static Future<void> delete({
     String collectionName = 'vaah-flutter-collection',
     required String key,
   }) async {
     return _instanceNetwork.delete(collectionName: collectionName, key: key);
+  }
+
+  static Future<void> deleteMany({
+    String collectionName = 'vaah-flutter-collection',
+    required List<String> keys,
+  }) async {
+    return _instanceNetwork.deleteMany(collectionName: collectionName, keys: keys);
+  }
+
+  static Future<void> deleteAll({
+    String collectionName = 'vaah-flutter-collection',
+  }) async {
+    return _instanceNetwork.deleteAll(collectionName: collectionName);
   }
 }
