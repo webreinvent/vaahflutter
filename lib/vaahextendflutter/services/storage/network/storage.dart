@@ -18,63 +18,62 @@ NetworkStorageService get instanceNetwork {
 
 abstract class NetworkStorage {
   static final NetworkStorageService _instanceNetwork = instanceNetwork;
+  static const String _vaahFlutterCollection = 'vaah-flutter-collection';
 
   static Future<void> addCollection(String collectionName, bool isShared) async {
     return _instanceNetwork.addCollection(collectionName, isShared);
   }
 
   static Future<void> create({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     return _instanceNetwork.create(collectionName: collectionName, key: key, value: value);
   }
 
   static Future<void> createMany({
-    String collectionName = 'vaah-flutter-collection',
-    required Map<String, String> values,
+    String collectionName = _vaahFlutterCollection,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
     return _instanceNetwork.createMany(collectionName: collectionName, values: values);
   }
 
-  static Future<String?> read({
-    String collectionName = 'vaah-flutter-collection',
+  static Future<Map<String, dynamic>?> read({
+    String collectionName = _vaahFlutterCollection,
     required String key,
   }) async {
     return _instanceNetwork.read(collectionName: collectionName, key: key);
   }
 
-  static Future<Map<String, String?>> readMany({
-    String collectionName = 'vaah-flutter-collection',
+  static Future<Map<String, Map<String, dynamic>?>> readMany({
+    String collectionName = _vaahFlutterCollection,
     required List<String> keys,
   }) async {
     return _instanceNetwork.readMany(collectionName: collectionName, keys: keys);
   }
 
-  static Future<Map<String, String?>> readAll({
-    String collectionName = 'vaah-flutter-collection',
-  }) {
+  static Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) {
     return _instanceNetwork.readAll(collectionName: collectionName);
   }
 
   static Future<void> update({
-    String collectionName = 'vaah-flutter-collection',
+    required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     return _instanceNetwork.update(collectionName: collectionName, key: key, value: value);
   }
 
   static Future<void> updateMany({
-    String collectionName = 'vaah-flutter-collection',
-    required Map<String, String> values,
+    String collectionName = _vaahFlutterCollection,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
     return _instanceNetwork.updateMany(collectionName: collectionName, values: values);
   }
 
   static Future<void> createOrUpdate({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
     required String key,
     required String value,
   }) async {
@@ -82,28 +81,28 @@ abstract class NetworkStorage {
   }
 
   static Future<void> createOrUpdateMany({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
     required Map<String, String> values,
   }) async {
     return _instanceNetwork.createOrUpdateMany(collectionName: collectionName, values: values);
   }
 
   static Future<void> delete({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
     required String key,
   }) async {
     return _instanceNetwork.delete(collectionName: collectionName, key: key);
   }
 
   static Future<void> deleteMany({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
     required List<String> keys,
   }) async {
     return _instanceNetwork.deleteMany(collectionName: collectionName, keys: keys);
   }
 
   static Future<void> deleteAll({
-    String collectionName = 'vaah-flutter-collection',
+    String collectionName = _vaahFlutterCollection,
   }) async {
     return _instanceNetwork.deleteAll(collectionName: collectionName);
   }

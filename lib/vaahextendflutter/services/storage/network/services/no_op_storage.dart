@@ -8,30 +8,30 @@ class NoOpNetworkStorage implements NetworkStorageService {
   Future<void> create({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> createMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
 
   @override
-  Future<String?> read({required String collectionName, required String key}) async {
+  Future<Map<String, dynamic>?> read({required String collectionName, required String key}) async {
     return null;
   }
 
   @override
-  Future<Map<String, String?>> readMany({
+  Future<Map<String, Map<String, dynamic>?>> readMany({
     required String collectionName,
-    List<String> keys = const [],
+    required List<String> keys,
   }) async {
     return {};
   }
 
   @override
-  Future<Map<String, String?>> readAll({
+  Future<Map<String, Map<String, dynamic>?>> readAll({
     required String collectionName,
   }) async {
     return {};
@@ -41,13 +41,13 @@ class NoOpNetworkStorage implements NetworkStorageService {
   Future<void> update({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> updateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
 
   @override

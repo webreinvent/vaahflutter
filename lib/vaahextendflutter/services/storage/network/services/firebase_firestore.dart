@@ -31,20 +31,10 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   Future<void> create({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     try {
-      _collections[collectionName]!.isShared
-          ? await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').set(
-              {key: value},
-              SetOptions(merge: true),
-            )
-          : await _firestore
-              .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
-              .set(
-              {'data': value},
-              SetOptions(merge: true),
-            );
+      await _firestore.doc('$collectionName/$key').set(value);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -53,33 +43,30 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   @override
   Future<void> createMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
+    WriteBatch batch = _firestore.batch();
+
     values.forEach((key, value) async {
-      create(
-        collectionName: collectionName,
-        key: key,
-        value: value,
-      );
+      DocumentReference ref = _firestore.doc('$collectionName/$key');
+      batch.set(ref, value);
     });
+
+    try {
+      await batch.commit();
+    } catch (e) {
+      throw ('Batch write failed: $e');
+    }
   }
 
   @override
-  Future<String?> read({
+  Future<Map<String, dynamic>?> read({
     required String collectionName,
     required String key,
   }) async {
     try {
-      String? value;
-      _collections[collectionName]!.isShared
-          ? await _firestore
-              .doc('shared/${_collections[collectionName]!.collectionName}')
-              .get()
-              .then((v) => value = v.data()?[key])
-          : await _firestore
-              .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
-              .get()
-              .then((v) => value = v.data()?['data']);
+      Map<String, dynamic>? value = {};
+      await _firestore.doc('$collectionName/$key').get().then((v) => value = v.data());
       return value;
     } catch (e) {
       throw Exception(e.toString());
@@ -87,11 +74,11 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
-  Future<Map<String, String?>> readMany({
+  Future<Map<String, Map<String, dynamic>?>> readMany({
     required String collectionName,
     List<String> keys = const [],
   }) async {
-    Map<String, String?> values = {};
+    Map<String, Map<String, dynamic>?> values = {};
     for (int i = 0; i < keys.length; i++) {
       values[keys[i]] = await read(collectionName: collectionName, key: keys[i]);
     }
@@ -99,26 +86,16 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   }
 
   @override
-  Future<Map<String, String?>> readAll({required String collectionName}) async {
+  Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) async {
     try {
-      final Map<String, String?> result;
-      if (_collections[collectionName]!.isShared) {
-        final documentSnapshot =
-            await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').get();
-        result = documentSnapshot.data()!.map((key, value) => MapEntry(key, value?.toString()));
-
-        return result;
-      } else {
-        final querySnapshot =
-            await _firestore.collection('separate').doc('user-id').collection(collectionName).get();
-        final Map<String, String?> result = Map.fromEntries(
-          querySnapshot.docs.map(
-            (e) => MapEntry(e.id, e.data()['data']?.toString()),
-          ),
-        );
-
-        return result;
-      }
+      final Map<String, Map<String, dynamic>?> result;
+      final querySnapshot = await _firestore.collection(collectionName).get();
+      result = Map.fromEntries(
+        querySnapshot.docs.map(
+          (e) => MapEntry(e.id, e.data()),
+        ),
+      );
+      return result;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -128,20 +105,10 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   Future<void> update({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     try {
-      if (_collections[collectionName]!.isShared) {
-        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').update({
-          key: value,
-        });
-      } else {
-        await _firestore
-            .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
-            .update({
-          'data': value,
-        });
-      }
+      await _firestore.doc('$collectionName/$key').set(value, SetOptions(merge: true));
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -150,11 +117,20 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   @override
   Future<void> updateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
-    values.forEach(
-      (key, value) async => await update(collectionName: collectionName, key: key, value: value),
-    );
+    WriteBatch batch = _firestore.batch();
+
+    values.forEach((key, value) async {
+      DocumentReference ref = _firestore.doc('$collectionName/$key');
+      batch.set(ref, value);
+    });
+
+    try {
+      await batch.commit();
+    } catch (e) {
+      throw ('Batch write failed: $e');
+    }
   }
 
   @override

@@ -8,45 +8,53 @@ class NetworkStorageWithSupabase implements NetworkStorageService {
   }
 
   @override
-  Future<void> create({String collectionName = '', required String key, required String value}) {
+  Future<void> create(
+      {required String collectionName, required String key, required Map<String, dynamic> value}) {
     // TODO: implement create
     throw UnimplementedError();
   }
 
   @override
-  Future<void> createMany({String collectionName = '', required Map<String, String> values}) {
+  Future<void> createMany(
+      {required String collectionName, required Map<String, Map<String, dynamic>> values}) {
     // TODO: implement createAll
     throw UnimplementedError();
   }
 
   @override
-  Future<String?> read({String collectionName = '', required String key}) {
+  Future<Map<String, dynamic>?> read({String collectionName = '', required String key}) {
     // TODO: implement read
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, String?>> readMany(
-      {required String collectionName, List<String> keys = const []}) {
+  Future<Map<String, Map<String, dynamic>?>> readMany(
+      {required String collectionName, required List<String> keys}) {
     // TODO: implement readAll
     throw UnimplementedError();
   }
 
   @override
-  Future<Map<String, String?>> readAll({required String collectionName}) {
+  Future<Map<String, Map<String, dynamic>?>> readAll({required String collectionName}) {
     // TODO: implement readAll
     throw UnimplementedError();
   }
 
   @override
-  Future<void> update(
-      {required String collectionName, required String key, required String value}) {
+  Future<void> update({
+    required String collectionName,
+    required String key,
+    required Map<String, dynamic> value,
+  }) {
     // TODO: implement update
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updateMany({required String collectionName, required Map<String, String> values}) {
+  Future<void> updateMany({
+    required String collectionName,
+    required Map<String, Map<String, dynamic>> values,
+  }) {
     // TODO: implement updateMany
     throw UnimplementedError();
   }
