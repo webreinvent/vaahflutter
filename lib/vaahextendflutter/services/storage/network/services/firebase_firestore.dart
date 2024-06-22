@@ -4,28 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'base_service.dart';
 
 class NetworkStorageWithFirestore implements NetworkStorageService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   User? currentUser;
-
-  final Map<String, CollectionSettings> _collections = {
-    'vaah-flutter-collection': CollectionSettings(
-      collectionName: 'vaah-flutter-collection',
-      isShared: true,
-    ),
-  };
-
-  @override
-  Future<void> addCollection(String collectionName, bool isShared) async {
-    assert(!_collections.containsKey(collectionName), 'The collection already exists');
-
-    if (!_collections.containsKey(collectionName)) {
-      _collections[collectionName] = CollectionSettings(
-        collectionName: collectionName,
-        isShared: isShared,
-      );
-    }
-  }
 
   @override
   Future<void> create({
@@ -108,7 +88,7 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
     required Map<String, dynamic> value,
   }) async {
     try {
-      await _firestore.doc('$collectionName/$key').set(value, SetOptions(merge: true));
+      await _firestore.doc('$collectionName/$key').update(value);
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -123,7 +103,7 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
 
     values.forEach((key, value) async {
       DocumentReference ref = _firestore.doc('$collectionName/$key');
-      batch.set(ref, value);
+      batch.update(ref, value);
     });
 
     try {
@@ -137,20 +117,10 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     try {
-      if (_collections[collectionName]!.isShared) {
-        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').set({
-          key: value,
-        }, SetOptions(merge: true));
-      } else {
-        await _firestore
-            .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
-            .set({
-          'data': value,
-        }, SetOptions(merge: true));
-      }
+      await _firestore.doc('$collectionName/$key').set(value, SetOptions(merge: true));
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -159,22 +129,25 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
   @override
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
-    values.forEach((key, value) async =>
-        await createOrUpdate(collectionName: collectionName, key: key, value: value));
+    WriteBatch batch = _firestore.batch();
+    try {
+      values.forEach((key, value) async {
+        DocumentReference ref = _firestore.doc('$collectionName/$key');
+        batch.set(ref, value, SetOptions(merge: true));
+      });
+
+      await batch.commit();
+    } catch (e) {
+      throw ('Batch write failed: $e');
+    }
   }
 
   @override
   Future<void> delete({required String collectionName, required String key}) async {
     try {
-      _collections[collectionName]!.isShared
-          ? _firestore
-              .doc('shared/${_collections[collectionName]!.collectionName}')
-              .update({key: FieldValue.delete()})
-          : await _firestore
-              .doc('separate/user-id/${_collections[collectionName]!.collectionName}/$key')
-              .delete();
+      await _firestore.doc('$collectionName/$key').delete();
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -182,32 +155,28 @@ class NetworkStorageWithFirestore implements NetworkStorageService {
 
   @override
   Future<void> deleteMany({required String collectionName, required List<String> keys}) async {
-    for (int i = 0; i < keys.length; i++) {
-      delete(collectionName: collectionName, key: keys[i]);
+    WriteBatch batch = _firestore.batch();
+    try {
+      for (int i = 0; i < keys.length; i++) {
+        DocumentReference ref = _firestore.doc('$collectionName/${keys[i]}');
+        batch.delete(ref);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      throw ('Batch write failed: $e');
     }
   }
 
   @override
   Future<void> deleteAll({required collectionName}) async {
     try {
-      if (_collections[collectionName]!.isShared) {
-        await _firestore.doc('shared/${_collections[collectionName]!.collectionName}').delete();
-      } else {
-        QuerySnapshot querySnapshot =
-            await _firestore.collection('separate/user-id/$collectionName').get();
-        for (DocumentSnapshot doc in querySnapshot.docs) {
-          await doc.reference.delete();
-        }
+      QuerySnapshot querySnapshot = await _firestore.collection(collectionName).get();
+      for (DocumentSnapshot doc in querySnapshot.docs) {
+        await doc.reference.delete();
       }
     } catch (e) {
       throw Exception(e.toString());
     }
   }
-}
-
-class CollectionSettings {
-  final String collectionName;
-  final bool isShared;
-
-  CollectionSettings({required this.collectionName, this.isShared = false});
 }

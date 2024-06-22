@@ -1,6 +1,4 @@
 abstract class NetworkStorageService {
-  Future<void> addCollection(String collectionName, bool isShared);
-
   Future<void> create(
       {required String collectionName, required String key, required Map<String, dynamic> value});
 
@@ -32,12 +30,12 @@ abstract class NetworkStorageService {
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   });
 
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   });
 
   Future<void> delete({required String collectionName, required String key});

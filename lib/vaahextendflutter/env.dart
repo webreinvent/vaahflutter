@@ -105,6 +105,7 @@ class EnvironmentConfig {
   final bool showDebugPanel;
   final Color debugPanelColor;
   final NetworkStorageType networkStorageType;
+  final SupabaseConfig? supabaseConfig;
 
   const EnvironmentConfig({
     required this.appTitle,
@@ -128,6 +129,7 @@ class EnvironmentConfig {
     required this.showDebugPanel,
     required this.debugPanelColor,
     required this.networkStorageType,
+    this.supabaseConfig,
   });
 
   static EnvironmentConfig getEnvConfig() {
@@ -174,6 +176,7 @@ class EnvironmentConfig {
     bool? showDebugPanel,
     Color? debugPanelColor,
     NetworkStorageType? networkStorageType,
+    SupabaseConfig? supabaseConfig,
   }) {
     return EnvironmentConfig(
       appTitle: appTitle ?? this.appTitle,
@@ -199,6 +202,7 @@ class EnvironmentConfig {
       showDebugPanel: showDebugPanel ?? this.showDebugPanel,
       debugPanelColor: debugPanelColor ?? this.debugPanelColor,
       networkStorageType: networkStorageType ?? this.networkStorageType,
+      supabaseConfig: supabaseConfig ?? this.supabaseConfig,
     );
   }
 
@@ -285,6 +289,23 @@ class PusherConfig {
     return PusherConfig(
       apiKey: apiKey ?? this.apiKey,
       cluster: cluster ?? this.cluster,
+    );
+  }
+}
+
+class SupabaseConfig {
+  final String url;
+  final String anonKey;
+
+  SupabaseConfig({required this.url, required this.anonKey});
+
+  SupabaseConfig copyWith({
+    String? url,
+    String? anonKey,
+  }) {
+    return SupabaseConfig(
+      url: url ?? this.url,
+      anonKey: anonKey ?? this.anonKey,
     );
   }
 }

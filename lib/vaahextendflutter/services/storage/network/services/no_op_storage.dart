@@ -2,9 +2,6 @@ import 'base_service.dart';
 
 class NoOpNetworkStorage implements NetworkStorageService {
   @override
-  Future<void> addCollection(String collectionName, bool isShared) async {}
-
-  @override
   Future<void> create({
     required String collectionName,
     required String key,
@@ -54,13 +51,13 @@ class NoOpNetworkStorage implements NetworkStorageService {
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {}
 
   @override
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {}
   @override
   Future<void> delete({required String collectionName, required String key}) async {}

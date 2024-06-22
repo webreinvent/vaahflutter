@@ -20,10 +20,6 @@ abstract class NetworkStorage {
   static final NetworkStorageService _instanceNetwork = instanceNetwork;
   static const String _vaahFlutterCollection = 'vaah-flutter-collection';
 
-  static Future<void> addCollection(String collectionName, bool isShared) async {
-    return _instanceNetwork.addCollection(collectionName, isShared);
-  }
-
   static Future<void> create({
     String collectionName = _vaahFlutterCollection,
     required String key,
@@ -75,14 +71,14 @@ abstract class NetworkStorage {
   static Future<void> createOrUpdate({
     String collectionName = _vaahFlutterCollection,
     required String key,
-    required String value,
+    required Map<String, dynamic> value,
   }) async {
     return _instanceNetwork.createOrUpdate(collectionName: collectionName, key: key, value: value);
   }
 
   static Future<void> createOrUpdateMany({
     String collectionName = _vaahFlutterCollection,
-    required Map<String, String> values,
+    required Map<String, Map<String, dynamic>> values,
   }) async {
     return _instanceNetwork.createOrUpdateMany(collectionName: collectionName, values: values);
   }
