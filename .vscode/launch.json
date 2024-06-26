@@ -1,0 +1,47 @@
+{
+    "version": "0.2.0",
+    "inputs": [
+        {
+            "id": "option",
+            "type": "pickString",
+            "description": "buildMode",
+            "options": [
+                "debug",
+                "profile",
+                "release"
+            ],
+        },
+    ],
+    "configurations": [
+        {
+            "name": "develop ${input:option}",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "${input:option}",
+            "args": [
+                "--dart-define",
+                "ENV_PATH=assets/env/develop.json",
+            ],
+        },
+        {
+            "name": "staging ${input:option}",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "${input:option}",
+            "args": [
+                "--dart-define",
+                "ENV_PATH=assets/env/staging.json",
+            ],
+        },
+        {
+            "name": "production ${input:option}",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "${input:option}",
+            "args": [
+                "--dart-define",
+                "ENV_PATH=assets/env/production.json",
+            ],
+        }
+    ]
+}

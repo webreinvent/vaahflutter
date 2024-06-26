@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../env.dart';
+import '../../../env/env.dart';
+import '../../../env/notification.dart';
 import '../../../helpers/constants.dart';
 import 'notification.dart';
 
@@ -12,12 +13,11 @@ class InternalNotificationsBadge extends StatefulWidget {
 }
 
 class _InternalNotificationsBadgeState extends State<InternalNotificationsBadge> {
-  final EnvironmentConfig _environmentConfig = EnvironmentConfig.getEnvConfig();
+  final EnvironmentConfig _environmentConfig = EnvironmentConfig.getConfig;
 
   @override
   Widget build(BuildContext context) {
-    return _environmentConfig.internalNotificationsServiceType ==
-            InternalNotificationsServiceType.none
+    return _environmentConfig.internalNotificationsServiceType.isNone
         ? emptyWidget
         : StreamBuilder(
             initialData: 0,

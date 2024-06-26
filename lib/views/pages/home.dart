@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../vaahextendflutter/env.dart';
 import '../../vaahextendflutter/services/notification/internal/notification_view.dart';
 import 'ui/index.dart';
 
@@ -24,7 +23,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    EnvironmentConfig.getEnvConfig().increaseOpenCount();
+    // TODO:
+    // increaseOpenCount();
   }
 
   @override

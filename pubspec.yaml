@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   # Annotations
   json_annotation: ^4.8.1
-  json_serializable: ^6.7.1
+  copy_with_extension: ^5.0.4
   # Console
   colorize: ^3.0.0
   # Log and Performance
@@ -47,7 +47,11 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.2
   build_runner: ^2.4.6
+  json_serializable: ^6.7.1
+  copy_with_extension_gen: ^5.0.4
 
 flutter:
   # below line allows you use Material Icons in application
   uses-material-design: true
+  assets:
+    - assets/env/

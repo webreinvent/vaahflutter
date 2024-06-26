@@ -1,0 +1,21 @@
+{
+  "app_title": "VaahFlutter",
+  "app_title_short": "VaahFlutter",
+  "env_type": "Develop",
+  "version": "1.0.0",
+  "build": "1",
+  "backend_url": "",
+  "api_url": "",
+  "firebase_id": null,
+  "timeout_limit": 20000,
+  "enable_local_logs": false,
+  "enable_cloud_logs": false,
+  "enable_api_log_interceptor": false,
+  "sentry_config": null,
+  "push_notifications_service_type": "none",
+  "internal_notifications_service_type": "none",
+  "one_signal_config": null,
+  "pusher_config": null,
+  "show_debug_panel": true,
+  "debug_panel_color": 3422552064
+}

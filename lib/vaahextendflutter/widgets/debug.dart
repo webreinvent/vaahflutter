@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
-import '../env.dart';
+import '../env/env.dart';
 import '../helpers/constants.dart';
 import '../helpers/styles.dart';
 import '../services/dynamic_links.dart';
@@ -53,7 +53,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
   void initState() {
     super.initState();
     // get env controller and set variable showDebugPanel
-    _environmentConfig = EnvironmentConfig.getEnvConfig();
+    _environmentConfig = EnvironmentConfig.getConfig;
     showDebugPanel = _environmentConfig.showDebugPanel;
     // initialise AnimationController
     _controller = AnimationController(
@@ -179,14 +179,11 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                           Data(value: _environmentConfig.version),
                                                       'Build':
                                                           Data(value: _environmentConfig.build),
-                                                      'Backend URL': Data(
-                                                        value: _environmentConfig.backendUrl,
-                                                      ),
                                                       'API URL':
                                                           Data(value: _environmentConfig.apiUrl),
                                                       'Request and Response Timeout': Data(
                                                         value:
-                                                            '${_environmentConfig.timeoutLimit / 1000} Seconds',
+                                                            '${_environmentConfig.timeoutLimit} Seconds',
                                                       ),
                                                       'Firebase Id': Data(
                                                         value: _environmentConfig.firebaseId,

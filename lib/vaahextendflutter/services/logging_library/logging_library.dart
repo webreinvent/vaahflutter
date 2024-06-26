@@ -1,11 +1,11 @@
-import '../../env.dart';
+import '../../env/env.dart';
 import '_cloud/firebase_logging_service.dart';
 import '_cloud/sentry_logging_service.dart';
 import '_local/console_service.dart';
 import 'models/log.dart';
 
 class Log {
-  static final EnvironmentConfig _config = EnvironmentConfig.getEnvConfig();
+  static final EnvironmentConfig _config = EnvironmentConfig.getConfig;
 
   static final List<Type> _services = [
     SentryLoggingService,
