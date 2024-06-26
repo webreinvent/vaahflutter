@@ -183,7 +183,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                           Data(value: _environmentConfig.apiUrl),
                                                       'Request and Response Timeout': Data(
                                                         value:
-                                                            '${_environmentConfig.timeoutLimit / 1000} Seconds',
+                                                            '${_environmentConfig.timeoutLimit} Seconds',
                                                       ),
                                                       'Firebase Id': Data(
                                                         value: _environmentConfig.firebaseId,

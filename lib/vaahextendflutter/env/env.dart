@@ -112,10 +112,10 @@ class EnvironmentConfig {
       version: '1.0.0',
       build: '1',
       apiUrl: '',
-      timeoutLimit: 20 * 1000, // 20 seconds
+      timeoutLimit: 20, // 20 seconds
       enableLocalLogs: true,
-      enableCloudLogs: true,
-      enableApiLogInterceptor: true,
+      enableCloudLogs: false,
+      enableApiLogInterceptor: false,
       pushNotificationsServiceType: PushNotificationsServiceType.none,
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
       showDebugPanel: true,

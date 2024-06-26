@@ -177,8 +177,8 @@ abstract class Api {
   }) async {
     Response? response;
     final Options options = await _getOptions();
-    options.sendTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
-    options.receiveTimeout = Duration(milliseconds: customTimeoutLimit ?? _config.timeoutLimit);
+    options.sendTimeout = Duration(seconds: customTimeoutLimit ?? _config.timeoutLimit);
+    options.receiveTimeout = Duration(seconds: customTimeoutLimit ?? _config.timeoutLimit);
     if (headers != null && headers.isNotEmpty) {
       if (options.headers != null) {
         for (Map<String, String> element in headers) {
