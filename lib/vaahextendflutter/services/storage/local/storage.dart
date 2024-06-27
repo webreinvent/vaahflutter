@@ -1,11 +1,12 @@
-import '../../../env.dart';
+import '../../../env/env.dart';
+import '../../../env/storage.dart';
 import 'services/base_service.dart';
 import 'services/flutter_secure_storage.dart';
 import 'services/hive.dart';
 import 'services/no_op_storage.dart';
 
 LocalStorageService get instanceLocal {
-  final EnvironmentConfig envConfig = EnvironmentConfig.getEnvConfig();
+  final EnvironmentConfig envConfig = EnvironmentConfig.getConfig;
   switch (envConfig.localStorageType) {
     case LocalStorageType.hive:
       return LocalStorageWithHive();
@@ -31,7 +32,7 @@ abstract class LocalStorage {
   /// LocalStorage.add('posts');
   /// //used only with Hive
   /// ```
-  void add(String collectionName) {
+  static void add(String collectionName) {
     return _instanceLocal.add(collectionName);
   }
 

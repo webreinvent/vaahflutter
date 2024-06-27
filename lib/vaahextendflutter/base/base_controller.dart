@@ -11,6 +11,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
+import '../env/storage.dart';
 import '../services/api.dart';
 import '../services/dynamic_links.dart';
 import '../services/notification/internal/notification.dart';
