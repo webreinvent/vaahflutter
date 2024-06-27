@@ -7,7 +7,7 @@
   "backend_url": "",
   "api_url": "",
   "firebase_id": null,
-  "timeout_limit": 20000,
+  "timeout_limit": 20,
   "enable_local_logs": false,
   "enable_cloud_logs": false,
   "enable_api_log_interceptor": false,
@@ -17,5 +17,6 @@
   "one_signal_config": null,
   "pusher_config": null,
   "show_debug_panel": false,
+  "local_storage_type": "none",
   "debug_panel_color": 3422552064
 }
