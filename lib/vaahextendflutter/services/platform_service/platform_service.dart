@@ -1,8 +1,8 @@
 import 'services/base_service.dart';
-import 'services/method_channel_service.dart';
+import 'services/platform_channel_service.dart';
 
 BasePlatformService get service {
-  return MethodChannelService();
+  return PlatformChannelService();
 }
 
 abstract class PlatformService {
@@ -12,7 +12,7 @@ abstract class PlatformService {
     return _service.invokeMethod<T>(method, arguments);
   }
 
-  static Stream<dynamic> getEventStream(String eventChannelName) {
-    return _service.getEventStream(eventChannelName);
+  static Stream<dynamic> getEventStream(String eventChannelName, [dynamic arguments]) {
+    return _service.getEventStream(eventChannelName, arguments);
   }
 }
