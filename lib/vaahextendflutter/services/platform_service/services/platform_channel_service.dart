@@ -20,6 +20,8 @@ class PlatformChannelService implements BasePlatformService {
       throw 'No plugin handler for the method call was found: ${e.message}(${channel.name})';
     } on PlatformException catch (e) {
       throw 'Failed to invoke method: ${e.message}';
+    } on Exception catch (_) {
+      rethrow;
     }
   }
 
