@@ -58,6 +58,7 @@ class EnvironmentConfig {
     this.oneSignalConfig,
     this.pusherConfig,
     required this.showDebugPanel,
+    required this.methodChannelName,
     required this.debugPanelColor,
   });
 
@@ -78,6 +79,7 @@ class EnvironmentConfig {
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
+  final String methodChannelName;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
   final Color debugPanelColor;
 
@@ -119,6 +121,7 @@ class EnvironmentConfig {
       pushNotificationsServiceType: PushNotificationsServiceType.none,
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
       showDebugPanel: true,
+      methodChannelName: '',
       debugPanelColor: Colors.black.withOpacity(0.8),
     );
   }

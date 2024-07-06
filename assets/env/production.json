@@ -17,5 +17,6 @@
   "one_signal_config": null,
   "pusher_config": null,
   "show_debug_panel": false,
+  "method_channel_name": "",
   "debug_panel_color": 3422552064
 }
