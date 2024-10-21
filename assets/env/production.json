@@ -17,5 +17,6 @@
   "one_signal_config": null,
   "pusher_config": null,
   "show_debug_panel": false,
+  "network_storage_type": "none",
   "debug_panel_color": 3422552064
 }

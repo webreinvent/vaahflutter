@@ -38,6 +38,12 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
           : PusherConfig.fromJson(
               json['pusher_config'] as Map<String, dynamic>),
       showDebugPanel: json['show_debug_panel'] as bool,
+      networkStorageType: $enumDecode(
+          _$NetworkStorageTypeEnumMap, json['network_storage_type']),
+      supabaseConfig: json['supabase_config'] == null
+          ? null
+          : SupabaseConfig.fromJson(
+              json['supabase_config'] as Map<String, dynamic>),
       debugPanelColor:
           EnvironmentConfig._colorFromJson(json['debug_panel_color'] as int),
     );
@@ -63,6 +69,9 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
               instance.internalNotificationsServiceType]!,
       'one_signal_config': instance.oneSignalConfig,
       'pusher_config': instance.pusherConfig,
+      'network_storage_type':
+          _$NetworkStorageTypeEnumMap[instance.networkStorageType]!,
+      'supabase_config': instance.supabaseConfig,
       'show_debug_panel': instance.showDebugPanel,
       'debug_panel_color':
           EnvironmentConfig._colorToJson(instance.debugPanelColor),
@@ -80,4 +89,10 @@ const _$InternalNotificationsServiceTypeEnumMap = {
   InternalNotificationsServiceType.firebase: 'firebase',
   InternalNotificationsServiceType.custom: 'custom',
   InternalNotificationsServiceType.none: 'none',
+};
+
+const _$NetworkStorageTypeEnumMap = {
+  NetworkStorageType.firebase: 'firebase',
+  NetworkStorageType.supabase: 'supabase',
+  NetworkStorageType.none: 'none',
 };
