@@ -38,6 +38,8 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
           : PusherConfig.fromJson(
               json['pusher_config'] as Map<String, dynamic>),
       showDebugPanel: json['show_debug_panel'] as bool,
+      localStorageType:
+          $enumDecode(_$LocalStorageTypeEnumMap, json['local_storage_type']),
       debugPanelColor:
           EnvironmentConfig._colorFromJson(json['debug_panel_color'] as int),
     );
@@ -64,6 +66,8 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
       'one_signal_config': instance.oneSignalConfig,
       'pusher_config': instance.pusherConfig,
       'show_debug_panel': instance.showDebugPanel,
+      'local_storage_type':
+          _$LocalStorageTypeEnumMap[instance.localStorageType]!,
       'debug_panel_color':
           EnvironmentConfig._colorToJson(instance.debugPanelColor),
     };
@@ -80,4 +84,10 @@ const _$InternalNotificationsServiceTypeEnumMap = {
   InternalNotificationsServiceType.firebase: 'firebase',
   InternalNotificationsServiceType.custom: 'custom',
   InternalNotificationsServiceType.none: 'none',
+};
+
+const _$LocalStorageTypeEnumMap = {
+  LocalStorageType.hive: 'hive',
+  LocalStorageType.flutterSecureStorage: 'flutterSecureStorage',
+  LocalStorageType.none: 'none',
 };
