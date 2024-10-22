@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // *****************************************
 // Dev helper panel that comes from bottom
 // example: https://img-v4.getdemo.dev/screenshot/qemu-system-x86_64_9g9eFWHZK5.mp4
@@ -10,12 +11,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../app_theme.dart';
-import '../env/env.dart';
-import '../helpers/constants.dart';
-import '../helpers/styles.dart';
-import '../services/dynamic_links.dart';
-import '../services/notification/push/notification.dart';
+import '../../app_theme.dart';
+import '../../env/env.dart';
+import '../../helpers/constants.dart';
+import '../../helpers/styles.dart';
+import '../../services/dynamic_links.dart';
+import '../../services/notification/push/notification.dart';
+import 'custom_debug_section.dart';
+import 'panel_content_holder.dart';
+import 'section_data.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -44,6 +48,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
   final _focusScopeNode = FocusScopeNode();
   final _handleHeight = constHandleHeight;
   late AnimationController _controller;
+  // List<CustomDebugSection> customDebugSections = [];
 
   // To determine whether to show tag or not depending on env variable
   late EnvironmentConfig _environmentConfig;
@@ -167,28 +172,28 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 _ShowDetails(
                                                   contentHolder: PanelDataContentHolder(
                                                     content: {
-                                                      'App Title':
-                                                          Data(value: _environmentConfig.appTitle),
-                                                      'App Title Short': Data(
+                                                      'App Title': SectionData(
+                                                          value: _environmentConfig.appTitle),
+                                                      'App Title Short': SectionData(
                                                         value: _environmentConfig.appTitleShort,
                                                       ),
-                                                      'Environment': Data(
+                                                      'Environment': SectionData(
                                                         value: _environmentConfig.envType,
                                                       ),
-                                                      'Version':
-                                                          Data(value: _environmentConfig.version),
-                                                      'Build':
-                                                          Data(value: _environmentConfig.build),
-                                                      'API URL':
-                                                          Data(value: _environmentConfig.apiUrl),
-                                                      'Request and Response Timeout': Data(
+                                                      'Version': SectionData(
+                                                          value: _environmentConfig.version),
+                                                      'Build': SectionData(
+                                                          value: _environmentConfig.build),
+                                                      'API URL': SectionData(
+                                                          value: _environmentConfig.apiUrl),
+                                                      'Request and Response Timeout': SectionData(
                                                         value:
                                                             '${_environmentConfig.timeoutLimit} Seconds',
                                                       ),
-                                                      'Firebase Id': Data(
+                                                      'Firebase Id': SectionData(
                                                         value: _environmentConfig.firebaseId,
                                                       ),
-                                                      'API Logs Interceptor': Data(
+                                                      'API Logs Interceptor': SectionData(
                                                         value: _environmentConfig
                                                                 .enableApiLogInterceptor
                                                             ? 'enabled'
@@ -198,7 +203,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                             ? AppTheme.colors['success']
                                                             : AppTheme.colors['danger'],
                                                       ),
-                                                      'Local Logs': Data(
+                                                      'Local Logs': SectionData(
                                                         value: _environmentConfig.enableLocalLogs
                                                             ? 'enabled'
                                                             : 'disabled',
@@ -206,7 +211,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                             ? AppTheme.colors['success']
                                                             : AppTheme.colors['danger'],
                                                       ),
-                                                      'Cloud Logs': Data(
+                                                      'Cloud Logs': SectionData(
                                                         value: _environmentConfig.enableCloudLogs
                                                             ? 'enabled'
                                                             : 'disabled',
@@ -216,17 +221,17 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                       ),
                                                       if (null !=
                                                           _environmentConfig.sentryConfig) ...{
-                                                        'Sentry DSN': Data(
+                                                        'Sentry DSN': SectionData(
                                                           value:
                                                               _environmentConfig.sentryConfig!.dsn,
                                                         ),
-                                                        'Sentry Traces Sample Rate': Data(
+                                                        'Sentry Traces Sample Rate': SectionData(
                                                           value: _environmentConfig
                                                               .sentryConfig!.tracesSampleRate
                                                               .toString(),
                                                         ),
                                                         'Sentry Auto App Start (Record Cold And Warm Start Time)':
-                                                            Data(
+                                                            SectionData(
                                                           value: _environmentConfig
                                                                   .sentryConfig!.autoAppStart
                                                               ? 'enabled'
@@ -236,7 +241,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                               ? AppTheme.colors['success']
                                                               : AppTheme.colors['danger'],
                                                         ),
-                                                        'Sentry User Interaction Tracing': Data(
+                                                        'Sentry User Interaction Tracing':
+                                                            SectionData(
                                                           value: _environmentConfig.sentryConfig!
                                                                   .enableUserInteractionTracing
                                                               ? 'enabled'
@@ -246,7 +252,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                               ? AppTheme.colors['success']
                                                               : AppTheme.colors['danger'],
                                                         ),
-                                                        'Sentry Auto Performance Tracking': Data(
+                                                        'Sentry Auto Performance Tracking':
+                                                            SectionData(
                                                           value: _environmentConfig.sentryConfig!
                                                                   .enableAutoPerformanceTracing
                                                               ? 'enabled'
@@ -256,7 +263,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                               ? AppTheme.colors['success']
                                                               : AppTheme.colors['danger'],
                                                         ),
-                                                        'Sentry Assets Instrumentation': Data(
+                                                        'Sentry Assets Instrumentation':
+                                                            SectionData(
                                                           value: _environmentConfig.sentryConfig!
                                                                   .enableAssetsInstrumentation
                                                               ? 'enabled'
@@ -275,6 +283,9 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
+                                                _CustomDebugSectionsBuilder(
+                                                  config: _environmentConfig,
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -526,8 +537,8 @@ class __NotificationSectionState extends State<_NotificationSection> {
               _ShowDetails(
                 contentHolder: PanelDataContentHolder(
                   content: {
-                    'One Signal App Id': Data(value: widget.config.oneSignalConfig?.appId),
-                    'User Id': Data(value: userId),
+                    'One Signal App Id': SectionData(value: widget.config.oneSignalConfig?.appId),
+                    'User Id': SectionData(value: userId),
                   },
                 ),
               ),
@@ -608,34 +619,46 @@ class _ShowDetailsState extends State<_ShowDetails> {
   }
 }
 
-abstract class PanelContentHolder {
-  const PanelContentHolder();
+class _CustomDebugSectionsBuilder extends StatelessWidget {
+  const _CustomDebugSectionsBuilder({
+    Key? key,
+    required this.config,
+  }) : super(key: key);
+
+  final EnvironmentConfig config;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      if (config.customDebugSections != null)
+        ...config.customDebugSections!
+            .map((newSection) => _CustomDebugSectionWidget(section: newSection))
+    ]);
+  }
 }
 
-class PanelDataContentHolder extends PanelContentHolder {
-  final Map<String, Data> content;
+class _CustomDebugSectionWidget extends StatefulWidget {
+  final CustomDebugSection section;
+  const _CustomDebugSectionWidget({required this.section});
 
-  const PanelDataContentHolder({
-    required this.content,
-  });
+  @override
+  State<_CustomDebugSectionWidget> createState() => _CustomDebugSectionWidgetState();
 }
 
-class PanelLinkContentHolder extends PanelContentHolder {
-  final DeepLink content;
-
-  const PanelLinkContentHolder({
-    required this.content,
-  });
-}
-
-class Data {
-  final String? value;
-  final String? tooltip;
-  final Color? color;
-
-  const Data({
-    this.value,
-    this.tooltip,
-    this.color,
-  });
+class _CustomDebugSectionWidgetState extends State<_CustomDebugSectionWidget> {
+  @override
+  Widget build(BuildContext context) {
+    final contentHolder = widget.section.contentHolder;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(widget.section.sectionName),
+        verticalMargin8,
+        _ShowDetails(contentHolder: contentHolder),
+        verticalMargin24,
+      ],
+    );
+  }
 }
