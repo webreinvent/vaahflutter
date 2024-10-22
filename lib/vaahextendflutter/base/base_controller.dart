@@ -9,9 +9,9 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
-import '../services/dynamic_links.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
+import 'root_assets_controller.dart';
 
 class BaseController extends GetxController {
   Future<void> init({
@@ -33,12 +33,14 @@ class BaseController extends GetxController {
         await Firebase.initializeApp(
           options: firebaseOptions,
         );
-        DynamicLinks.init();
       }
 
       // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
+
+      // RootAssets
+      Get.put(RootAssetsController());
 
       // Other Core Services
       await PushNotifications.init();

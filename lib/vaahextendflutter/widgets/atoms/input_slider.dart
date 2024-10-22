@@ -22,7 +22,7 @@ class InputSlider extends StatefulWidget {
   final Color? thumbColor;
 
   const InputSlider({
-    Key? key,
+    super.key,
     required this.initialValue,
     this.onChanged,
     this.onChangeStart,
@@ -37,7 +37,7 @@ class InputSlider extends StatefulWidget {
     this.activeColor,
     this.inactiveColor,
     this.thumbColor,
-  }) : super(key: key);
+  });
 
   @override
   State<InputSlider> createState() => _InputSliderState();
@@ -167,7 +167,7 @@ class InputRangeSlider extends StatefulWidget {
   final Color? thumbColor;
 
   const InputRangeSlider({
-    Key? key,
+    super.key,
     required this.initialValues,
     this.onChanged,
     this.onChangeStart,
@@ -180,7 +180,7 @@ class InputRangeSlider extends StatefulWidget {
     this.activeColor,
     this.inactiveColor,
     this.thumbColor,
-  }) : super(key: key);
+  });
 
   @override
   State<InputRangeSlider> createState() => _InputRangeSliderState();

@@ -12,7 +12,9 @@ import 'icons.dart';
 import 'sizes.dart';
 
 class AppInputs extends StatefulWidget {
-  const AppInputs({Key? key}) : super(key: key);
+  const AppInputs({
+    super.key,
+  });
 
   @override
   State<AppInputs> createState() => _AppInputsState();
@@ -104,10 +106,10 @@ class _AppInputsState extends State<AppInputs> {
 @immutable
 class ExpansionPanelWrap extends StatelessWidget {
   const ExpansionPanelWrap({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget child;

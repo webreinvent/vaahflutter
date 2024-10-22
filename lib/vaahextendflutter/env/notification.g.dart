@@ -9,11 +9,13 @@ part of 'notification.dart';
 OneSignalConfig _$OneSignalConfigFromJson(Map<String, dynamic> json) =>
     OneSignalConfig(
       appId: json['app_id'] as String,
+      apiKey: json['api_key'] as String?,
     );
 
 Map<String, dynamic> _$OneSignalConfigToJson(OneSignalConfig instance) =>
     <String, dynamic>{
       'app_id': instance.appId,
+      'api_key': instance.apiKey,
     };
 
 PusherConfig _$PusherConfigFromJson(Map<String, dynamic> json) => PusherConfig(

@@ -15,7 +15,7 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
       build: json['build'] as String,
       apiUrl: json['api_url'] as String,
       firebaseId: json['firebase_id'] as String?,
-      timeoutLimit: json['timeout_limit'] as int,
+      timeoutLimit: (json['timeout_limit'] as num).toInt(),
       enableLocalLogs: json['enable_local_logs'] as bool,
       enableCloudLogs: json['enable_cloud_logs'] as bool,
       enableApiLogInterceptor: json['enable_api_log_interceptor'] as bool,
@@ -38,8 +38,8 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
           : PusherConfig.fromJson(
               json['pusher_config'] as Map<String, dynamic>),
       showDebugPanel: json['show_debug_panel'] as bool,
-      debugPanelColor:
-          EnvironmentConfig._colorFromJson(json['debug_panel_color'] as int),
+      debugPanelColor: EnvironmentConfig._colorFromJson(
+          (json['debug_panel_color'] as num).toInt()),
     );
 
 Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>

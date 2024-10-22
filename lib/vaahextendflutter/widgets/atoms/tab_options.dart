@@ -15,9 +15,9 @@ class TabOption {
 
 class TabOptions extends StatefulWidget {
   const TabOptions({
-    Key? key,
+    super.key,
     required this.tabs,
-  }) : super(key: key);
+  });
 
   final List<TabOption> tabs;
 
