@@ -1,6 +1,9 @@
-import '../../env/env.dart';
+import 'package:datadog_flutter_plugin/datadog_flutter_plugin.dart';
+
+import '../../env.dart';
 import '_cloud/firebase_logging_service.dart';
 import '_cloud/sentry_logging_service.dart';
+import '_cloud/datadog_logging_service.dart';
 import '_local/console_service.dart';
 import 'models/log.dart';
 
@@ -10,6 +13,7 @@ class Log {
   static final List<Type> _services = [
     SentryLoggingService,
     FirebaseLoggingService,
+    DatadogLoggingService,
   ];
 
   static void log(
@@ -98,6 +102,15 @@ class Log {
               throwable,
               stackTrace: stackTrace,
               hint: hintWithData,
+            );
+            return;
+          case DatadogLoggingService:
+            final DatadogLoggingService datadogLoggingService = DatadogLoggingService(
+              DatadogSdk.instance,
+            );
+            datadogLoggingService.logException(
+              throwable,
+              stackTrace: stackTrace,
             );
             return;
           default:

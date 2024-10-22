@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:datadog_flutter_plugin/datadog_flutter_plugin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -44,6 +45,33 @@ class BaseController extends GetxController {
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
+
+      // datadog configuration
+      if (config.datadogConfig != null) {
+        final datadogSdk = DatadogSdk.instance;
+
+        final datadogConfig = DatadogConfiguration(
+          clientToken: config.datadogConfig!.clientToken,
+          env: config.envType,
+          site: config.datadogConfig!.site,
+          rumConfiguration: DatadogRumConfiguration(
+            applicationId: config.datadogConfig!.rumApplicationId,
+            sessionSamplingRate: 50.0,
+          ),
+          nativeCrashReportEnabled: config.datadogConfig!.nativeCrashReportEnabled,
+        );
+
+        final datadogLoggerConfiguration = DatadogLoggerConfiguration(
+          networkInfoEnabled: true,
+        );
+
+        datadogSdk.logs?.createLogger(datadogLoggerConfiguration);
+
+        await datadogSdk.initialize(
+          datadogConfig,
+          TrackingConsent.granted,
+        );
+      }
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
