@@ -6,17 +6,15 @@ import 'package:flutter/material.dart';
 import '../models/log.dart';
 
 class Console {
-  static void _printChunks(Colorize text) {
+  static void _printLog(String text, [Set<Styles>? logStyle]) {
     final RegExp pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text.toString()).forEach(
-          (RegExpMatch match) => debugPrint(
-            match.group(0),
-          ),
-        );
-  }
-
-  static void _printLog(Colorize text) {
-    _printChunks(text);
+    pattern.allMatches(text).forEach((RegExpMatch match) {
+      if (logStyle == null || logStyle.isEmpty) {
+        return debugPrint(match.group(0));
+      }
+      Colorize chunk = Colorize(match.group(0).toString()).apply(logStyle.first);
+      return debugPrint('$chunk');
+    });
   }
 
   static String _parseData(Object? data) {
@@ -29,62 +27,98 @@ class Console {
     }
   }
 
-  static void log(String text, [Object? data]) {
-    Colorize txt = Colorize(text);
-    _printLog(txt);
+  static void log(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(message);
 
     if (data != null) {
-      Colorize dataColor = Colorize(_parseData(data));
-      dataColor.white();
-      _printLog(dataColor);
+      _printLog(_parseData(data));
     }
   }
 
-  static void info(String text, [Object? data]) {
-    Colorize txt = Colorize(text);
-    txt.blue();
-    _printLog(txt);
+  static void info(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.BLUE},
+    );
 
     if (data != null) {
-      Colorize dataColor = Colorize(_parseData(data));
-      dataColor.blue();
-      _printLog(dataColor);
+      _printLog(
+        _parseData(data),
+        {Styles.BLUE},
+      );
     }
   }
 
-  static void success(String text, [Object? data]) {
-    Colorize txt = Colorize(text);
-    txt.green();
-    _printLog(txt);
+  static void success(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.GREEN},
+    );
 
     if (data != null) {
-      Colorize dataColor = Colorize(_parseData(data));
-      dataColor.green();
-      _printLog(dataColor);
+      _printLog(
+        _parseData(data),
+        {Styles.GREEN},
+      );
     }
   }
 
-  static void warning(String text, [Object? data]) {
-    Colorize txt = Colorize(text);
-    txt.yellow();
-    _printLog(txt);
+  static void warning(
+    String message, {
+    Object? data,
+  }) {
+    _printLog(
+      message,
+      {Styles.YELLOW},
+    );
 
     if (data != null) {
-      Colorize dataColor = Colorize(_parseData(data));
-      dataColor.yellow();
-      _printLog(dataColor);
+      _printLog(
+        _parseData(data),
+        {Styles.YELLOW},
+      );
     }
   }
 
-  static void danger(String text, [Object? data]) {
-    Colorize txt = Colorize(text);
-    txt.red();
-    _printLog(txt);
+  static void danger(
+    String message, {
+    Object? throwable,
+    StackTrace? stackTrace,
+    dynamic hint,
+  }) {
+    _printLog(
+      message,
+      {Styles.RED},
+    );
 
-    if (data != null) {
-      Colorize dataColor = Colorize(_parseData(data));
-      dataColor.red();
-      _printLog(dataColor);
+    if (throwable != null) {
+      _printLog(
+        _parseData(throwable),
+        {Styles.RED},
+      );
+    }
+
+    if (stackTrace != null) {
+      _printLog(
+        stackTrace.toString(),
+        {Styles.RED},
+      );
+    }
+
+    if (hint != null) {
+      _printLog(
+        _parseData(hint),
+        {Styles.RED},
+      );
     }
   }
 

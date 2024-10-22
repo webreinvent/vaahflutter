@@ -4,10 +4,10 @@ import '../models/log.dart';
 import 'logging_service.dart';
 
 abstract class SentryLoggingService implements LoggingService {
-  static logEvent({
-    required String message,
-    SentryLevel? level,
+  static logEvent(
+    String message, {
     Object? data,
+    SentryLevel? level,
   }) {
     final SentryEvent event = SentryEvent(message: SentryMessage(message), level: level);
     Sentry.captureEvent(
@@ -17,11 +17,19 @@ abstract class SentryLoggingService implements LoggingService {
   }
 
   static logException(
-    dynamic throwable, {
-    dynamic stackTrace,
+    String message, {
+    Object? throwable,
+    StackTrace? stackTrace,
     dynamic hint,
   }) {
-    Sentry.captureException(throwable, stackTrace: stackTrace, hint: hint);
+    Sentry.captureException(
+      throwable,
+      stackTrace: stackTrace,
+      hint: Hint.withMap({
+        "message": message,
+        "hint": hint,
+      }),
+    );
   }
 
   static logTransaction({

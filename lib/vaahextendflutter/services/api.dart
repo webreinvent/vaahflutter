@@ -348,7 +348,11 @@ abstract class Api {
     bool showAlert,
     String alertType,
   ) async {
-    Log.exception(error, stackTrace: error.stackTrace);
+    Log.exception(
+      "Handle Timeout Error",
+      throwable: error,
+      stackTrace: error.stackTrace,
+    );
     if (showAlert) {
       if (alertType == 'dialog') {
         if (Alerts.showErrorDialog != null) {
@@ -416,7 +420,12 @@ abstract class Api {
 
       if (error.response?.data != null) {
         try {
-          Log.exception(catchErr, data: error.response, stackTrace: stackTrace);
+          Log.exception(
+            "Handle Response Error",
+            throwable: catchErr,
+            hint: error.response,
+            stackTrace: stackTrace,
+          );
 
           final Map<String, dynamic> response = error.response?.data as Map<String, dynamic>;
           if (response['errors'] != null) {

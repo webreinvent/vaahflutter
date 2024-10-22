@@ -2,16 +2,17 @@ import '../models/log.dart';
 import 'logging_service.dart';
 
 abstract class FirebaseLoggingService implements LoggingService {
-  static logEvent({
-    required String message,
-    EventType? type,
+  static logEvent(
+    String message, {
     Object? data,
+    EventType? type,
   }) =>
       throw UnimplementedError();
 
   static logException(
-    dynamic throwable, {
-    dynamic stackTrace,
+    String message, {
+    Object? throwable,
+    StackTrace? stackTrace,
     dynamic hint,
   }) =>
       throw UnimplementedError();
