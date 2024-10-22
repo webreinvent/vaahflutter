@@ -20,11 +20,11 @@ class ButtonCheckBox<T> extends StatefulWidget {
   final EdgeInsets? padding;
 
   const ButtonCheckBox({
-    Key? key,
+    super.key,
     required this.items,
     required this.onChanged,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   State<ButtonCheckBox<T>> createState() => _ButtonCheckBoxState<T>();

@@ -1,113 +1,111 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
+import '../../../api.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
-const String _userIdKey = 'remote_notification_user_id';
 const Map<String, String> channels = {
   //  Create a channel on One Signal and add id here
-  'Primary': 'channel_id'
+  'Primary': 'General'
 };
 
 abstract class RemoteNotifications {
-  static final OneSignal _oneSignal = OneSignal.shared;
   static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
-  static final GetStorage _storage = GetStorage();
-
-  static final StreamController<String> _userIdStreamController =
-      StreamController<String>.broadcast();
-  static final Stream<String> userIdStream = _userIdStreamController.stream;
-
-  static String? get userId => _storage.read(_userIdKey);
 
   static Future<void> init() async {
     if (_env.oneSignalConfig == null) return;
-    if (_storage.read(_userIdKey) != null) {
-      _userIdStreamController.add(_storage.read(_userIdKey));
-    }
-    _oneSignal.setSubscriptionObserver(_handleSubscriptionStateChanges);
-    await _oneSignal.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
-    await _oneSignal.setAppId(_env.oneSignalConfig!.appId);
-    _oneSignal.setNotificationOpenedHandler(_handleNotification);
+    await OneSignal.Debug.setLogLevel(OSLogLevel.info);
+    OneSignal.initialize(_env.oneSignalConfig!.appId);
+    OneSignal.Notifications.addForegroundWillDisplayListener(_handleWillDisplayNotification);
+    OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
-  static void dispose() {
-    _userIdStreamController.close();
-  }
+  static void dispose() {}
 
   static Future<bool?> askPermission() async {
     if (_env.oneSignalConfig == null) return null;
-    return await _oneSignal.promptUserForPushNotificationPermission();
+    return await OneSignal.Notifications.requestPermission(false);
   }
 
-  static Future<void> subscribe() async {
-    await _oneSignal.disablePush(false);
+  static Future<void> subscribe({
+    required String userid,
+    String? email,
+    String? phone,
+  }) async {
+    OneSignal.login(userid);
+    if (email != null) OneSignal.User.addEmail(email);
+    if (phone != null) OneSignal.User.addSms(phone);
   }
 
   static Future<void> unsubscribe() async {
-    await _oneSignal.disablePush(true);
+    await OneSignal.logout();
   }
 
   static Future<void> push({
     required PushNotification notification,
     String? channel,
   }) async {
-    assert(notification.playerIds.isNotEmpty);
-    await _oneSignal.postNotification(
-      OSCreateNotification(
-        playerIds: notification.playerIds,
-        heading: notification.heading,
-        content: notification.content,
-        additionalData: {
-          'payload': {
-            'path': notification.payloadPath,
-            'data': notification.payloadData,
-            'auth': notification.payloadAuth,
+    final appId = _env.oneSignalConfig?.appId;
+    final apiKey = _env.oneSignalConfig?.apiKey;
+    if (appId == null || apiKey == null) {
+      Log.warning("No app id/ api key is found!");
+      return;
+    }
+    await Api.ajax(
+      url: "https://onesignal.com/api/v1/notifications",
+      method: "post",
+      headers: [
+        {
+          "Content-Type": "application/json",
+          "Authorization": "Basic $apiKey",
+        },
+      ],
+      params: {
+        "app_id": appId,
+        "include_aliases": {
+          "external_id": notification.externalIds,
+        },
+        "target_channel": channel ?? "General",
+        "headings": {
+          "en": notification.heading,
+        },
+        "contents": {
+          "en": notification.content,
+        },
+        "data": {
+          "payload": {
+            "auth": notification.payloadAuth,
+            "path": notification.payloadPath,
+            "data": notification.payloadData,
           },
         },
-        buttons: notification.buttons
-            ?.map(
-              (element) => OSActionButton(
-                id: element.id,
-                text: element.text,
-                icon: element.icon,
-              ),
-            )
-            .toList(),
-        bigPicture: notification.imageUrl,
-        iosAttachments: notification.imageUrl == null
+        "big_picture": notification.imageUrl,
+        "ios_attachments": notification.imageUrl == null
             ? null
             : {
                 'image': notification.imageUrl!,
               },
-        androidChannelId: channels[channel],
-        sendAfter: notification.sendAfter,
-      ),
+      },
     );
   }
 
-  static Future<void> _handleSubscriptionStateChanges(
-    OSSubscriptionStateChanges subscriptionState,
-  ) async {
-    if (subscriptionState.to.userId != null) {
-      await _storage.write(_userIdKey, subscriptionState.to.userId);
-      _userIdStreamController.add(subscriptionState.to.userId!);
-    }
-  }
+  static void _handleWillDisplayNotification(OSNotificationWillDisplayEvent result) {}
 
-  static void _handleNotification(OSNotificationOpenedResult openedResult) {
-    Log.success('Notification Opened', data: {
-      "actionId": openedResult.action?.actionId,
-      "title": openedResult.notification.title,
-      "body": openedResult.notification.body,
-      "additionalData": openedResult.notification.additionalData,
-      "timestamp": DateTime.now().millisecondsSinceEpoch,
-    });
+  static void _handleNotificationClick(OSNotificationClickEvent openedResult) {
+    Log.success(
+      'Notification Opened',
+      data: {
+        "actionId": openedResult.result.actionId,
+        "title": openedResult.notification.title,
+        "body": openedResult.notification.body,
+        "additionalData": openedResult.notification.additionalData,
+        "timestamp": DateTime.now().millisecondsSinceEpoch,
+      },
+    );
     final dynamic payload = openedResult.notification.additionalData?['payload'];
     if (payload != null && payload['path'] != null) {
       Get.to(

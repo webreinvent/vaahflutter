@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:get/get.dart';
+
+import '../../../../models/user.dart';
+import '../../../base/root_assets_controller.dart';
 import '../../../env/env.dart';
 import '../../../env/notification.dart';
 import '../models/notification.dart';
@@ -10,32 +14,36 @@ abstract class PushNotifications {
   static final PushNotificationsServiceType _pushNotificationsServiceType =
       EnvironmentConfig.getConfig.pushNotificationsServiceType;
 
-  static late final Stream<String> userIdStream;
-  static late String? userId;
-
   static Future<void> init() async {
     switch (_pushNotificationsServiceType) {
       case PushNotificationsServiceType.local:
         await LocalNotifications.init();
-        userIdStream = const Stream.empty();
-        userId = null;
         return;
       case PushNotificationsServiceType.remote:
         await RemoteNotifications.init();
-        userIdStream = RemoteNotifications.userIdStream;
-        userId = RemoteNotifications.userId;
+        _listen();
         return;
       case PushNotificationsServiceType.both:
         await RemoteNotifications.init();
         await LocalNotifications.init();
-        userIdStream = RemoteNotifications.userIdStream;
-        userId = RemoteNotifications.userId;
+        _listen();
         return;
       case PushNotificationsServiceType.none:
-        userIdStream = const Stream.empty();
-        userId = null;
         return;
     }
+  }
+
+  static void _listen() {
+    final RootAssetsController assetController = Get.find<RootAssetsController>();
+    assetController.userStream.listen(
+      (User? user) {
+        if (user == null) {
+          unsubscribe();
+        } else {
+          subscribe(userid: user.id);
+        }
+      },
+    );
   }
 
   static void dispose() {
@@ -77,16 +85,28 @@ abstract class PushNotifications {
     }
   }
 
-  static Future<void> subscribe() async {
+  static Future<void> subscribe({
+    required String userid,
+    String? email,
+    String? phone,
+  }) async {
     switch (_pushNotificationsServiceType) {
       case PushNotificationsServiceType.local:
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.remote:
-        await RemoteNotifications.subscribe();
+        await RemoteNotifications.subscribe(
+          userid: userid,
+          email: email,
+          phone: phone,
+        );
         return;
       case PushNotificationsServiceType.both:
-        await RemoteNotifications.subscribe();
+        await RemoteNotifications.subscribe(
+          userid: userid,
+          email: email,
+          phone: phone,
+        );
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.none:
@@ -125,10 +145,7 @@ abstract class PushNotifications {
         await RemoteNotifications.push(notification: notification, channel: channel);
         return;
       case PushNotificationsServiceType.both:
-        if (NotificationType.local == notification.type) {
-          await LocalNotifications.push(notification: notification);
-          return;
-        }
+        await LocalNotifications.push(notification: notification);
         await RemoteNotifications.push(notification: notification, channel: channel);
         return;
       case PushNotificationsServiceType.none:

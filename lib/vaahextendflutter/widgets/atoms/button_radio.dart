@@ -19,12 +19,12 @@ class ButtonRadio<T> extends StatefulWidget {
   final EdgeInsets? padding;
 
   const ButtonRadio({
-    Key? key,
+    super.key,
     this.initialValue,
     required this.items,
     required this.onChanged,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   State<ButtonRadio<T>> createState() => _ButtonRadioState<T>();

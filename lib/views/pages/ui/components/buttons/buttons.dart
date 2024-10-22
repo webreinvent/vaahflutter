@@ -16,7 +16,7 @@ import 'rating_bar.dart';
 import 'text.dart';
 
 class Buttons extends StatelessWidget {
-  const Buttons({Key? key}) : super(key: key);
+  const Buttons({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -111,10 +111,10 @@ class Buttons extends StatelessWidget {
 @immutable
 class ExpansionPanelWrap extends StatelessWidget {
   const ExpansionPanelWrap({
-    Key? key,
+    super.key,
     required this.title,
     required this.child,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget child;
