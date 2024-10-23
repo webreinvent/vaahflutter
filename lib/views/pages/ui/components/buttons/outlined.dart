@@ -8,7 +8,9 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class ButtonOutlinedPreview extends StatelessWidget {
-  const ButtonOutlinedPreview({Key? key}) : super(key: key);
+  const ButtonOutlinedPreview({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,9 @@ class ButtonOutlinedPreview extends StatelessWidget {
 }
 
 class ButtonOutlinedCode extends StatelessWidget {
-  const ButtonOutlinedCode({Key? key}) : super(key: key);
+  const ButtonOutlinedCode({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

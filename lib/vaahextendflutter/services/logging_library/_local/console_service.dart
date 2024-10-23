@@ -25,7 +25,7 @@ class Console {
       return encoder.convert(data).toString();
     } catch (err) {
       danger("Cannot parse the data, please check the type of data!");
-      return '';
+      return data.toString();
     }
   }
 

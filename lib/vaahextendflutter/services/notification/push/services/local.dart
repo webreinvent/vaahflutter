@@ -35,7 +35,7 @@ abstract class LocalNotifications {
   static Future<bool?> askPermission() async {
     return await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestPermission();
+        ?.requestNotificationsPermission();
   }
 
   static Future<void> subscribe() async {}

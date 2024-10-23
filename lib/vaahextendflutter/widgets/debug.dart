@@ -8,14 +8,10 @@
 // *****************************************
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../helpers/constants.dart';
-import '../helpers/styles.dart';
-import '../services/dynamic_links.dart';
-import '../services/notification/push/notification.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -23,10 +19,10 @@ const double constHandleHeight = 38.0; // tag handle height
 @immutable
 class DebugWidget extends StatefulWidget {
   const DebugWidget({
-    Key? key,
+    super.key,
     required this.navigatorKey,
     required this.child,
-  }) : super(key: key);
+  });
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
@@ -271,8 +267,6 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                   ),
                                                 ),
                                                 verticalMargin24,
-                                                const _StreamLinksSection(),
-                                                verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
                                               ],
@@ -301,12 +295,11 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
 @immutable
 class _EnvPanel extends StatelessWidget {
   const _EnvPanel({
-    Key? key,
     required this.handleHeight,
     required this.onHandlePressed,
     required this.config,
     required this.child,
-  }) : super(key: key);
+  });
 
   final double handleHeight;
   final VoidCallback onHandlePressed;
@@ -454,67 +447,16 @@ class _PanelBorder extends ShapeBorder {
   }
 }
 
-class _StreamLinksSection extends StatefulWidget {
-  const _StreamLinksSection({Key? key}) : super(key: key);
-
-  @override
-  State<_StreamLinksSection> createState() => _StreamLinksSectionState();
-}
-
-class _StreamLinksSectionState extends State<_StreamLinksSection> {
-  DeepLink? link;
-
-  @override
-  void initState() {
-    super.initState();
-    DynamicLinks.dynamicLinksStream.listen((DeepLink deeplink) {
-      setState(() {
-        link = deeplink;
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return link == null
-        ? emptyWidget
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Dynamic Link Section'),
-              verticalMargin8,
-              _ShowDetails(contentHolder: PanelLinkContentHolder(content: link!)),
-            ],
-          );
-  }
-}
-
-class _NotificationSection extends StatefulWidget {
+class _NotificationSection extends StatelessWidget {
   final EnvironmentConfig config;
 
-  const _NotificationSection({Key? key, required this.config}) : super(key: key);
-
-  @override
-  State<_NotificationSection> createState() => __NotificationSectionState();
-}
-
-class __NotificationSectionState extends State<_NotificationSection> {
-  String? userId = PushNotifications.userId;
-
-  @override
-  void initState() {
-    super.initState();
-    PushNotifications.userIdStream.listen((String updatedUserId) {
-      setState(() {
-        userId = updatedUserId;
-      });
-    });
-  }
+  const _NotificationSection({
+    required this.config,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return widget.config.oneSignalConfig == null || widget.config.oneSignalConfig!.appId.isEmpty
+    return config.oneSignalConfig == null || config.oneSignalConfig!.appId.isEmpty
         ? emptyWidget
         : Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -526,8 +468,7 @@ class __NotificationSectionState extends State<_NotificationSection> {
               _ShowDetails(
                 contentHolder: PanelDataContentHolder(
                   content: {
-                    'One Signal App Id': Data(value: widget.config.oneSignalConfig?.appId),
-                    'User Id': Data(value: userId),
+                    'One Signal App Id': Data(value: config.oneSignalConfig?.appId),
                   },
                 ),
               ),
@@ -540,9 +481,8 @@ class _ShowDetails extends StatefulWidget {
   final PanelContentHolder contentHolder;
 
   const _ShowDetails({
-    Key? key,
     required this.contentHolder,
-  }) : super(key: key);
+  });
 
   @override
   State<_ShowDetails> createState() => _ShowDetailsState();
@@ -590,19 +530,7 @@ class _ShowDetailsState extends State<_ShowDetails> {
                 children: rows,
               );
             },
-          )
-        else if (contentHolder is PanelLinkContentHolder) ...[
-          SelectableText(
-            contentHolder.content.encoded,
-            style: TextStyles.regular3?.copyWith(color: AppTheme.colors['danger']),
-            onTap: () => Clipboard.setData(ClipboardData(text: contentHolder.content.encoded)),
           ),
-          SelectableText(
-            contentHolder.content.decoded,
-            style: TextStyles.regular3?.copyWith(color: AppTheme.colors['success']),
-            onTap: () => Clipboard.setData(ClipboardData(text: contentHolder.content.decoded)),
-          ),
-        ]
       ],
     );
   }
@@ -616,14 +544,6 @@ class PanelDataContentHolder extends PanelContentHolder {
   final Map<String, Data> content;
 
   const PanelDataContentHolder({
-    required this.content,
-  });
-}
-
-class PanelLinkContentHolder extends PanelContentHolder {
-  final DeepLink content;
-
-  const PanelLinkContentHolder({
     required this.content,
   });
 }
