@@ -8,7 +8,9 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class InputSizesPreview extends StatelessWidget {
-  const InputSizesPreview({Key? key}) : super(key: key);
+  const InputSizesPreview({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,9 @@ class InputSizesPreview extends StatelessWidget {
 }
 
 class InputSizesCode extends StatelessWidget {
-  const InputSizesCode({Key? key}) : super(key: key);
+  const InputSizesCode({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -40,7 +40,7 @@ class ButtonElevated extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonElevated({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     this.style,
@@ -50,7 +50,7 @@ class ButtonElevated extends StatelessWidget {
     this.fontSize,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +93,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonElevatedWithIcon({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     required this.leading,
@@ -105,7 +105,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
     this.iconSize = 16,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +145,7 @@ class ButtonOutlined extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonOutlined({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     this.style,
@@ -154,7 +154,7 @@ class ButtonOutlined extends StatelessWidget {
     this.fontSize,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +199,7 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
   final Color? borderColor;
 
   const ButtonOutlinedWithIcon({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     required this.iconData,
@@ -211,7 +211,7 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
     this.borderRadius,
     this.padding,
     this.borderColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,9 @@ class ButtonOutlinedWithIcon extends StatelessWidget {
           OutlinedButton.styleFrom(
             side: BorderSide(
               width: 2.0,
-              color: borderColor ?? foregroundColor ?? getColorForButtonType(buttonType ?? ButtonType.primary)!,
+              color: borderColor ??
+                  foregroundColor ??
+                  getColorForButtonType(buttonType ?? ButtonType.primary)!,
             ),
             foregroundColor:
                 foregroundColor ?? (buttonType == null ? null : getColorForButtonType(buttonType!)),
@@ -257,7 +259,7 @@ class ButtonText extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonText({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     this.style,
@@ -266,7 +268,7 @@ class ButtonText extends StatelessWidget {
     this.fontSize,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -306,7 +308,7 @@ class ButtonTextWithIcon extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonTextWithIcon({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.text,
     required this.leading,
@@ -317,7 +319,7 @@ class ButtonTextWithIcon extends StatelessWidget {
     this.iconSize = 16,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -356,7 +358,7 @@ class ButtonIcon extends StatelessWidget {
   final EdgeInsets? padding;
 
   const ButtonIcon({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.iconData,
     this.buttonType,
@@ -365,7 +367,7 @@ class ButtonIcon extends StatelessWidget {
     this.enableBorder = true,
     this.borderRadius,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

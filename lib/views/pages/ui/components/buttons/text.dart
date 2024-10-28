@@ -8,7 +8,9 @@ import '../code_preview.dart';
 import '../commons.dart';
 
 class ButtonTextPreview extends StatelessWidget {
-  const ButtonTextPreview({Key? key}) : super(key: key);
+  const ButtonTextPreview({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +66,9 @@ class ButtonTextPreview extends StatelessWidget {
 }
 
 class ButtonTextCode extends StatelessWidget {
-  const ButtonTextCode({Key? key}) : super(key: key);
+  const ButtonTextCode({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

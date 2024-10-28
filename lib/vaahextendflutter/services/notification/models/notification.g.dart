@@ -8,9 +8,9 @@ part of 'notification.dart';
 
 PushNotification _$PushNotificationFromJson(Map<String, dynamic> json) =>
     PushNotification(
-      id: json['id'] as int,
+      id: (json['id'] as num).toInt(),
       type: $enumDecode(_$NotificationTypeEnumMap, json['type']),
-      playerIds: (json['player_ids'] as List<dynamic>)
+      externalIds: (json['external_ids'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
       heading: json['heading'] as String?,
@@ -31,7 +31,7 @@ Map<String, dynamic> _$PushNotificationToJson(PushNotification instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': _$NotificationTypeEnumMap[instance.type]!,
-      'player_ids': instance.playerIds,
+      'external_ids': instance.externalIds,
       'heading': instance.heading,
       'content': instance.content,
       'payload_path': instance.payloadPath,

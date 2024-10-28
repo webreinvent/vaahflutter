@@ -8,7 +8,7 @@ enum UpdateRatingMode {
 
 class RatingBar extends StatefulWidget {
   const RatingBar({
-    Key? key,
+    super.key,
     this.itemBuilder,
     this.onRatingUpdate,
     this.allowHalfRating = false,
@@ -24,7 +24,7 @@ class RatingBar extends StatefulWidget {
     this.minRatingAllowed = 0,
     this.maxRatingAllowed,
     this.updateRatingMode = UpdateRatingMode.tapAndDrag,
-  }) : super(key: key);
+  });
 
   final IndexedWidgetBuilder? itemBuilder;
   final ValueChanged<double>? onRatingUpdate;
