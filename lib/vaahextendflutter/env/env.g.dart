@@ -38,8 +38,11 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
           : PusherConfig.fromJson(
               json['pusher_config'] as Map<String, dynamic>),
       showDebugPanel: json['show_debug_panel'] as bool,
-      debugPanelColor: EnvironmentConfig._colorFromJson(
-          (json['debug_panel_color'] as num).toInt()),
+      debugPanelColor:
+          EnvironmentConfig._colorFromJson(json['debug_panel_color'] as int),
+      customDebugSections: (json['custom_debug_sections'] as List<dynamic>?)
+          ?.map((e) => CustomDebugSection.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
@@ -64,6 +67,7 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
       'one_signal_config': instance.oneSignalConfig,
       'pusher_config': instance.pusherConfig,
       'show_debug_panel': instance.showDebugPanel,
+      'custom_debug_sections': instance.customDebugSections,
       'debug_panel_color':
           EnvironmentConfig._colorToJson(instance.debugPanelColor),
     };

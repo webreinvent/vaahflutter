@@ -6,7 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
+import '../app_theme.dart';
 import '../services/logging_library/logging_library.dart';
+import '../widgets/debug/section_data.dart';
+import '../widgets/debug/custom_debug_section.dart';
+import '../widgets/debug/panel_content_holder.dart';
 import 'logging.dart';
 import 'notification.dart';
 
@@ -59,6 +63,7 @@ class EnvironmentConfig {
     this.pusherConfig,
     required this.showDebugPanel,
     required this.debugPanelColor,
+    this.customDebugSections,
   });
 
   final String appTitle;
@@ -78,6 +83,7 @@ class EnvironmentConfig {
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
+  final List<CustomDebugSection>? customDebugSections;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
   final Color debugPanelColor;
 
@@ -120,6 +126,23 @@ class EnvironmentConfig {
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
       showDebugPanel: true,
       debugPanelColor: Colors.black.withOpacity(0.8),
+      customDebugSections: [
+        CustomDebugSection(
+          sectionName: 'Section Test 1',
+          contentHolder: PanelDataContentHolder(content: {
+            'Topic 1': SectionData(
+                value: 'Test Value 1', color: AppTheme.colors['success'], tooltip: 'Tip'),
+            'Topic 2': const SectionData(value: 'Test Value 2'),
+          }),
+        ),
+        CustomDebugSection(
+          sectionName: 'Section 2',
+          contentHolder: const PanelDataContentHolder(content: {
+            'Topic 1': SectionData(value: 'Test Value 1'),
+            'Topic 2': SectionData(value: 'Test Value 2'),
+          }),
+        ),
+      ],
     );
   }
 }
