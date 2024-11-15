@@ -1,14 +1,13 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
+import '../services/logging_library/logging_library.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
 import 'root_assets_controller.dart';
@@ -29,7 +28,8 @@ class BaseController extends GetxController {
       final EnvironmentConfig config = EnvironmentConfig.getConfig;
 
       // Initialization of Firebase and Services
-      if (firebaseOptions != null) {
+      bool isFirebaseEnabled = firebaseOptions != null;
+      if (isFirebaseEnabled) {
         await Firebase.initializeApp(
           options: firebaseOptions,
         );
@@ -47,37 +47,14 @@ class BaseController extends GetxController {
       await InternalNotifications.init();
       PushNotifications.askPermission();
 
-      // Sentry Initialization (And/ Or) Running main app
-      if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
-        await SentryFlutter.init(
-          (options) => options
-            ..dsn = config.sentryConfig!.dsn
-            ..autoAppStart = config.sentryConfig!.autoAppStart
-            ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
-            ..enableAutoPerformanceTracing = config.sentryConfig!.enableAutoPerformanceTracing
-            ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
-            ..environment = config.envType,
-        );
-        Widget child = app;
-        if (config.sentryConfig!.enableUserInteractionTracing) {
-          child = SentryUserInteractionWidget(
-            child: child,
-          );
-        }
-        if (config.sentryConfig!.enableAssetsInstrumentation) {
-          child = DefaultAssetBundle(
-            bundle: SentryAssetBundle(
-              enableStructuredDataTracing: true,
-            ),
-            child: child,
-          );
-        }
-        // Running main app
-        runApp(child);
-      } else {
-        // Running main app when sentry config is not there
-        runApp(app);
-      }
+      // Error Monitoring & Logging
+      Widget child = await Log.init(
+        app: app,
+        errorLogging: config.errorLoggingTypeService(
+          isFirebaseEnabled: isFirebaseEnabled,
+        ),
+      );
+      runApp(child);
     } catch (error, stackTrace) {
       debugPrint(error.toString());
       debugPrintStack(stackTrace: stackTrace);

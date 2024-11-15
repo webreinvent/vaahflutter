@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
-
 import 'routes/middleware.dart';
 import 'vaahextendflutter/app_theme.dart';
 import 'vaahextendflutter/env/env.dart';
+import 'vaahextendflutter/services/logging_library/logging_library.dart';
 import 'vaahextendflutter/widgets/debug.dart';
 
 final _navigatorKey = GlobalKey<NavigatorState>();
@@ -12,17 +11,16 @@ final _navigatorKey = GlobalKey<NavigatorState>();
 class AppConfig extends StatelessWidget {
   const AppConfig({super.key});
 
+  EnvironmentConfig get config => EnvironmentConfig.getConfig;
+
   @override
   Widget build(BuildContext context) {
-    EnvironmentConfig env = EnvironmentConfig.getConfig;
     return GetMaterialApp(
-      title: env.appTitle,
+      title: config.appTitle,
       theme: ThemeData(
         primarySwatch: AppTheme.colors['primary'],
       ),
-      navigatorObservers: [
-        SentryNavigatorObserver(),
-      ],
+      navigatorObservers: Log.loggingServiceObserver,
       onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
         return DebugWidget(

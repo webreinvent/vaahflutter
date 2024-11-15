@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'logging.dart';
+part of 'sentry_logging.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

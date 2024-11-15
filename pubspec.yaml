@@ -19,6 +19,8 @@ dependencies:
   colorize: ^3.0.0
   # Log and Performance
   sentry_flutter: ^8.9.0
+  datadog_flutter_plugin: ^2.8.0
+  datadog_tracking_http_client: ^2.2.0
   # State Management
   get: ^4.6.6
   # Api

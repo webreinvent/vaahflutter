@@ -7,13 +7,15 @@ import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../services/logging_library/logging_library.dart';
-import 'logging.dart';
+import 'datadog_config.dart';
 import 'notification.dart';
+import 'sentry_logging.dart';
 
 part 'env.g.dart';
 
 class EnvController extends GetxController {
   EnvironmentConfig _config = EnvironmentConfig.defaultConfig();
+
   EnvironmentConfig get config => _config;
 
   Future<void> initialize() async {
@@ -47,12 +49,13 @@ class EnvironmentConfig {
     required this.version,
     required this.build,
     required this.apiUrl,
-    this.firebaseId,
     required this.timeoutLimit,
     required this.enableLocalLogs,
     required this.enableCloudLogs,
     required this.enableApiLogInterceptor,
+    this.errorLoggingType = ErrorLoggingType.noService,
     this.sentryConfig,
+    this.datadogConfig,
     required this.pushNotificationsServiceType,
     required this.internalNotificationsServiceType,
     this.oneSignalConfig,
@@ -67,12 +70,13 @@ class EnvironmentConfig {
   final String version;
   final String build;
   final String apiUrl;
-  final String? firebaseId;
   final int timeoutLimit;
   final bool enableLocalLogs;
   final bool enableCloudLogs;
   final bool enableApiLogInterceptor;
+  final ErrorLoggingType errorLoggingType;
   final SentryConfig? sentryConfig;
+  final DatadogConfig? datadogConfig;
   final PushNotificationsServiceType pushNotificationsServiceType;
   final InternalNotificationsServiceType internalNotificationsServiceType;
   final OneSignalConfig? oneSignalConfig;
@@ -114,7 +118,12 @@ class EnvironmentConfig {
       apiUrl: '',
       timeoutLimit: 20, // 20 seconds
       enableLocalLogs: true,
+      errorLoggingType: ErrorLoggingType.noService,
       enableCloudLogs: false,
+      sentryConfig: null,
+      datadogConfig: null,
+      oneSignalConfig: null,
+      pusherConfig: null,
       enableApiLogInterceptor: false,
       pushNotificationsServiceType: PushNotificationsServiceType.none,
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
@@ -122,4 +131,40 @@ class EnvironmentConfig {
       debugPanelColor: Colors.black.withOpacity(0.8),
     );
   }
+}
+
+extension ErrorLoggingTypeService on EnvironmentConfig {
+  ErrorLoggingType errorLoggingTypeService({
+    required bool isFirebaseEnabled,
+  }) {
+    ErrorLoggingType? errorLogging;
+
+    if (errorLoggingType.isSentry && null != sentryConfig && sentryConfig!.dsn.isNotEmpty) {
+      errorLogging = ErrorLoggingType.sentry;
+    } else if (errorLoggingType.isDatadog &&
+        null != datadogConfig &&
+        (datadogConfig?.clientToken ?? '').isNotEmpty &&
+        (datadogConfig?.applicationId ?? '').isNotEmpty) {
+      errorLogging = ErrorLoggingType.datadog;
+    } else if (errorLoggingType.isFirebase && isFirebaseEnabled) {
+      errorLogging = ErrorLoggingType.firebase;
+    }
+
+    return errorLogging ?? ErrorLoggingType.noService;
+  }
+}
+
+enum ErrorLoggingType {
+  noService,
+  sentry,
+  datadog,
+  firebase;
+
+  bool get isSentry => this == ErrorLoggingType.sentry;
+
+  bool get isDatadog => this == ErrorLoggingType.datadog;
+
+  bool get isFirebase => this == ErrorLoggingType.firebase;
+
+  bool get isNoService => this == ErrorLoggingType.noService;
 }
