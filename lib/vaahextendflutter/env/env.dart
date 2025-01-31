@@ -32,7 +32,11 @@ class EnvController extends GetxController {
         throw Exception('Environment configuration not found for key: $envPath');
       }
     } catch (error, stackTrace) {
-      Log.exception(error, stackTrace: stackTrace);
+      Log.exception(
+        "error-occured-while-initializing-env-controller",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
       exit(0);
     }
   }
