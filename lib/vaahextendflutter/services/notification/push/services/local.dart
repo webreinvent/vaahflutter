@@ -78,7 +78,12 @@ abstract class LocalNotifications {
   // static Future<void> _handleSubscriptionStateChanges() async {}
 
   static void _handleNotification({required String? payload, String? actionId}) {
-    Log.info(payload);
-    Log.info(actionId);
+    Log.info(
+      "local-notification-payload",
+      data: {
+        "payload": payload,
+        "actionId": actionId,
+      },
+    );
   }
 }
