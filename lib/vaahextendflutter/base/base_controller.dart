@@ -11,6 +11,7 @@ import '../env/env.dart';
 import '../services/api.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
+import '../services/storage/local/storage.dart';
 import 'root_assets_controller.dart';
 
 class BaseController extends GetxController {
@@ -46,6 +47,8 @@ class BaseController extends GetxController {
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
+
+      await LocalDatabaseStorage.init();
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {

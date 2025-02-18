@@ -9,6 +9,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../services/logging_library/logging_library.dart';
 import 'logging.dart';
 import 'notification.dart';
+import 'storage.dart';
 
 part 'env.g.dart';
 
@@ -62,6 +63,7 @@ class EnvironmentConfig {
     this.oneSignalConfig,
     this.pusherConfig,
     required this.showDebugPanel,
+    required this.localDatabaseStorageType,
     required this.debugPanelColor,
   });
 
@@ -82,6 +84,7 @@ class EnvironmentConfig {
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
+  final LocalDatabaseStorageType localDatabaseStorageType;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
   final Color debugPanelColor;
 
@@ -123,6 +126,7 @@ class EnvironmentConfig {
       pushNotificationsServiceType: PushNotificationsServiceType.none,
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
       showDebugPanel: true,
+      localDatabaseStorageType: LocalDatabaseStorageType.none,
       debugPanelColor: Colors.black.withOpacity(0.8),
     );
   }
