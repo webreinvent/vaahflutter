@@ -8,6 +8,7 @@
 // *****************************************
 
 import 'package:flutter/material.dart';
+import 'package:vaahflutter/main.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
@@ -269,6 +270,10 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
+                                                TextButton(
+                                                  onPressed: restartApp,
+                                                  child: const Text('Restart App'),
+                                                ),
                                               ],
                                             ),
                                           ),

@@ -17,10 +17,10 @@ import 'logging_library/logging_library.dart';
 
 abstract class Api {
   // To check  env variables logs enabled, apiUrl and timeout limit for requests
-  static late final EnvironmentConfig _config;
+  static late EnvironmentConfig _config;
 
   // Get base url by env
-  static late final String _apiBaseUrl;
+  static late String _apiBaseUrl;
   static final Dio _dio = Dio();
 
   // Get request header options

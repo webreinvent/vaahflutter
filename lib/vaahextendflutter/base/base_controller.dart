@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,35 +19,28 @@ class BaseController extends GetxController {
     FirebaseOptions? firebaseOptions,
   }) async {
     try {
-      // Storage initialization to store some properties locally
       await GetStorage.init();
 
-      // Environment initialization
       final envController = Get.put(EnvController());
       await envController.initialize();
       final EnvironmentConfig config = EnvironmentConfig.getConfig;
 
-      // Initialization of Firebase and Services
       if (firebaseOptions != null) {
         await Firebase.initializeApp(
           options: firebaseOptions,
         );
       }
 
-      // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
-
-      // RootAssets
       Get.put(RootAssetsController());
 
-      // Other Core Services
-      await PushNotifications.init();
-      await InternalNotifications.init();
-      PushNotifications.askPermission();
+       // Temporary commented for testing purposes
+      /* await PushNotifications.init();
+      // await InternalNotifications.init();
+      hNotifications.askPermission(); */
 
-      // Sentry Initialization (And/ Or) Running main app
-      if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
+      if (config.sentryConfig?.dsn.isNotEmpty ?? false) {
         await SentryFlutter.init(
           (options) => options
             ..dsn = config.sentryConfig!.dsn
@@ -58,24 +50,20 @@ class BaseController extends GetxController {
             ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing
             ..environment = config.envType,
         );
+
         Widget child = app;
         if (config.sentryConfig!.enableUserInteractionTracing) {
-          child = SentryUserInteractionWidget(
-            child: child,
-          );
+          child = SentryUserInteractionWidget(child: child);
         }
         if (config.sentryConfig!.enableAssetsInstrumentation) {
           child = DefaultAssetBundle(
-            bundle: SentryAssetBundle(
-              enableStructuredDataTracing: true,
-            ),
+            bundle: SentryAssetBundle(enableStructuredDataTracing: true),
             child: child,
           );
         }
-        // Running main app
+
         runApp(child);
       } else {
-        // Running main app when sentry config is not there
         runApp(app);
       }
     } catch (error, stackTrace) {
