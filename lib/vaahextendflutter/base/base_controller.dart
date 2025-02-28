@@ -1,5 +1,9 @@
 import 'dart:async';
+<<<<<<< Updated upstream
 
+=======
+import 'dart:developer';
+>>>>>>> Stashed changes
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,8 +13,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
-import '../services/notification/internal/notification.dart';
-import '../services/notification/push/notification.dart';
+
 import 'root_assets_controller.dart';
 
 class BaseController extends GetxController {
@@ -22,6 +25,7 @@ class BaseController extends GetxController {
     try {
       // Storage initialization to store some properties locally
       await GetStorage.init();
+      log("baseController reinitialised");
 
       // Environment initialization
       final envController = Get.put(EnvController());
@@ -42,10 +46,17 @@ class BaseController extends GetxController {
       // RootAssets
       Get.put(RootAssetsController());
 
+<<<<<<< Updated upstream
       // Other Core Services
       await PushNotifications.init();
       await InternalNotifications.init();
       PushNotifications.askPermission();
+=======
+      // Temporary commented for testing purposes
+      /* await PushNotifications.init();
+      // await InternalNotifications.init();
+      hNotifications.askPermission(); */
+>>>>>>> Stashed changes
 
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
@@ -60,6 +71,7 @@ class BaseController extends GetxController {
         );
         Widget child = app;
         if (config.sentryConfig!.enableUserInteractionTracing) {
+<<<<<<< Updated upstream
           child = SentryUserInteractionWidget(
             child: child,
           );
@@ -76,6 +88,24 @@ class BaseController extends GetxController {
         runApp(child);
       } else {
         // Running main app when sentry config is not there
+=======
+          log("route changes");
+
+          child = SentryUserInteractionWidget(child: child);
+        }
+        if (config.sentryConfig!.enableAssetsInstrumentation) {
+          child = DefaultAssetBundle(
+            bundle: SentryAssetBundle(enableStructuredDataTracing: true),
+            child: child,
+          );
+        }
+        log("runapp child");
+
+        runApp(child);
+      } else {
+        log("runapp app");
+
+>>>>>>> Stashed changes
         runApp(app);
       }
     } catch (error, stackTrace) {

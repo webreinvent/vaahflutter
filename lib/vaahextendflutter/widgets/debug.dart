@@ -269,6 +269,18 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
+<<<<<<< Updated upstream
+=======
+                                                TextButton(
+                                                  onPressed: () {
+                                                    restartApp(context);
+                                                    // Get.delete<EnvController>();
+                                                    // Get.delete<BaseController>();
+                                                    // app();
+                                                  },
+                                                  child: const Text('Restart App'),
+                                                ),
+>>>>>>> Stashed changes
                                               ],
                                             ),
                                           ),
