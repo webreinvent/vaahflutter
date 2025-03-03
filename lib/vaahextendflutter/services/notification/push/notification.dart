@@ -1,10 +1,7 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
-
-import '../../../../models/user.dart';
-import '../../../base/root_assets_controller.dart';
-import '../../../env/env.dart';
+import '../../../base/root_asset_bloc/root_asset_bloc.dart';
+import '../../../env/env_bloc/env_bloc.dart';
 import '../../../env/notification.dart';
 import '../models/notification.dart';
 import 'services/local.dart';
@@ -12,7 +9,7 @@ import 'services/remote.dart';
 
 abstract class PushNotifications {
   static final PushNotificationsServiceType _pushNotificationsServiceType =
-      EnvironmentConfig.getConfig.pushNotificationsServiceType;
+      EnvBloc.instance.config.pushNotificationsServiceType;
 
   static Future<void> init() async {
     switch (_pushNotificationsServiceType) {
@@ -34,16 +31,17 @@ abstract class PushNotifications {
   }
 
   static void _listen() {
-    final RootAssetsController assetController = Get.find<RootAssetsController>();
-    assetController.userStream.listen(
-      (User? user) {
-        if (user == null) {
+    final rootAssetBloc = RootAssetBloc.instance;
+
+    rootAssetBloc.stream.listen((state) {
+      if (state is RootAssetLoaded) {
+        if (state.user == null) {
           unsubscribe();
         } else {
-          subscribe(userid: user.id);
+          subscribe(userid: state.user!.id);
         }
-      },
-    );
+      }
+    });
   }
 
   static void dispose() {

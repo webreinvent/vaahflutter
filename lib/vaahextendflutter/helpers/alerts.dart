@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 
+import '../../app_config.dart';
 import '../app_theme.dart';
 import 'constants.dart';
 
@@ -25,71 +26,78 @@ class Alerts {
     List<Widget>? actions,
     Color color = Colors.white,
   }) {
-    return Get.dialog(
-      AlertDialog(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(
-            Radius.circular(defaultPadding),
-          ),
-        ),
-        contentPadding: allPadding8,
-        title: Center(child: Text(title)),
-        content: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (messages != null && messages.isNotEmpty) ...[
-                verticalMargin12,
-                Padding(
-                  padding: horizontalPadding8,
-                  child: Text(
-                    messages.join('\n'),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
-              if ((messages != null && messages.isNotEmpty) ||
-                  (hint != null && hint.trim().isNotEmpty))
-                verticalMargin8,
-              if (hint != null && hint.trim().isNotEmpty) ...[
-                Padding(
-                  padding: horizontalPadding8,
-                  child: Text(
-                    hint,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: hintColor),
-                  ),
-                ),
-                verticalMargin8,
-              ],
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          if (actions == null || actions.isNotEmpty)
-            Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: color),
-                child: Text(
-                  'Ok',
-                  style: TextStyle(
-                    color: color == AppTheme.colors['white']
-                        ? AppTheme.colors['black']
-                        : AppTheme.colors['white'],
-                  ),
-                ),
-                onPressed: () {
-                  Get.back();
-                },
-              ),
-            )
-          else
-            ...actions,
-        ],
-      ),
+    BuildContext? context = navigatorKey.currentContext;
+    if (context == null) {
+      return;
+    }
+    return showCupertinoModalPopup(
+      context: context,
       barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(defaultPadding),
+            ),
+          ),
+          contentPadding: allPadding8,
+          title: Center(child: Text(title)),
+          content: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (messages != null && messages.isNotEmpty) ...[
+                  verticalMargin12,
+                  Padding(
+                    padding: horizontalPadding8,
+                    child: Text(
+                      messages.join('\n'),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+                if ((messages != null && messages.isNotEmpty) ||
+                    (hint != null && hint.trim().isNotEmpty))
+                  verticalMargin8,
+                if (hint != null && hint.trim().isNotEmpty) ...[
+                  Padding(
+                    padding: horizontalPadding8,
+                    child: Text(
+                      hint,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: hintColor),
+                    ),
+                  ),
+                  verticalMargin8,
+                ],
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            if (actions == null || actions.isNotEmpty)
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: color),
+                  child: Text(
+                    'Ok',
+                    style: TextStyle(
+                      color: color == AppTheme.colors['white']
+                          ? AppTheme.colors['black']
+                          : AppTheme.colors['white'],
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              )
+            else
+              ...actions,
+          ],
+        );
+      },
     );
   }
 

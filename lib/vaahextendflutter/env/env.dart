@@ -1,49 +1,46 @@
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import '../services/logging_library/logging_library.dart';
 import 'logging.dart';
 import 'notification.dart';
 
 part 'env.g.dart';
 
-class EnvController extends GetxController {
-  EnvironmentConfig _config = EnvironmentConfig.defaultConfig();
-  EnvironmentConfig get config => _config;
+// Todo : Remove the below only GetxController code
+// Todo : Shifted to EnvBloc
+// class EnvController extends GetxController {
+//   EnvironmentConfig _config = EnvironmentConfig.defaultConfig();
+//   EnvironmentConfig get config => _config;
 
-  Future<void> initialize() async {
-    try {
-      const String envPath = String.fromEnvironment("ENV_PATH");
-      if (envPath.isEmpty) {
-        Log.warning("INVALID ENVIRONMENT PATH");
-        return;
-      }
-      Log.success("ENVIRONMENT PATH: $envPath");
-      final String jsonConfig = await rootBundle.loadString(envPath);
-      if (jsonConfig.isNotEmpty) {
-        final Map<String, dynamic> json = jsonDecode(jsonConfig);
-        _config = EnvironmentConfig.fromJson(json);
-      } else {
-        throw Exception('Environment configuration not found for key: $envPath');
-      }
-    } catch (error, stackTrace) {
-      Log.exception(
-        "error-occured-while-initializing-env-controller",
-        throwable: error,
-        stackTrace: stackTrace,
-      );
-      exit(0);
-    }
-  }
-}
+//   Future<void> initialize() async {
+//     try {
+//       const String envPath = String.fromEnvironment("ENV_PATH");
+//       if (envPath.isEmpty) {
+//         Log.warning("INVALID ENVIRONMENT PATH");
+//         return;
+//       }
+//       Log.success("ENVIRONMENT PATH: $envPath");
+//       final String jsonConfig = await rootBundle.loadString(envPath);
+//       if (jsonConfig.isNotEmpty) {
+//         final Map<String, dynamic> json = jsonDecode(jsonConfig);
+//         _config = EnvironmentConfig.fromJson(json);
+//       } else {
+//         throw Exception('Environment configuration not found for key: $envPath');
+//       }
+//     } catch (error, stackTrace) {
+//       Log.exception(
+//         "error-occured-while-initializing-env-controller",
+//         throwable: error,
+//         stackTrace: stackTrace,
+//       );
+//       exit(0);
+//     }
+//   }
+// }
 
 @JsonSerializable(fieldRename: FieldRename.snake)
-class EnvironmentConfig {
+class EnvironmentConfig extends Equatable {
   const EnvironmentConfig({
     required this.appTitle,
     required this.appTitleShort,
@@ -98,16 +95,6 @@ class EnvironmentConfig {
 
   Map<String, dynamic> toJson() => _$EnvironmentConfigToJson(this);
 
-  static EnvironmentConfig get getConfig {
-    final bool isRegistered = Get.isRegistered<EnvController>();
-    if (isRegistered) {
-      EnvController envController = Get.find<EnvController>();
-      return envController.config;
-    } else {
-      return EnvironmentConfig.defaultConfig();
-    }
-  }
-
   factory EnvironmentConfig.defaultConfig() {
     return EnvironmentConfig(
       appTitle: 'VaahFlutter',
@@ -126,4 +113,8 @@ class EnvironmentConfig {
       debugPanelColor: Colors.black.withOpacity(0.8),
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [envType];
 }
