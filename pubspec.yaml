@@ -20,7 +20,8 @@ dependencies:
   # Log and Performance
   sentry_flutter: ^8.9.0
   # State Management
-  get: ^4.6.6
+  bloc: ^9.0.0
+  flutter_bloc: ^9.0.0
   # Api
   dio: ^5.7.0
   # Utilities
@@ -44,6 +45,7 @@ dependencies:
   # Icons
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.7.0
+  equatable: ^2.0.7
 
 dev_dependencies:
   flutter_test:

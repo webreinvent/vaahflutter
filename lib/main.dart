@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import 'app_config.dart';
-import 'vaahextendflutter/base/base_controller.dart';
+import 'vaahextendflutter/base/base_bloc/base_bloc.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  BaseController baseController = Get.put(BaseController());
-  await baseController.init(
-    app: const AppConfig(),
-    errorApp: const ErrorAppConfig(),
-  ); // Pass main app as argument in init method
+
+  /// Initialize the app's with core features
+  BaseBloc.instance.add(
+    InitializeApp(
+      app: AppConfig(),
+      errorApp: const ErrorAppConfig(),
+    ),
+  );
+
+  runApp(AppLauncher());
 }

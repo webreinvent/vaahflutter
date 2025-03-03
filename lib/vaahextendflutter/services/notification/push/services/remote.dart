@@ -1,9 +1,11 @@
 import 'dart:async';
 
-import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import '../../../../../app_config.dart';
 
 import '../../../../env/env.dart';
+import '../../../../env/env_bloc/env_bloc.dart';
 import '../../../api.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
@@ -14,7 +16,7 @@ const Map<String, String> channels = {
 };
 
 abstract class RemoteNotifications {
-  static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
+  static final EnvironmentConfig _env = EnvBloc.instance.config;
 
   static Future<void> init() async {
     if (_env.oneSignalConfig == null) return;
@@ -108,7 +110,12 @@ abstract class RemoteNotifications {
     );
     final dynamic payload = openedResult.notification.additionalData?['payload'];
     if (payload != null && payload['path'] != null) {
-      Get.to(
+      BuildContext? context = navigatorKey.currentContext;
+
+      if (context == null) return;
+
+      Navigator.pushNamed(
+        context,
         payload['path'],
         arguments: <String, dynamic>{
           'data': payload['data'],

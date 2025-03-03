@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../env/env.dart';
+import '../../../env/env_bloc/env_bloc.dart';
 import '../../../env/notification.dart';
 import '../models/notification.dart';
 import 'services/base_service.dart';
@@ -11,7 +11,7 @@ import 'services/pusher.dart';
 
 InternalNotificationsService get getService {
   final InternalNotificationsServiceType serviceType =
-      EnvironmentConfig.getConfig.internalNotificationsServiceType;
+      EnvBloc.instance.config.internalNotificationsServiceType;
   switch (serviceType) {
     case InternalNotificationsServiceType.firebase:
       return InternalNotificationsWithFirebase();

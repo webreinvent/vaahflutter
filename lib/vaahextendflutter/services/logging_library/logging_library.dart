@@ -1,11 +1,13 @@
 import '../../env/env.dart';
+import '../../env/env_bloc/env_bloc.dart';
 import '_cloud/firebase_logging_service.dart';
 import '_cloud/sentry_logging_service.dart';
 import '_local/console_service.dart';
 import 'models/log.dart';
 
 class Log {
-  static final EnvironmentConfig _config = EnvironmentConfig.getConfig;
+  // Every time _config is accessed, it will fetch the latest configuration from EnvBloc.
+  static EnvironmentConfig get _config => EnvBloc.instance.config;
 
   static final List<Type> _services = [
     SentryLoggingService,

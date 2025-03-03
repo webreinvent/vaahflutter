@@ -8,6 +8,7 @@
 // *****************************************
 
 import 'package:flutter/material.dart';
+import 'package:vaahflutter/vaahextendflutter/env/env_bloc/env_bloc.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
@@ -49,7 +50,7 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
   void initState() {
     super.initState();
     // get env controller and set variable showDebugPanel
-    _environmentConfig = EnvironmentConfig.getConfig;
+    _environmentConfig = EnvBloc.instance.config;
     showDebugPanel = _environmentConfig.showDebugPanel;
     // initialise AnimationController
     _controller = AnimationController(

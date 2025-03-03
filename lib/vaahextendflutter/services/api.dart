@@ -5,12 +5,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart' as getx;
 
+import '../../app_config.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
+import '../env/env_bloc/env_bloc.dart';
 import '../helpers/alerts.dart';
 import '../helpers/constants.dart';
+import '../helpers/extensions/string_extensions.dart';
 import 'logging_library/logging_library.dart';
 
 // alertType : 'dialog', 'toast',
@@ -153,7 +155,10 @@ abstract class Api {
 
   static void init() {
     // get env controller to get variable apiUrl
-    _config = EnvironmentConfig.getConfig;
+    // Todo : Check is configs getting loaded or not
+    final config = EnvBloc.instance.config;
+    _config = EnvBloc.instance.config;
+
     _apiBaseUrl = _config.apiUrl;
     if (_config.enableApiLogInterceptor) {
       _dio.interceptors.add(
@@ -547,33 +552,39 @@ Future<void> _showDialog({
   List<String>? content,
   String? hint,
   List<Widget>? actions,
-}) {
-  return getx.Get.dialog(
-    CupertinoAlertDialog(
-      title: Text(title),
-      content: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (content != null && content.isNotEmpty) Text(content.join('\n')),
-            if (content != null && content.isNotEmpty) verticalMargin12,
-            if (hint != null && hint.trim().isNotEmpty) Text(hint),
-          ],
+}) async {
+  BuildContext? context = navigatorKey.currentContext;
+  if (context == null) {
+    return;
+  }
+  return showCupertinoModalPopup(
+    context: context,
+    builder: (context) {
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (content != null && content.isNotEmpty) Text(content.join('\n')),
+              if (content != null && content.isNotEmpty) verticalMargin12,
+              if (hint != null && hint.trim().isNotEmpty) Text(hint),
+            ],
+          ),
         ),
-      ),
-      actions: <Widget>[
-        if (actions == null || actions.isNotEmpty)
-          CupertinoButton(
-            child: const Text('Ok'),
-            onPressed: () {
-              getx.Get.back();
-            },
-          )
-        else
-          ...actions,
-      ],
-    ),
-    barrierDismissible: false,
+        actions: <Widget>[
+          if (actions == null || actions.isNotEmpty)
+            CupertinoButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          else
+            ...actions,
+        ],
+      );
+    },
   );
 }

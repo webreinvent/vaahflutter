@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 import '../../../../env/env.dart';
+import '../../../../env/env_bloc/env_bloc.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 import 'base_service.dart';
@@ -40,7 +41,7 @@ class InternalNotificationsWithPusher implements InternalNotificationsService {
     // Write your logic here to get user id
     userId = 'userId';
 
-    final EnvironmentConfig environmentConfig = EnvironmentConfig.getConfig;
+    final EnvironmentConfig environmentConfig = EnvBloc.instance.config;
     if (environmentConfig.pusherConfig == null) return;
 
     _pusher = PusherChannelsFlutter.getInstance();

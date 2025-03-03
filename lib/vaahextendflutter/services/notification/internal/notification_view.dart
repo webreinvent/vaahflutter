@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../env/env.dart';
+import '../../../env/env_bloc/env_bloc.dart';
 import '../../../env/notification.dart';
 import '../../../helpers/constants.dart';
 import 'notification.dart';
@@ -15,7 +16,7 @@ class InternalNotificationsBadge extends StatefulWidget {
 }
 
 class _InternalNotificationsBadgeState extends State<InternalNotificationsBadge> {
-  final EnvironmentConfig _environmentConfig = EnvironmentConfig.getConfig;
+  final EnvironmentConfig _environmentConfig = EnvBloc.instance.config;
 
   @override
   Widget build(BuildContext context) {
