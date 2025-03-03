@@ -38,8 +38,10 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
           : PusherConfig.fromJson(
               json['pusher_config'] as Map<String, dynamic>),
       showDebugPanel: json['show_debug_panel'] as bool,
-      localDatabaseStorageType: $enumDecode(_$LocalDatabaseStorageTypeEnumMap,
-          json['local_database_storage_type']),
+      localDatabaseStorageType: $enumDecodeNullable(
+              _$LocalDatabaseStorageTypeEnumMap,
+              json['local_database_storage_type']) ??
+          LocalDatabaseStorageType.none,
       debugPanelColor: EnvironmentConfig._colorFromJson(
           (json['debug_panel_color'] as num).toInt()),
     );

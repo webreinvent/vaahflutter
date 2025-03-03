@@ -84,6 +84,7 @@ class EnvironmentConfig {
   final OneSignalConfig? oneSignalConfig;
   final PusherConfig? pusherConfig;
   final bool showDebugPanel;
+  @JsonKey(defaultValue: LocalDatabaseStorageType.none)
   final LocalDatabaseStorageType localDatabaseStorageType;
   @JsonKey(fromJson: _colorFromJson, toJson: _colorToJson)
   final Color debugPanelColor;

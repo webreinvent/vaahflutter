@@ -17,7 +17,7 @@ class LocalNoOpStorage implements LocalStorageService {
   Future<void> create({
     String collectionName = '',
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
     return;
   }
@@ -25,7 +25,7 @@ class LocalNoOpStorage implements LocalStorageService {
   @override
   Future<void> createMany({
     String collectionName = '',
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     return;
   }
@@ -59,7 +59,7 @@ class LocalNoOpStorage implements LocalStorageService {
   Future<void> update({
     String collectionName = '',
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
     return;
   }
@@ -67,7 +67,7 @@ class LocalNoOpStorage implements LocalStorageService {
   @override
   Future<void> updateMany({
     String collectionName = '',
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     return;
   }
@@ -76,7 +76,7 @@ class LocalNoOpStorage implements LocalStorageService {
   Future<void> createOrUpdate({
     String collectionName = '',
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
     return;
   }
@@ -84,7 +84,7 @@ class LocalNoOpStorage implements LocalStorageService {
   @override
   Future<void> createOrUpdateMany({
     String collectionName = '',
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     return;
   }

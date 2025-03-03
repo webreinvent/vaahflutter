@@ -1,1 +1,1 @@
-enum LocalDatabaseStorageType { hive, none }
+enum LocalDatabaseStorageType { hive, sqflite, none }

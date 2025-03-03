@@ -10,12 +10,12 @@ abstract class LocalStorageService {
   Future<void> create({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   });
 
   Future<void> createMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   });
 
   Future<String?> read({
@@ -23,7 +23,7 @@ abstract class LocalStorageService {
     required String key,
   });
 
-  Future<Map<String, String>> readMany({
+  Future<Map<String, dynamic>> readMany({
     required String collectionName,
     required List<String> keys,
   });
@@ -35,23 +35,23 @@ abstract class LocalStorageService {
   Future<void> update({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   });
 
   Future<void> updateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   });
 
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   });
 
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   });
 
   Future<void> delete({required String collectionName, required String key});

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:vaahflutter/vaahextendflutter/services/storage/local/storage_error.dart';
 
 import 'base_storage.dart';
 
@@ -31,41 +32,50 @@ class LocalHiveStorage implements LocalStorageService {
     }
   }
 
+  Future<Box> _getBox(String collectionName) async {
+    if (!_collections.containsKey(collectionName)) {
+      throw Exception('no-collection-found: $collectionName');
+    }
+    return await _collections[collectionName]!;
+  }
+
   @override
   Future<void> create({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
-    if (!_collections.containsKey(collectionName)) {
-      return;
+    final Box box = await _getBox(collectionName);
+    if (box.containsKey(key)) {
+      throw Exception('key-already-exists: $key');
     }
-    final Box box = await _collections[collectionName]!;
-    if (box.containsKey(key)) {}
-
     await box.put(key, value);
   }
 
   @override
   Future<void> createMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     final List<String> errors = [];
     final List<String> success = [];
-    for (final String key in values.keys) {
-      try {
-        await create(
-          collectionName: collectionName,
-          key: key,
-          value: values[key]!,
-        );
-        success.add(key);
-      } catch (e, st) {
-        errors.add(key);
+
+    final Box box = await _getBox(collectionName);
+    try {
+      for (final String key in values.keys) {
+        if (box.containsKey(key)) {
+          errors.add(key);
+          throw 'key-already-exists';
+        } else {
+          success.add(key);
+        }
       }
+    } catch (e, st) {
+      throw StorageException(
+        throwable: e,
+        stackTrace: st,
+      );
     }
-    return;
   }
 
   @override
@@ -73,45 +83,35 @@ class LocalHiveStorage implements LocalStorageService {
     required String collectionName,
     required String key,
   }) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection data found';
-    }
-    final Box box = await _collections[collectionName]!;
+    final Box box = await _getBox(collectionName);
     if (!box.containsKey(key)) {
-      throw 'no data found';
+      return null;
     }
-
     return box.get(key);
   }
 
   @override
-  Future<Map<String, String>> readMany({
+  Future<Map<String, dynamic>> readMany({
     required String collectionName,
     required List<String> keys,
   }) async {
-    final Map<String, String?> success = {};
-    final List<String> errors = [];
-    for (final String key in keys) {
-      try {
-        final String? result = await read(collectionName: collectionName, key: key);
-        if (result != null) {
-          success[key] = result;
-        } else {
-          errors.add(key);
-        }
-      } catch (e, st) {
-        errors.add(key);
+    Map<String, dynamic> result = {};
+
+    final Box box = await _getBox(collectionName);
+
+    for (final key in keys) {
+      if (box.containsKey(key)) {
+        result[key] = box.get(key);
       }
     }
-    return {};
+
+    return result;
   }
 
   @override
   Future<Map<String, String>> readAll({required String collectionName}) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
-    final Box box = await _collections[collectionName]!;
+    final Box box = await _getBox(collectionName);
+
     return box.toMap().map(
       (key, value) {
         return MapEntry(
@@ -126,36 +126,31 @@ class LocalHiveStorage implements LocalStorageService {
   Future<void> update({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
-    final Box box = await _collections[collectionName]!;
+    final Box box = await _getBox(collectionName);
     if (!box.containsKey(key)) {
-      throw 'no key found';
+      throw Exception('no-key-found: $key');
     }
+
     return await box.put(key, value);
   }
 
   @override
   Future<void> updateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     final List<String> errors = [];
     final List<String> success = [];
-    for (final String key in values.keys) {
-      try {
-        await update(
-          collectionName: collectionName,
-          key: key,
-          value: values[key]!,
-        );
-        success.add(key);
-      } catch (e, st) {
-        errors.add(key);
-      }
+
+    final Box box = await _getBox(collectionName);
+    try {
+      await box.putAll(values);
+      success.addAll(values.keys);
+    } catch (e, st) {
+      errors.addAll(values.keys);
+      throw StorageException(throwable: e, stackTrace: st);
     }
   }
 
@@ -163,47 +158,26 @@ class LocalHiveStorage implements LocalStorageService {
   Future<void> createOrUpdate({
     required String collectionName,
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
-    final Box box = await _collections[collectionName]!;
-    if (!box.containsKey(key)) {
-      return create(collectionName: collectionName, key: key, value: value);
-    }
-    return update(collectionName: collectionName, key: key, value: value);
+    final Box box = await _getBox(collectionName);
+    await box.put(key, value);
   }
 
   @override
   Future<void> createOrUpdateMany({
     required String collectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
-    final List<String> errors = [];
-    final List<String> success = [];
-    for (final String key in values.keys) {
-      try {
-        await createOrUpdate(
-          collectionName: collectionName,
-          key: key,
-          value: values[key]!,
-        );
-        success.add(key);
-      } catch (e, st) {
-        errors.add(key);
-      }
-    }
+    final Box box = await _getBox(collectionName);
+    await box.putAll(values);
   }
 
   @override
-  Future<void> delete({required String collectionName, dynamic key}) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
-    final Box box = await _collections[collectionName]!;
+  Future<void> delete({required String collectionName, String? key}) async {
+    final Box box = await _getBox(collectionName);
     if (!box.containsKey(key)) {
-      throw 'no key found';
+      throw 'no-key-found';
     }
     await box.delete(key);
   }
@@ -214,12 +188,10 @@ class LocalHiveStorage implements LocalStorageService {
     List<String> keys = const [],
   }) async {
     final List<String> errors = [];
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
     final List<String> nonExistingKeys = [];
     final List<String> existingKeys = [];
-    final Box box = await _collections[collectionName]!;
+
+    final Box box = await _getBox(collectionName);
     for (int i = 0; i < keys.length; i++) {
       if (!box.containsKey(keys[i])) {
         errors.add(keys[i]);
@@ -238,10 +210,7 @@ class LocalHiveStorage implements LocalStorageService {
 
   @override
   Future<void> deleteAll({required String collectionName}) async {
-    if (!_collections.containsKey(collectionName)) {
-      throw 'no collection found';
-    }
-    final Box box = await _collections[collectionName]!;
+    final Box box = await _getBox(collectionName);
     await box.clear();
   }
 }

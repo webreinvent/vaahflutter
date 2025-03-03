@@ -38,7 +38,7 @@ abstract class LocalDatabaseStorage {
 
   static Future<void> createMany({
     String collectionName = defaultCollectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     await _instanceLocal?.createMany(collectionName: collectionName, values: values);
     return;
@@ -52,14 +52,14 @@ abstract class LocalDatabaseStorage {
     return;
   }
 
-  static Future<Map<String, String>> readMany({
+  static Future<Map<String, dynamic>> readMany({
     String collectionName = defaultCollectionName,
     required List<String> keys,
   }) async {
     return await _instanceLocal?.readMany(collectionName: collectionName, keys: keys) ?? {};
   }
 
-  static Future<Map<String, String>> readAll({
+  static Future<Map<String, dynamic>> readAll({
     String collectionName = defaultCollectionName,
   }) async {
     return await _instanceLocal?.readAll(collectionName: collectionName) ?? {};
@@ -68,7 +68,7 @@ abstract class LocalDatabaseStorage {
   static Future<void> update({
     String collectionName = defaultCollectionName,
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
     await _instanceLocal?.update(collectionName: collectionName, key: key, value: value);
     return;
@@ -76,7 +76,7 @@ abstract class LocalDatabaseStorage {
 
   static Future<void> updateMany({
     String collectionName = defaultCollectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     await _instanceLocal?.updateMany(collectionName: collectionName, values: values);
     return;
@@ -85,7 +85,7 @@ abstract class LocalDatabaseStorage {
   static Future<void> createOrUpdate({
     String collectionName = defaultCollectionName,
     required String key,
-    required String value,
+    required dynamic value,
   }) async {
     await _instanceLocal?.createOrUpdate(collectionName: collectionName, key: key, value: value);
     return;
@@ -93,7 +93,7 @@ abstract class LocalDatabaseStorage {
 
   static Future<void> createOrUpdateMany({
     String collectionName = defaultCollectionName,
-    required Map<String, String> values,
+    required Map<String, dynamic> values,
   }) async {
     await _instanceLocal?.createOrUpdateMany(collectionName: collectionName, values: values);
     return;
