@@ -1,16 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-<<<<<<< Updated upstream
-
-import 'app_config.dart';
-import 'vaahextendflutter/base/base_controller.dart';
-
-Future<void> main() async {
-=======
-import 'package:vaahflutter/views/pages/home.dart';
 import 'app_config.dart';
 import 'vaahextendflutter/base/base_controller.dart';
 
@@ -19,19 +10,22 @@ void main() async {
   app();
 }
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void app() async {
->>>>>>> Stashed changes
   WidgetsFlutterBinding.ensureInitialized();
   BaseController baseController = Get.put(BaseController());
   await baseController.init(
+    restartKey: navigatorKey,
     app: const AppConfig(),
     errorApp: const ErrorAppConfig(),
   ); // Pass main app as argument in init method
 }
 
 void restartApp(BuildContext context) async {
-  const MethodChannel _channel = MethodChannel('restart');
+  // Get.delete<BaseController>();
+  app();
+  // const MethodChannel channel = MethodChannel('restart');
 
-  await _channel.invokeMethod('restartApp', []) == "ok";
-  main();
+  // await channel.invokeMethod('restartApp', []) == "ok";
+  // main();
 }

@@ -26,6 +26,7 @@ class AppConfig extends StatelessWidget {
       onGenerateRoute: routeMiddleware,
       builder: (BuildContext context, Widget? child) {
         return DebugWidget(
+          parentContext: context,
           navigatorKey: _navigatorKey,
           child: child!,
         );

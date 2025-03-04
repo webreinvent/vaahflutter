@@ -7,7 +7,10 @@
 // assigned with some values when material app is build.
 // *****************************************
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:vaahflutter/main.dart';
 
 import '../app_theme.dart';
 import '../env/env.dart';
@@ -22,10 +25,12 @@ class DebugWidget extends StatefulWidget {
     super.key,
     required this.navigatorKey,
     required this.child,
+    required this.parentContext,
   });
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget child;
+  final BuildContext parentContext;
 
   @override
   DebugWidgetState createState() => DebugWidgetState();
@@ -269,10 +274,10 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                 verticalMargin24,
                                                 _NotificationSection(config: _environmentConfig),
                                                 verticalMargin24,
-<<<<<<< Updated upstream
-=======
                                                 TextButton(
                                                   onPressed: () {
+                                                    log("restart");
+                                                    close();
                                                     restartApp(context);
                                                     // Get.delete<EnvController>();
                                                     // Get.delete<BaseController>();
@@ -280,7 +285,6 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                   },
                                                   child: const Text('Restart App'),
                                                 ),
->>>>>>> Stashed changes
                                               ],
                                             ),
                                           ),
