@@ -33,8 +33,10 @@ abstract class Api {
 
   // return type of ajax is ApiResponseType? so if there is error
   // then null will be returned otherwise ApiResponseType object
-  static Future<dynamic> ajax<T>({
+  static Future ajax<T>({
     required String url,
+    T Function(Map<String, dynamic>)? fromJson,
+    List<T> Function(List<dynamic>)? fromJsonList,
     Future<void> Function(dynamic data, Response<dynamic>? res)? callback,
     String method = 'get',
     Map<String, dynamic>?
@@ -87,10 +89,18 @@ abstract class Api {
         );
       }
 
-      return {
-        'data': _parseKeys(data: responseData, changeKeys: _snakeCaseToLowerCamelCase),
-        'response': response
-      };
+      // Handle both list & single object responses
+      if (responseData is List) {
+        if (fromJsonList != null) {
+          List<T> list = fromJsonList(responseData);
+          return list;
+        }
+        return [];
+      } else if (responseData is Map<String, dynamic>) {
+        return fromJson != null ? fromJson(responseData) : null;
+      } else {
+        throw Exception("Unexpected response type: ${responseData.runtimeType}");
+      }
     } catch (error) {
       // On inline error
       if (onError != null) {
@@ -116,13 +126,14 @@ abstract class Api {
         if (callback != null) {
           await callback(null, null);
         }
-        return {
-          'data': null,
-          'response': {
-            'success': false,
-            'errors': [error]
-          }
-        };
+        return Future.value(null);
+        // return {
+        //   'data': null,
+        //   'response': {
+        //     'success': false,
+        //     'errors': [error]
+        //   }
+        // };
       }
 
       // Here response error means server sends error response. eg 401: unauthorised
@@ -135,13 +146,14 @@ abstract class Api {
         if (callback != null) {
           await callback(null, null);
         }
-        return {
-          'data': null,
-          'response': {
-            'success': false,
-            'errors': [error]
-          }
-        };
+        // return {
+        //   'data': null,
+        //   'response': {
+        //     'success': false,
+        //     'errors': [error]
+        //   }
+        // };
+        return Future.value(null);
       }
     } finally {
       // Call finally function
@@ -283,64 +295,45 @@ abstract class Api {
   ) async {
     if (response != null && response.data != null) {
       try {
-        final Map<String, dynamic> formatedResponse = response.data as Map<String, dynamic>;
-        dynamic responseData = formatedResponse['data'];
-        if (responseData == null) {
-          Log.warning(
-            'response doesn\'t contain data key.',
-            data: formatedResponse,
-            disableCloudLogging: true,
-          );
+        dynamic responseData = response.data;
+
+        // Check if the response is a List or a Map
+        if (responseData is Map<String, dynamic>) {
+          // If it's a Map, extract 'data' if present
+          responseData = responseData.containsKey('data') ? responseData['data'] : responseData;
         }
+
+        // Ensure proper logging and handling of messages
         List<String>? responseMessages;
-        if (formatedResponse['messages'] == null) {
-          Log.warning(
-            'response doesn\'t contain messages key.',
-            data: formatedResponse,
-            disableCloudLogging: true,
-          );
-        } else {
+        if (responseData is Map<String, dynamic> && responseData.containsKey('messages')) {
           responseMessages =
-              (formatedResponse['messages'] as List<dynamic>).map((e) => e.toString()).toList();
+              (responseData['messages'] as List<dynamic>).map((e) => e.toString()).toList();
         }
-        String? responseHint = formatedResponse['hint'] as String?;
-        if (responseHint == null) {
-          Log.warning('response doesn\'t contain hint key.', disableCloudLogging: true);
-        }
+
+        String? responseHint =
+            responseData is Map<String, dynamic> ? responseData['hint'] as String? : null;
+
+        // Show alerts based on the type
         if (showAlert) {
           if (alertType == 'dialog') {
-            if (Alerts.showSuccessDialog != null) {
-              await Alerts.showSuccessDialog!(
-                title: 'Success',
-                messages: responseMessages,
-                hint: responseHint,
-              );
-            } else {
-              _showDialog(
-                title: 'Success',
-                content: responseMessages,
-                hint: responseHint,
-              );
-            }
+            await Alerts.showSuccessDialog?.call(
+              title: 'Success',
+              messages: responseMessages,
+              hint: responseHint,
+            );
           } else {
-            if (Alerts.showSuccessToast != null) {
-              await Alerts.showSuccessToast!(
-                content: responseMessages?.join('\n') ?? 'Successful',
-              );
-            } else {
-              _showToast(
-                content: responseMessages?.join('\n') ?? 'Successful',
-                color: AppTheme.colors['success']!,
-              );
-            }
+            await Alerts.showSuccessToast?.call(
+              content: responseMessages?.join('\n') ?? 'Successful',
+            );
           }
         }
-        return responseData;
+
+        return responseData; // Could be List or Map
       } catch (e) {
         rethrow;
       }
     }
-    throw Exception('response from server is null or response.data is null');
+    throw Exception('Response from server is null or response.data is null');
   }
 
   static Future<void> _handleTimeoutError(
