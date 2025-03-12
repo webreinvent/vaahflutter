@@ -35,7 +35,7 @@ endif
 
 # ========================================================================= #
 
-vaahflutter/app: check_git clone_repository choose_state_management \
+vaahflutter/app: check_git clone_repository choose_state_management setup_bloc_related_files\
                  update_package_name update_android_package_identifier \
                  update_ios_package_identifier update_vaahflutter_env \
                  update_android_app_label update_ios_app_label \
@@ -96,6 +96,17 @@ choose_state_management:
 		rm -rf "$(PACKAGE_NAME)/lib/state_management/bloc"; \
 	else \
 		echo "\n>>>>> Error: Invalid choice. Please select either 'bloc' or 'getx'"; \
+		exit 1; \
+	fi
+
+# ========================================================================= #
+
+setup_bloc_related_files:
+	@if [ -f "$(PACKAGE_NAME)/lib/state_management/bloc/app_config.dart" ]; then \
+		cp "$(PACKAGE_NAME)/lib/state_management/bloc/app_config.dart" "$(PACKAGE_NAME)/lib/app_config.dart"; \
+		echo "> Copied bloc's app_config.dart to the root lib directory"; \
+	else \
+		echo ">>>>> Error: Bloc's app_config.dart not found!"; \
 		exit 1; \
 	fi
 
