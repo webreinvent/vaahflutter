@@ -181,9 +181,6 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                         value:
                                                             '${_environmentConfig.timeoutLimit} Seconds',
                                                       ),
-                                                      'Firebase Id': Data(
-                                                        value: _environmentConfig.firebaseId,
-                                                      ),
                                                       'API Logs Interceptor': Data(
                                                         value: _environmentConfig
                                                                 .enableApiLogInterceptor
@@ -209,6 +206,10 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                         color: _environmentConfig.enableCloudLogs
                                                             ? AppTheme.colors['success']
                                                             : AppTheme.colors['danger'],
+                                                      ),
+                                                      'CloudLoggingService': Data(
+                                                        value: _environmentConfig
+                                                            .cloudLoggingService.name,
                                                       ),
                                                       if (null !=
                                                           _environmentConfig.sentryConfig) ...{
@@ -259,6 +260,52 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                               : 'disabled',
                                                           color: _environmentConfig.sentryConfig!
                                                                   .enableAssetsInstrumentation
+                                                              ? AppTheme.colors['success']
+                                                              : AppTheme.colors['danger'],
+                                                        ),
+                                                      },
+                                                      if (null !=
+                                                          _environmentConfig.datadogConfig) ...{
+                                                        'DataDog Client Token': Data(
+                                                          value: _environmentConfig
+                                                              .datadogConfig!.clientToken,
+                                                        ),
+                                                        'DataDog Application Id': Data(
+                                                          value: _environmentConfig
+                                                              .datadogConfig!.applicationId,
+                                                        ),
+                                                        'DataDog Site': Data(
+                                                          value: _environmentConfig
+                                                              .datadogConfig!.site.name,
+                                                        ),
+                                                        'DataDog First Party Host': Data(
+                                                          value: (
+                                                            _environmentConfig
+                                                                .datadogConfig!.firstPartyHosts,
+                                                          ).toString(),
+                                                        ),
+                                                        'DataDog Traces Sample Rate': Data(
+                                                          value: _environmentConfig
+                                                              .datadogConfig!.tracesSampleRate
+                                                              .toString(),
+                                                        ),
+                                                        'DataDog Native Crash report': Data(
+                                                          value: _environmentConfig.datadogConfig!
+                                                                  .nativeCrashReportEnabled
+                                                              ? 'enabled'
+                                                              : 'disabled',
+                                                          color: _environmentConfig.datadogConfig!
+                                                                  .nativeCrashReportEnabled
+                                                              ? AppTheme.colors['success']
+                                                              : AppTheme.colors['danger'],
+                                                        ),
+                                                        'DataDog Report Flutter Performance': Data(
+                                                          value: _environmentConfig.datadogConfig!
+                                                                  .reportFlutterPerformance
+                                                              ? 'enabled'
+                                                              : 'disabled',
+                                                          color: _environmentConfig.datadogConfig!
+                                                                  .reportFlutterPerformance
                                                               ? AppTheme.colors['success']
                                                               : AppTheme.colors['danger'],
                                                         ),
