@@ -14,15 +14,21 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
       version: json['version'] as String,
       build: json['build'] as String,
       apiUrl: json['api_url'] as String,
-      firebaseId: json['firebase_id'] as String?,
       timeoutLimit: (json['timeout_limit'] as num).toInt(),
       enableLocalLogs: json['enable_local_logs'] as bool,
       enableCloudLogs: json['enable_cloud_logs'] as bool,
       enableApiLogInterceptor: json['enable_api_log_interceptor'] as bool,
+      cloudLoggingService: $enumDecodeNullable(
+              _$CloudLoggingServiceEnumMap, json['cloud_logging_service']) ??
+          CloudLoggingService.noService,
       sentryConfig: json['sentry_config'] == null
           ? null
           : SentryConfig.fromJson(
               json['sentry_config'] as Map<String, dynamic>),
+      datadogConfig: json['datadog_config'] == null
+          ? null
+          : DatadogConfig.fromJson(
+              json['datadog_config'] as Map<String, dynamic>),
       pushNotificationsServiceType: $enumDecode(
           _$PushNotificationsServiceTypeEnumMap,
           json['push_notifications_service_type']),
@@ -50,12 +56,14 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
       'version': instance.version,
       'build': instance.build,
       'api_url': instance.apiUrl,
-      'firebase_id': instance.firebaseId,
       'timeout_limit': instance.timeoutLimit,
       'enable_local_logs': instance.enableLocalLogs,
       'enable_cloud_logs': instance.enableCloudLogs,
       'enable_api_log_interceptor': instance.enableApiLogInterceptor,
+      'cloud_logging_service':
+          _$CloudLoggingServiceEnumMap[instance.cloudLoggingService]!,
       'sentry_config': instance.sentryConfig,
+      'datadog_config': instance.datadogConfig,
       'push_notifications_service_type': _$PushNotificationsServiceTypeEnumMap[
           instance.pushNotificationsServiceType]!,
       'internal_notifications_service_type':
@@ -67,6 +75,13 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
       'debug_panel_color':
           EnvironmentConfig._colorToJson(instance.debugPanelColor),
     };
+
+const _$CloudLoggingServiceEnumMap = {
+  CloudLoggingService.noService: 'no_service',
+  CloudLoggingService.sentry: 'sentry',
+  CloudLoggingService.datadog: 'datadog',
+  CloudLoggingService.firebase: 'firebase',
+};
 
 const _$PushNotificationsServiceTypeEnumMap = {
   PushNotificationsServiceType.local: 'local',

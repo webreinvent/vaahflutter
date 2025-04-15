@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'logging.g.dart';
+part 'sentry_logging.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.snake)
 class SentryConfig {

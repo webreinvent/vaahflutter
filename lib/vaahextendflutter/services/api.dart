@@ -424,7 +424,9 @@ abstract class Api {
             "handle-response-error",
             throwable: catchErr,
             stackTrace: stackTrace,
-            hint: error.response,
+            hint: {
+              'info': error.response,
+            },
           );
 
           final Map<String, dynamic> response = error.response?.data as Map<String, dynamic>;

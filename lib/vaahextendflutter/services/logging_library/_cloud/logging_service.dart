@@ -1,23 +1,34 @@
+import 'package:flutter/material.dart';
 import '../models/log.dart';
 
 abstract class LoggingService {
-  static logEvent({
+  Future<Widget> init({
+    required Widget app,
+  });
+
+  void logEvent({
     required String message,
     required EventType type,
-    Object? data,
-  }) =>
-      UnimplementedError();
+    Map<String, dynamic>? data,
+  });
 
-  static logException(
+  void logException(
     dynamic throwable, {
-    dynamic stackTrace,
-    dynamic hint,
-  }) =>
-      UnimplementedError();
+    StackTrace? stackTrace,
+    Map<String, dynamic>? hint,
+  });
 
-  static logTransaction({
+  Future<void> logTransaction({
     required Function execute,
     required TransactionDetails details,
-  }) async =>
-      UnimplementedError();
+  });
+
+  void setUserInfo({
+    String? id,
+    String? name,
+    String? email,
+    Map<String, dynamic>? metaData,
+  });
+
+  void unsetUserInfo();
 }

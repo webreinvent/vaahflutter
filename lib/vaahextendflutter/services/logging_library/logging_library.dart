@@ -1,20 +1,49 @@
+import 'package:datadog_flutter_plugin/datadog_flutter_plugin.dart';
+import 'package:flutter/material.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
+
 import '../../env/env.dart';
+import '_cloud/datadog_logging_service.dart';
 import '_cloud/firebase_logging_service.dart';
+import '_cloud/logging_service.dart';
 import '_cloud/sentry_logging_service.dart';
 import '_local/console_service.dart';
 import 'models/log.dart';
 
 class Log {
-  static final EnvironmentConfig _config = EnvironmentConfig.getConfig;
+  static EnvironmentConfig get _config => EnvironmentConfig.getConfig;
+  static LoggingService? _loggingService;
 
-  static final List<Type> _services = [
-    SentryLoggingService,
-    FirebaseLoggingService,
+  static List<NavigatorObserver> navigatorObservers = [
+    if (_config.cloudLoggingServiceType(isFirebaseConfigured: false).isSentry) ...[
+      SentryNavigatorObserver(),
+    ] else if (_config.cloudLoggingServiceType(isFirebaseConfigured: false).isDatadog) ...[
+      DatadogNavigationObserver(
+        datadogSdk: DataDogLoggingService.datadogSdk ?? DatadogSdk.instance,
+      )
+    ]
   ];
+
+  static Future<Widget> init({
+    required CloudLoggingService cloudLogging,
+    required Widget app,
+  }) async {
+    if (cloudLogging.isSentry) {
+      _loggingService = SentryLoggingService();
+    } else if (cloudLogging.isDatadog) {
+      _loggingService = DataDogLoggingService();
+    } else if (cloudLogging.isFirebase) {
+      _loggingService = FirebaseLoggingService();
+    }
+
+    final updatedApp = await _loggingService?.init(app: app);
+
+    return updatedApp ?? app;
+  }
 
   static void log(
     String message, {
-    Object? data,
+    Map<String, dynamic>? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
@@ -22,13 +51,17 @@ class Log {
       Console.log(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(message, data: data, type: EventType.log);
+      _logEvent(
+        message,
+        data: data,
+        type: EventType.log,
+      );
     }
   }
 
   static void info(
     String message, {
-    Object? data,
+    Map<String, dynamic>? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
@@ -36,13 +69,17 @@ class Log {
       Console.info(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(message, data: data, type: EventType.info);
+      _logEvent(
+        message,
+        data: data,
+        type: EventType.info,
+      );
     }
   }
 
   static void success(
     String message, {
-    Object? data,
+    Map<String, dynamic>? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
@@ -50,13 +87,17 @@ class Log {
       Console.success(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(message, data: data, type: EventType.success);
+      _logEvent(
+        message,
+        data: data,
+        type: EventType.success,
+      );
     }
   }
 
   static void warning(
     String message, {
-    Object? data,
+    Map<String, dynamic>? data,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
   }) {
@@ -64,18 +105,34 @@ class Log {
       Console.warning(message, data: data);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      _logEvent(message, data: data, type: EventType.warning);
+      _logEvent(
+        message,
+        data: data,
+        type: EventType.warning,
+      );
     }
+  }
+
+  static void _logEvent(
+    String message, {
+    Map<String, dynamic>? data,
+    EventType? type,
+  }) {
+    _loggingService?.logEvent(
+      message: message,
+      data: data,
+      type: type ?? EventType.info,
+    );
   }
 
   static void exception(
     String message, {
-    Object? throwable,
+    dynamic throwable,
     StackTrace? stackTrace,
-    dynamic hint,
+    Map<String, dynamic>? hint,
     bool disableLocalLogging = false,
     bool disableCloudLogging = false,
-  }) {
+  }) async {
     if (_config.enableLocalLogs && !disableLocalLogging) {
       Console.danger(
         message,
@@ -85,32 +142,57 @@ class Log {
       );
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      for (final service in _services) {
-        switch (service) {
-          case const (SentryLoggingService):
-            SentryLoggingService.logException(
-              message,
-              throwable: throwable,
-              stackTrace: stackTrace,
-              hint: hint,
-            );
-            return;
-          case const (FirebaseLoggingService):
-            FirebaseLoggingService.logException(
-              message,
-              throwable: throwable,
-              stackTrace: stackTrace,
-              hint: hint,
-            );
-            return;
-          default:
-            return;
-        }
-      }
+      final hintWithData = {
+        'hint': hint,
+        'message': message,
+      };
+      _loggingService?.logException(
+        throwable,
+        hint: hintWithData,
+        stackTrace: stackTrace,
+      );
     }
   }
 
-  static logTransaction({
+  static Future<void> setUserInfo({
+    bool disableLocalLogging = false,
+    bool disableCloudLogging = false,
+    required String id,
+    required String name,
+    required String email,
+    Map<String, dynamic> metaData = const {},
+  }) async {
+    if (_config.enableLocalLogs && !disableLocalLogging) {
+      Console.info(
+        name,
+        data: metaData,
+      );
+    }
+    if (_config.enableCloudLogs && !disableCloudLogging) {
+      _loggingService?.setUserInfo(
+        id: id,
+        name: name,
+        email: email,
+        metaData: metaData,
+      );
+    }
+  }
+
+  static void unsetUserInfo({
+    String? id,
+    bool disableLocalLogging = false,
+    bool disableCloudLogging = false,
+  }) {
+    _loggingService?.unsetUserInfo();
+
+    if (_config.enableLocalLogs && !disableLocalLogging) {
+      Console.info(
+        'User info successfully cleared.',
+      );
+    }
+  }
+
+  static Future<void> logTransaction({
     required Function execute,
     required TransactionDetails details,
     bool disableLocalLogging = false,
@@ -120,51 +202,10 @@ class Log {
       Console.logTransaction(execute: execute, details: details);
     }
     if (_config.enableCloudLogs && !disableCloudLogging) {
-      for (final service in _services) {
-        switch (service) {
-          case const (SentryLoggingService):
-            SentryLoggingService.logTransaction(
-              execute: execute,
-              details: details,
-            );
-            return;
-          case const (FirebaseLoggingService):
-            FirebaseLoggingService.logTransaction(
-              execute: execute,
-              details: details,
-            );
-            return;
-          default:
-            return;
-        }
-      }
-    }
-  }
-
-  static void _logEvent(
-    String message, {
-    Object? data,
-    EventType? type,
-  }) {
-    for (final service in _services) {
-      switch (service) {
-        case const (SentryLoggingService):
-          SentryLoggingService.logEvent(
-            message,
-            data: data,
-            level: type?.toSentryLevel,
-          );
-          return;
-        case const (FirebaseLoggingService):
-          FirebaseLoggingService.logEvent(
-            message,
-            data: data,
-            type: type,
-          );
-          return;
-        default:
-          return;
-      }
+      _loggingService?.logTransaction(
+        execute: execute,
+        details: details,
+      );
     }
   }
 }
