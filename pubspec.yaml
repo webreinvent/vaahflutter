@@ -1,0 +1,21 @@
+name: vaahflutter
+description: "Essentials for every flutter app"
+version: 0.0.1
+homepage: https://github.com/webreinvent/vaahflutter
+
+environment:
+  sdk: ^3.8.1
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  assets:
+    - assets/
