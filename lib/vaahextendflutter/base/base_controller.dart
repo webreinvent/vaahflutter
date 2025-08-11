@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
+import '../services/http_overrides.dart';
 import '../services/logging_library/logging_library.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
@@ -20,6 +21,8 @@ class BaseController extends GetxController {
     FirebaseOptions? firebaseOptions,
   }) async {
     try {
+      HttpOverridesSetup.setupProxyOverrides();
+
       // Storage initialization to store some properties locally
       await GetStorage.init();
 

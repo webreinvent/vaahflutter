@@ -5,14 +5,21 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../models/user.dart';
+import '../services/http_overrides.dart';
 
-const String userKey = 'user';
+const String _userKey = 'user';
+const String _proxyKey = 'proxy';
 
 class RootAssetsController extends GetxController {
   RootAssetsController() {
-    if (_storage.hasData(userKey)) {
-      final String rawUser = _storage.read(userKey);
-      _user = User.fromJson(jsonDecode(rawUser));
+    _proxy = _storage.read(_proxyKey);
+    HttpOverridesSetup.setProxyService(_proxy);
+    if (_storage.hasData(_userKey)) {
+      _user = User.fromJson(
+        jsonDecode(
+          _storage.read(_userKey),
+        ),
+      );
     }
   }
 
@@ -24,9 +31,18 @@ class RootAssetsController extends GetxController {
   Stream<User?> get userStream => _userStreamController.stream;
 
   void setUser(User? updatedUser) async {
-    await _storage.write(userKey, jsonEncode(user?.toJson()));
+    await _storage.write(_userKey, jsonEncode(user?.toJson()));
     _user = updatedUser;
     _userStreamController.add(user);
+    update();
+  }
+
+  String? _proxy;
+  String? get proxy => _proxy;
+  set proxy(String? updatedProxy) {
+    _proxy = (updatedProxy?.isNotEmpty ?? false) ? updatedProxy : null;
+    _storage.write(_proxyKey, _proxy);
+    HttpOverridesSetup.setProxyService(_proxy);
     update();
   }
 

@@ -8,10 +8,14 @@
 // *****************************************
 
 import 'package:flutter/material.dart';
-
+import 'package:get/get.dart';
 import '../app_theme.dart';
+import '../base/root_assets_controller.dart';
 import '../env/env.dart';
+import '../env/notification.dart';
 import '../helpers/constants.dart';
+import 'atoms/buttons.dart';
+import 'atoms/input_text.dart';
 
 const double constHandleWidth = 180.0; // tag handle width
 const double constHandleHeight = 38.0; // tag handle height
@@ -313,8 +317,15 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                     },
                                                   ),
                                                 ),
+                                                if (_environmentConfig.oneSignalConfig != null) ...[
+                                                  verticalMargin24,
+                                                  _NotificationSection(
+                                                    oneSignalConfig:
+                                                        _environmentConfig.oneSignalConfig!,
+                                                  ),
+                                                ],
                                                 verticalMargin24,
-                                                _NotificationSection(config: _environmentConfig),
+                                                const _ProxySection(),
                                                 verticalMargin24,
                                               ],
                                             ),
@@ -495,32 +506,79 @@ class _PanelBorder extends ShapeBorder {
 }
 
 class _NotificationSection extends StatelessWidget {
-  final EnvironmentConfig config;
+  final OneSignalConfig oneSignalConfig;
 
   const _NotificationSection({
-    required this.config,
+    required this.oneSignalConfig,
   });
 
   @override
   Widget build(BuildContext context) {
-    return config.oneSignalConfig == null || config.oneSignalConfig!.appId.isEmpty
-        ? emptyWidget
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Notification Section'),
-              verticalMargin8,
-              _ShowDetails(
-                contentHolder: PanelDataContentHolder(
-                  content: {
-                    'One Signal App Id': Data(value: config.oneSignalConfig?.appId),
-                  },
-                ),
-              ),
-            ],
-          );
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text('Notification Section'),
+        verticalMargin8,
+        _ShowDetails(
+          contentHolder: PanelDataContentHolder(
+            content: {
+              'One Signal App Id': Data(value: oneSignalConfig.appId),
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ProxySection extends StatefulWidget {
+  const _ProxySection();
+
+  @override
+  State<_ProxySection> createState() => _ProxySectionState();
+}
+
+class _ProxySectionState extends State<_ProxySection> {
+  final TextEditingController _controller = TextEditingController();
+  final RootAssetsController _assetController = Get.find<RootAssetsController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.text = _assetController.proxy ?? '';
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: InputText(
+            controller: _controller,
+            label: 'Proxy',
+          ),
+        ),
+        horizontalMargin8,
+        ButtonElevated(
+          text: 'Save',
+          borderRadius: defaultPadding * 0.75,
+          foregroundColor: AppTheme.colors['white'],
+          backgroundColor: AppTheme.colors['primary'],
+          onPressed: () => _assetController.proxy = _controller.text,
+        ),
+      ],
+    );
   }
 }
 
