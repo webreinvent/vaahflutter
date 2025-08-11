@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:vaahflutter/vaahflutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await VaahEnv.init();
   runApp(const MyApp());
 }
 
@@ -24,7 +27,24 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('VaahFlutter')),
-      body: const Center(child: Text('Hello World!')),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Spacer(),
+              const SizedBox(height: 12),
+              Center(
+                child: Text(
+                  'Version: ${VaahEnv.instance.data.appVersion} (${VaahEnv.instance.data.buildNumber})',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
