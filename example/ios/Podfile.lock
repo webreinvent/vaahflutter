@@ -1,21 +1,80 @@
 PODS:
+  - datadog_flutter_plugin (0.0.1):
+    - DatadogCore (= 2.30.0)
+    - DatadogCrashReporting (= 2.30.0)
+    - DatadogInternal (= 2.30.0)
+    - DatadogLogs (= 2.30.0)
+    - DatadogRUM (= 2.30.0)
+    - DictionaryCoder (= 1.2.0)
+    - Flutter
+  - DatadogCore (2.30.0):
+    - DatadogInternal (= 2.30.0)
+  - DatadogCrashReporting (2.30.0):
+    - DatadogInternal (= 2.30.0)
+    - PLCrashReporter (~> 1.12.0)
+  - DatadogInternal (2.30.0)
+  - DatadogLogs (2.30.0):
+    - DatadogInternal (= 2.30.0)
+  - DatadogRUM (2.30.0):
+    - DatadogInternal (= 2.30.0)
+  - DictionaryCoder (1.2.0)
   - Flutter (1.0.0)
   - package_info_plus (0.4.5):
     - Flutter
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - PLCrashReporter (1.12.0)
+  - Sentry/HybridSDK (8.52.1)
+  - sentry_flutter (9.6.0):
+    - Flutter
+    - FlutterMacOS
+    - Sentry/HybridSDK (= 8.52.1)
 
 DEPENDENCIES:
+  - datadog_flutter_plugin (from `.symlinks/plugins/datadog_flutter_plugin/ios`)
   - Flutter (from `Flutter`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - sentry_flutter (from `.symlinks/plugins/sentry_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - DatadogCore
+    - DatadogCrashReporting
+    - DatadogInternal
+    - DatadogLogs
+    - DatadogRUM
+    - DictionaryCoder
+    - PLCrashReporter
+    - Sentry
 
 EXTERNAL SOURCES:
+  datadog_flutter_plugin:
+    :path: ".symlinks/plugins/datadog_flutter_plugin/ios"
   Flutter:
     :path: Flutter
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  sentry_flutter:
+    :path: ".symlinks/plugins/sentry_flutter/ios"
 
 SPEC CHECKSUMS:
+  datadog_flutter_plugin: 52c9877fbf3feae699a36868b32ea4f6ca979e37
+  DatadogCore: 5c01290a3b60b27bf49aa958f2e339c738364d9e
+  DatadogCrashReporting: 11286d48ab61baeb2b41b945c7c0d4ef23db317d
+  DatadogInternal: 7aeb48e254178a0c462c3953dc0a8a8d64499a93
+  DatadogLogs: 4324739de62a6059e07d70bf6ceceed78764edeb
+  DatadogRUM: f36949a38285f3b240a7be577d425f8518e087d4
+  DictionaryCoder: f7115fcd074c8301e91f2eb862da1ea7d0385e61
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
+  PLCrashReporter: db59ef96fa3d25f3650040d02ec2798cffee75f2
+  Sentry: 2cbbe3592f30050c60e916c63c7f5a2fa584005e
+  sentry_flutter: 9b1e3e6934cb7040ffb71383c95a35f73523180c
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 
