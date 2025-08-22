@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaahflutter/vaahflutter.dart';
+import 'package:vaahflutterexample/widgets/notificiation_permission_section.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -139,6 +140,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
+              NotificationPermissionSection(),
               const Spacer(),
               const SizedBox(height: 12),
               Center(
