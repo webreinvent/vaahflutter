@@ -1,4 +1,5 @@
 import '../models/logs/log_config.dart';
+import '../models/push_notifications/push_notifications_config.dart';
 
 class VaahEnvData {
   const VaahEnvData({
@@ -8,6 +9,7 @@ class VaahEnvData {
     required this.appVersion,
     required this.buildNumber,
     required this.loggerConfig,
+    this.pushNotificationsConfig,
   });
 
   final String env;
@@ -16,4 +18,5 @@ class VaahEnvData {
   final String appVersion;
   final String buildNumber;
   final LoggerConfig loggerConfig;
+  final PushNotificationsConfig? pushNotificationsConfig;
 }

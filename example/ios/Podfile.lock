@@ -19,6 +19,55 @@ PODS:
     - DatadogInternal (= 2.30.0)
   - DictionaryCoder (1.2.0)
   - Flutter (1.0.0)
+  - onesignal_flutter (5.3.4):
+    - Flutter
+    - OneSignalXCFramework (= 5.2.14)
+  - OneSignalXCFramework (5.2.14):
+    - OneSignalXCFramework/OneSignalComplete (= 5.2.14)
+  - OneSignalXCFramework/OneSignal (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalLiveActivities
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalComplete (5.2.14):
+    - OneSignalXCFramework/OneSignal
+    - OneSignalXCFramework/OneSignalInAppMessages
+    - OneSignalXCFramework/OneSignalLocation
+  - OneSignalXCFramework/OneSignalCore (5.2.14)
+  - OneSignalXCFramework/OneSignalExtension (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalInAppMessages (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLiveActivities (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalLocation (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalUser
+  - OneSignalXCFramework/OneSignalNotifications (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalExtension
+    - OneSignalXCFramework/OneSignalOutcomes
+  - OneSignalXCFramework/OneSignalOSCore (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalOutcomes (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+  - OneSignalXCFramework/OneSignalUser (5.2.14):
+    - OneSignalXCFramework/OneSignalCore
+    - OneSignalXCFramework/OneSignalNotifications
+    - OneSignalXCFramework/OneSignalOSCore
+    - OneSignalXCFramework/OneSignalOutcomes
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -36,6 +85,7 @@ PODS:
 DEPENDENCIES:
   - datadog_flutter_plugin (from `.symlinks/plugins/datadog_flutter_plugin/ios`)
   - Flutter (from `Flutter`)
+  - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
@@ -49,6 +99,7 @@ SPEC REPOS:
     - DatadogLogs
     - DatadogRUM
     - DictionaryCoder
+    - OneSignalXCFramework
     - PLCrashReporter
     - Sentry
 
@@ -57,6 +108,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/datadog_flutter_plugin/ios"
   Flutter:
     :path: Flutter
+  onesignal_flutter:
+    :path: ".symlinks/plugins/onesignal_flutter/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
@@ -75,6 +128,8 @@ SPEC CHECKSUMS:
   DatadogRUM: f36949a38285f3b240a7be577d425f8518e087d4
   DictionaryCoder: f7115fcd074c8301e91f2eb862da1ea7d0385e61
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  onesignal_flutter: 3a2b51f9262c851166a882a553d71a8ccec4e29c
+  OneSignalXCFramework: 7112f3e89563e41ebc23fe807788f11985ac541c
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d

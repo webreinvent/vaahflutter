@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../models/logs/log_config.dart';
+import '../models/push_notifications/push_notifications_config.dart';
 import 'env_data.dart';
 
 export 'env_data.dart';
@@ -23,9 +24,9 @@ class VaahEnv {
   }
 
   static Future<void> init() async {
-    const String rawConfig = String.fromEnvironment('ENV_CONFIG', defaultValue: '');
+    const String configFile = String.fromEnvironment('ENV_CONFIG', defaultValue: '');
     final dynamic decodedConfig = jsonDecode(
-      await rootBundle.loadString('$_filePathPrefix/$rawConfig'),
+      await rootBundle.loadString('$_filePathPrefix/$configFile'),
     );
 
     final String env = decodedConfig['env'] ?? 'development';
@@ -38,6 +39,16 @@ class VaahEnv {
       loggerConfig = const LoggerConfig();
     }
 
+    PushNotificationsConfig? pushNotificationsConfig;
+    if (decodedConfig['push_notifications_config'] != null &&
+        decodedConfig['push_notifications_config'] is Map<String, dynamic>) {
+      pushNotificationsConfig = PushNotificationsConfig.fromJson(
+        (decodedConfig['push_notifications_config'] as Map).cast<String, dynamic>(),
+      );
+    } else {
+      pushNotificationsConfig = null;
+    }
+
     final info = await PackageInfo.fromPlatform();
 
     instance._data = VaahEnvData(
@@ -47,6 +58,7 @@ class VaahEnv {
       appVersion: info.version,
       buildNumber: info.buildNumber,
       loggerConfig: loggerConfig,
+      pushNotificationsConfig: pushNotificationsConfig,
     );
   }
 }

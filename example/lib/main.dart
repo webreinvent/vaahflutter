@@ -46,6 +46,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logger = VaahLogger();
+    final pushNotifications = VaahPushNotifications();
     return Scaffold(
       appBar: AppBar(title: const Text('VaahFlutter')),
       body: SafeArea(
@@ -141,6 +142,48 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               NotificationPermissionSection(),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pushNotifications.grantConsent();
+                      },
+                      child: const Text('Grant Push Consent'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pushNotifications.revokeConsent();
+                      },
+                      child: const Text('Revoke Push Consent'),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pushNotifications.bindUser(User(id: '1', name: 'John Doe'));
+                      },
+                      child: const Text('Bind Push User'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        pushNotifications.unbindUser();
+                      },
+                      child: const Text('Unbind Push User'),
+                    ),
+                  ),
+                ],
+              ),
               const Spacer(),
               const SizedBox(height: 12),
               Center(

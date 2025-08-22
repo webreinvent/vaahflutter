@@ -23,6 +23,9 @@ dependencies:
   # Permission Manager
   permission_handler: ^11.0.0
 
+  # Push Notifications
+  onesignal_flutter: ^5.3.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
