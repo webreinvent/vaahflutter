@@ -20,6 +20,9 @@ dependencies:
   sentry_flutter: ^9.6.0
   datadog_flutter_plugin: ^2.12.0
 
+  # Permission Manager
+  permission_handler: ^11.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
