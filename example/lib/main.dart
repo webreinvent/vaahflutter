@@ -1,27 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vaahflutter/vaahflutter.dart';
+import 'package:vaahflutterexample/models/user.dart';
 import 'package:vaahflutterexample/widgets/notificiation_permission_section.dart';
+import 'package:vaahflutterexample/widgets/push_notification_section.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await VaahEnv.init();
   await VaahLogger().wrapAppRunner(appRunner: () => runApp(const MyApp()));
-}
-
-class User implements VaahUser {
-  const User({required this.id, this.email, this.username, this.name});
-
-  @override
-  final String id;
-
-  @override
-  final String? email;
-
-  @override
-  final String? username;
-
-  @override
-  final String? name;
 }
 
 class MyApp extends StatelessWidget {
@@ -46,7 +32,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logger = VaahLogger();
-    final pushNotifications = VaahPushNotifications();
+    final user = User(id: 'abc123', name: 'John Doe');
     return Scaffold(
       appBar: AppBar(title: const Text('VaahFlutter')),
       body: SafeArea(
@@ -61,7 +47,7 @@ class HomePage extends StatelessWidget {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
-                        logger.bindUser(User(id: '1', name: 'John Doe'));
+                        logger.bindUser(user);
                       },
                       child: const Text('Bind User'),
                     ),
@@ -141,49 +127,8 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
-              NotificationPermissionSection(),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        pushNotifications.grantConsent();
-                      },
-                      child: const Text('Grant Push Consent'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        pushNotifications.revokeConsent();
-                      },
-                      child: const Text('Revoke Push Consent'),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        pushNotifications.bindUser(User(id: '1', name: 'John Doe'));
-                      },
-                      child: const Text('Bind Push User'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        pushNotifications.unbindUser();
-                      },
-                      child: const Text('Unbind Push User'),
-                    ),
-                  ),
-                ],
-              ),
+              const NotificationPermissionSection(),
+              const PushNotificationSection(),
               const Spacer(),
               const SizedBox(height: 12),
               Center(
