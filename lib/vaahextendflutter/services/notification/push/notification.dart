@@ -95,18 +95,10 @@ abstract class PushNotifications {
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.remote:
-        await RemoteNotifications.subscribe(
-          userid: userid,
-          email: email,
-          phone: phone,
-        );
+        await RemoteNotifications.subscribe();
         return;
       case PushNotificationsServiceType.both:
-        await RemoteNotifications.subscribe(
-          userid: userid,
-          email: email,
-          phone: phone,
-        );
+        await RemoteNotifications.subscribe();
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.none:

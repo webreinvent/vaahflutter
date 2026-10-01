@@ -11,8 +11,8 @@ For More Info Please Check: [docs.vaah.dev/vaahflutter](https://docs.vaah.dev/va
 Project requires Dart and flutter versions:
 
 ```yaml
-  sdk: ">=2.19.6"
-  flutter: ">=3.7.11"
+  sdk: ">=3.1.0"
+  flutter: ">=3.47.5"
 ```
 
 To change minimum requirement of dart and flutter change the `sdk and flutter` versions under `environment` in the `pubspec.yaml` file.
