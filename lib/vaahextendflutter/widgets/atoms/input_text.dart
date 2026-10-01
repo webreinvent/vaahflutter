@@ -18,10 +18,10 @@ class InputText extends StatelessWidget {
   final AutovalidateMode? autoValidateMode;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
-  final IconData? prefixIcon;
+  final FaIconData? prefixIcon;
   final Color? prefixIconColor;
   final Function()? prefixOnTap;
-  final IconData? suffixIcon;
+  final FaIconData? suffixIcon;
   final Color? suffixIconColor;
   final Function()? suffixOnTap;
   final int? minLines;

@@ -82,7 +82,7 @@ class ButtonElevated extends StatelessWidget {
 class ButtonElevatedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? backgroundColor;
@@ -191,7 +191,7 @@ class ButtonOutlined extends StatelessWidget {
 class ButtonOutlinedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -297,7 +297,7 @@ class ButtonText extends StatelessWidget {
 class ButtonTextWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -351,7 +351,7 @@ class ButtonTextWithIcon extends StatelessWidget {
 
 class ButtonIcon extends StatelessWidget {
   final OnPressed onPressed;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonType? buttonType;
   final Color? color;
   final Color? backgroundColor;

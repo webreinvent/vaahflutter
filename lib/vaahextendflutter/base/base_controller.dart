@@ -47,9 +47,8 @@ class BaseController extends GetxController {
       // Sentry Initialization (And/ Or) Running main app
       if (null != config.sentryConfig && config.sentryConfig!.dsn.isNotEmpty) {
         await SentryFlutter.init(
-          (options) => options
+              (options) => options
             ..dsn = config.sentryConfig!.dsn
-            ..autoAppStart = config.sentryConfig!.autoAppStart
             ..tracesSampleRate = config.sentryConfig!.tracesSampleRate
             ..enableAutoPerformanceTracing = config.sentryConfig!.enableAutoPerformanceTracing
             ..enableUserInteractionTracing = config.sentryConfig!.enableUserInteractionTracing

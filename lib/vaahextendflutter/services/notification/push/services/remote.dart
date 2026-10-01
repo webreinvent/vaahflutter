@@ -10,17 +10,16 @@ import '../../models/notification.dart';
 
 const String _userIdKey = 'remote_notification_user_id';
 const Map<String, String> channels = {
-  //  Create a channel on One Signal and add id here
+  // Create a channel on One Signal and add id here
   'Primary': 'channel_id'
 };
 
 abstract class RemoteNotifications {
-  static final OneSignal _oneSignal = OneSignal.shared;
   static final EnvironmentConfig _env = EnvironmentConfig.getEnvConfig();
   static final GetStorage _storage = GetStorage();
 
   static final StreamController<String> _userIdStreamController =
-      StreamController<String>.broadcast();
+  StreamController<String>.broadcast();
   static final Stream<String> userIdStream = _userIdStreamController.stream;
 
   static String? get userId => _storage.read(_userIdKey);
@@ -30,10 +29,24 @@ abstract class RemoteNotifications {
     if (_storage.read(_userIdKey) != null) {
       _userIdStreamController.add(_storage.read(_userIdKey));
     }
-    _oneSignal.setSubscriptionObserver(_handleSubscriptionStateChanges);
-    await _oneSignal.setLogLevel(OSLogLevel.warn, OSLogLevel.none);
-    await _oneSignal.setAppId(_env.oneSignalConfig!.appId);
-    _oneSignal.setNotificationOpenedHandler(_handleNotification);
+
+    // Set Log Level in v5
+    OneSignal.Debug.setLogLevel(OSLogLevel.warn);
+
+    // Initialize App in v5
+    OneSignal.initialize(_env.oneSignalConfig!.appId);
+
+    // Listen to push subscription state changes
+    OneSignal.User.pushSubscription.addObserver((state) {
+      final String? currentSubscriptionId = state.current.id;
+      if (currentSubscriptionId != null && currentSubscriptionId.isNotEmpty) {
+        _storage.write(_userIdKey, currentSubscriptionId);
+        _userIdStreamController.add(currentSubscriptionId);
+      }
+    });
+
+    // Listen to notification click events
+    OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
   static void dispose() {
@@ -42,73 +55,37 @@ abstract class RemoteNotifications {
 
   static Future<bool?> askPermission() async {
     if (_env.oneSignalConfig == null) return null;
-    return await _oneSignal.promptUserForPushNotificationPermission();
+    return await OneSignal.Notifications.requestPermission(true);
   }
 
   static Future<void> subscribe() async {
-    await _oneSignal.disablePush(false);
+    OneSignal.User.pushSubscription.optIn();
   }
 
   static Future<void> unsubscribe() async {
-    await _oneSignal.disablePush(true);
+    OneSignal.User.pushSubscription.optOut();
   }
 
+  /// Note: Client-side notification creation is deprecated in OneSignal v5.
+  /// Notifications should be sent via backend API.
   static Future<void> push({
     required PushNotification notification,
     String? channel,
   }) async {
-    assert(notification.playerIds.isNotEmpty);
-    await _oneSignal.postNotification(
-      OSCreateNotification(
-        playerIds: notification.playerIds,
-        heading: notification.heading,
-        content: notification.content,
-        additionalData: {
-          'payload': {
-            'path': notification.payloadPath,
-            'data': notification.payloadData,
-            'auth': notification.payloadAuth,
-          },
-        },
-        buttons: notification.buttons
-            ?.map(
-              (element) => OSActionButton(
-                id: element.id,
-                text: element.text,
-                icon: element.icon,
-              ),
-            )
-            .toList(),
-        bigPicture: notification.imageUrl,
-        iosAttachments: notification.imageUrl == null
-            ? null
-            : {
-                'image': notification.imageUrl!,
-              },
-        androidChannelId: channels[channel],
-        sendAfter: notification.sendAfter,
-      ),
-    );
+    // Client-side postNotification is removed in OneSignal v5 SDK.
+    // Call your backend service endpoint here to dispatch the notification via OneSignal REST API.
   }
 
-  static Future<void> _handleSubscriptionStateChanges(
-    OSSubscriptionStateChanges subscriptionState,
-  ) async {
-    if (subscriptionState.to.userId != null) {
-      await _storage.write(_userIdKey, subscriptionState.to.userId);
-      _userIdStreamController.add(subscriptionState.to.userId!);
-    }
-  }
-
-  static void _handleNotification(OSNotificationOpenedResult openedResult) {
+  static void _handleNotificationClick(OSNotificationClickEvent event) {
     Log.success('Notification Opened', data: {
-      "actionId": openedResult.action?.actionId,
-      "title": openedResult.notification.title,
-      "body": openedResult.notification.body,
-      "additionalData": openedResult.notification.additionalData,
+      "actionId": event.result.actionId,
+      "title": event.notification.title,
+      "body": event.notification.body,
+      "additionalData": event.notification.additionalData,
       "timestamp": DateTime.now().millisecondsSinceEpoch,
     });
-    final dynamic payload = openedResult.notification.additionalData?['payload'];
+
+    final dynamic payload = event.notification.additionalData?['payload'];
     if (payload != null && payload['path'] != null) {
       Get.to(
         payload['path'],
