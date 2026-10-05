@@ -27,13 +27,15 @@ class BaseController extends GetxController {
       EnvironmentConfig.setEnvConfig();
       final EnvironmentConfig config = EnvironmentConfig.getEnvConfig();
 
-      // Initialization of Firebase and Services
+      // Initialization of Firebase
       if (firebaseOptions != null) {
         await Firebase.initializeApp(
           options: firebaseOptions,
         );
-        DynamicLinks.init();
       }
+
+      // Dynamic links use app_links and are independent of Firebase
+      DynamicLinks.init();
 
       // Other Local Initializations (Depends on your app)
       AppTheme.init();

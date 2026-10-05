@@ -47,32 +47,29 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    _flutterLocalNotificationsPlugin.zonedSchedule(
-      notification.id,
-      notification.heading,
-      notification.content,
-      TZDateTime(
-        getLocation('Asia/Kolkata'),
-        scheduledDate.year,
-        scheduledDate.month,
-        scheduledDate.day,
-        scheduledDate.hour,
-        scheduledDate.minute,
-        scheduledDate.second,
-        scheduledDate.millisecond,
-        scheduledDate.microsecond,
-      ),
-      const NotificationDetails(
-        android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
-      ),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: {
-        'path': notification.payloadPath,
-        'data': notification.payloadData,
-        'auth': notification.payloadAuth,
-      }.toString(),
-    );
+    try {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        notification.id,
+        notification.heading,
+        notification.content,
+        TZDateTime.from(scheduledDate, local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
+        ),
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: {
+          'path': notification.payloadPath,
+          'data': notification.payloadData,
+          'auth': notification.payloadAuth,
+        }.toString(),
+      );
+    } catch (e, stackTrace) {
+      // On Android 12+ (API 31+) with targetSdk >= 31, exact alarms require the
+      // USE_EXACT_ALARM (or user-granted SCHEDULE_EXACT_ALARM) permission;
+      // zonedSchedule throws otherwise.
+      Log.exception(e, stackTrace: stackTrace, hint: 'Failed to schedule local notification');
+    }
   }
 
   // static Future<void> _handleSubscriptionStateChanges() async {}
