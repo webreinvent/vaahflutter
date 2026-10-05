@@ -32,10 +32,6 @@ android {
         coreLibraryDesugaringEnabled true
     }
 
-    kotlinOptions {
-        jvmTarget = '11'
-    }
-
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
     }
@@ -53,6 +49,15 @@ android {
         release {
             signingConfig signingConfigs.debug
         }
+    }
+}
+
+// Built-in Kotlin (AGP 9): this top-level `kotlin` extension replaces the
+// legacy `kotlinOptions {}` block that used to live inside `android {}`.
+// It must be a sibling of `android {}`, not nested inside it.
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
     }
 }
 
