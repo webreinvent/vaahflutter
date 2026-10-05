@@ -42,15 +42,27 @@ abstract class DynamicLinks {
   /// Note: Firebase short link generation (`buildShortLink`) no longer works.
   /// You can either generate standard web URLs pointing to your domain or use a
   /// third-party link-shortening API provider.
+  ///
+  /// [domain] must be your real app-link host (the domain configured in your
+  /// Android/iOS app-link manifest, e.g. `app.example.com`). The payload is
+  /// JSON-encoded and then percent-encoded via [Uri.queryParameters] so it
+  /// round-trips correctly through [Uri.queryParameters] on the receiving side
+  /// (see [_decodePayload]).
   static Future<String?> createLink({
+    required String domain,
     required String? path,
     required dynamic data,
     required dynamic auth,
   }) async {
     try {
       final String parameters = jsonEncode({"path": path, "data": data, "auth": auth});
-      // Replace with your actual web domain configured for app links
-      final String generatedUrl = "https://your.domain/deep-link?payload=$parameters";
+      final Uri uri = Uri(
+        scheme: 'https',
+        host: domain,
+        path: 'deep-link',
+        queryParameters: {'payload': parameters},
+      );
+      final String generatedUrl = uri.toString();
 
       Log.info("Generated Link: $generatedUrl");
       return generatedUrl;

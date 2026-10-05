@@ -34,14 +34,15 @@ abstract class RemoteNotifications {
     OneSignal.Debug.setLogLevel(OSLogLevel.warn);
 
     // Initialize App in v5
-    OneSignal.initialize(_env.oneSignalConfig!.appId);
+    await OneSignal.initialize(_env.oneSignalConfig!.appId);
 
-    // Listen to push subscription state changes
-    OneSignal.User.pushSubscription.addObserver((state) {
-      final String? currentSubscriptionId = state.current.id;
-      if (currentSubscriptionId != null && currentSubscriptionId.isNotEmpty) {
-        _storage.write(_userIdKey, currentSubscriptionId);
-        _userIdStreamController.add(currentSubscriptionId);
+    // Listen to the OneSignal user so `userId` holds the user-level ID
+    // (state.current.onesignalId), not the device push-subscription token.
+    OneSignal.User.addObserver((state) {
+      final String? oneSignalId = state.current.onesignalId;
+      if (oneSignalId != null && oneSignalId.isNotEmpty) {
+        _storage.write(_userIdKey, oneSignalId);
+        _userIdStreamController.add(oneSignalId);
       }
     });
 
@@ -72,8 +73,12 @@ abstract class RemoteNotifications {
     required PushNotification notification,
     String? channel,
   }) async {
-    // Client-side postNotification is removed in OneSignal v5 SDK.
-    // Call your backend service endpoint here to dispatch the notification via OneSignal REST API.
+    // Client-side postNotification was removed in OneSignal v5. Pushes must be
+    // dispatched server-side via the OneSignal REST API from your backend.
+    Log.warning(
+      'Remote push unavailable client-side (OneSignal v5); send via backend REST API',
+      data: {'heading': notification.heading, 'channel': channel},
+    );
   }
 
   static void _handleNotificationClick(OSNotificationClickEvent event) {
