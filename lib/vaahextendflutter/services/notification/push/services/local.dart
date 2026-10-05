@@ -14,7 +14,7 @@ abstract class LocalNotifications {
   static Future<void> init() async {
     tz.initializeTimeZones();
     await _flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings(
           'ic_stat_onesignal_default',
         ),
@@ -27,7 +27,6 @@ abstract class LocalNotifications {
         );
       },
     );
-    // _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   }
 
   static void dispose() {}
@@ -49,14 +48,13 @@ abstract class LocalNotifications {
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
     try {
       await _flutterLocalNotificationsPlugin.zonedSchedule(
-        notification.id,
-        notification.heading,
-        notification.content,
-        TZDateTime.from(scheduledDate, local),
-        const NotificationDetails(
+        id: notification.id,
+        title: notification.heading,
+        body: notification.content,
+        scheduledDate: TZDateTime.from(scheduledDate, local),
+        notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
         ),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         payload: {
           'path': notification.payloadPath,
