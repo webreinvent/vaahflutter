@@ -37,4 +37,8 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Exact local notifications on Android 12+ (API 31+) require this;
+         without it, zonedSchedule(exactAllowWhileIdle) throws and the
+         notification is never scheduled. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 </manifest>
