@@ -1,34 +1,62 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
-import '../../../api.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
+const String _userIdKey = 'remote_notification_user_id';
 const Map<String, String> channels = {
-  //  Create a channel on One Signal and add id here
-  'Primary': 'General'
+  // Create a channel on One Signal and add id here
+  'Primary': 'channel_id'
 };
 
 abstract class RemoteNotifications {
   static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
+  static final GetStorage _storage = GetStorage();
+
+  static final StreamController<String> _userIdStreamController =
+  StreamController<String>.broadcast();
+  static final Stream<String> userIdStream = _userIdStreamController.stream;
+
+  static String? get userId => _storage.read(_userIdKey);
 
   static Future<void> init() async {
     if (_env.oneSignalConfig == null) return;
-    await OneSignal.Debug.setLogLevel(OSLogLevel.info);
+    if (_storage.read(_userIdKey) != null) {
+      _userIdStreamController.add(_storage.read(_userIdKey));
+    }
+
+    // Set Log Level in v5
+    OneSignal.Debug.setLogLevel(OSLogLevel.warn);
+
+    // Initialize App in v5
     OneSignal.initialize(_env.oneSignalConfig!.appId);
-    OneSignal.Notifications.addForegroundWillDisplayListener(_handleWillDisplayNotification);
+
+    // Listen to the OneSignal user so `userId` holds the user-level ID
+    // (state.current.onesignalId), not the device push-subscription token.
+    OneSignal.User.addObserver((state) {
+      final String? oneSignalId = state.current.onesignalId;
+      if (oneSignalId != null && oneSignalId.isNotEmpty) {
+        _storage.write(_userIdKey, oneSignalId);
+        _userIdStreamController.add(oneSignalId);
+      }
+    });
+
+    // Listen to notification click events
     OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
-  static void dispose() {}
+  static void dispose() {
+    _userIdStreamController.close();
+  }
 
   static Future<bool?> askPermission() async {
     if (_env.oneSignalConfig == null) return null;
-    return await OneSignal.Notifications.requestPermission(false);
+    return await OneSignal.Notifications.requestPermission(true);
   }
 
   static Future<void> subscribe({
@@ -36,77 +64,42 @@ abstract class RemoteNotifications {
     String? email,
     String? phone,
   }) async {
-    OneSignal.login(userid);
-    if (email != null) OneSignal.User.addEmail(email);
-    if (phone != null) OneSignal.User.addSms(phone);
+    // Link the device to the app user so user-targeted pushes work.
+    await OneSignal.login(userid);
+    if (email != null) await OneSignal.User.addEmail(email);
+    if (phone != null) await OneSignal.User.addSms(phone);
+    OneSignal.User.pushSubscription.optIn();
   }
 
   static Future<void> unsubscribe() async {
+    OneSignal.User.pushSubscription.optOut();
     await OneSignal.logout();
   }
 
+  /// Note: Client-side notification creation is deprecated in OneSignal v5.
+  /// Notifications should be sent via backend API.
   static Future<void> push({
     required PushNotification notification,
     String? channel,
   }) async {
-    final appId = _env.oneSignalConfig?.appId;
-    final apiKey = _env.oneSignalConfig?.apiKey;
-    if (appId == null || apiKey == null) {
-      Log.warning("No app id/ api key is found!");
-      return;
-    }
-    await Api.ajax(
-      url: "https://onesignal.com/api/v1/notifications",
-      method: "post",
-      headers: [
-        {
-          "Content-Type": "application/json",
-          "Authorization": "Basic $apiKey",
-        },
-      ],
-      params: {
-        "app_id": appId,
-        "include_aliases": {
-          "external_id": notification.externalIds,
-        },
-        "target_channel": channel ?? "General",
-        "headings": {
-          "en": notification.heading,
-        },
-        "contents": {
-          "en": notification.content,
-        },
-        "data": {
-          "payload": {
-            "auth": notification.payloadAuth,
-            "path": notification.payloadPath,
-            "data": notification.payloadData,
-          },
-        },
-        "big_picture": notification.imageUrl,
-        "ios_attachments": notification.imageUrl == null
-            ? null
-            : {
-                'image': notification.imageUrl!,
-              },
-      },
+    // Client-side postNotification was removed in OneSignal v5. Pushes must be
+    // dispatched server-side via the OneSignal REST API from your backend.
+    Log.warning(
+      'Remote push unavailable client-side (OneSignal v5); send via backend REST API',
+      data: {'heading': notification.heading, 'channel': channel},
     );
   }
 
-  static void _handleWillDisplayNotification(OSNotificationWillDisplayEvent result) {}
+  static void _handleNotificationClick(OSNotificationClickEvent event) {
+    Log.success('Notification Opened', data: {
+      "actionId": event.result.actionId,
+      "title": event.notification.title,
+      "body": event.notification.body,
+      "additionalData": event.notification.additionalData,
+      "timestamp": DateTime.now().millisecondsSinceEpoch,
+    });
 
-  static void _handleNotificationClick(OSNotificationClickEvent openedResult) {
-    Log.success(
-      'Notification Opened',
-      data: {
-        "actionId": openedResult.result.actionId,
-        "title": openedResult.notification.title,
-        "body": openedResult.notification.body,
-        "additionalData": openedResult.notification.additionalData,
-        "timestamp": DateTime.now().millisecondsSinceEpoch,
-      },
-    );
-    final dynamic payload = openedResult.notification.additionalData?['payload'];
+    final dynamic payload = event.notification.additionalData?['payload'];
     if (payload != null && payload['path'] != null) {
       Get.to(
         payload['path'],

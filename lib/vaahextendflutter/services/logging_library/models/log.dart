@@ -20,8 +20,6 @@ extension EventTypeExtension on EventType {
         return SentryLevel.info;
       case EventType.warning:
         return SentryLevel.warning;
-      default:
-        return null;
     }
   }
 }

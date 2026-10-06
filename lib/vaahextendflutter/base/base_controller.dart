@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
+import '../services/dynamic_links.dart';
 import '../services/logging_library/logging_library.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
@@ -34,6 +35,10 @@ class BaseController extends GetxController {
         );
       }
 
+      // Dynamic links use app_links and are independent of Firebase
+      DynamicLinks.init();
+
+      // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
 
