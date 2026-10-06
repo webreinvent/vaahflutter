@@ -203,7 +203,6 @@ extension DateExtensions on int {
       case TimeZone.local:
         return localDateTime;
       case TimeZone.utc:
-      default:
         return utcDateTime;
     }
   }
