@@ -110,6 +110,8 @@ class DataDogLoggingService implements LoggingService {
     String? email,
     Map<String, dynamic>? metaData,
   }) {
+    // DataDog 3.x requires a non-null user id; skip when none is provided.
+    if (id == null) return;
     datadogSdk?.setUserInfo(
       id: id,
       name: name,
@@ -120,11 +122,7 @@ class DataDogLoggingService implements LoggingService {
 
   @override
   void unsetUserInfo() async {
-    datadogSdk?.setUserInfo(
-      id: null,
-      name: null,
-      email: null,
-      extraInfo: {},
-    );
+    // DataDog 3.x replaces the old setUserInfo(id: null) with clearUserInfo().
+    datadogSdk?.clearUserInfo();
   }
 }
