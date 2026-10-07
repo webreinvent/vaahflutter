@@ -219,6 +219,9 @@ abstract class DynamicLinks {
 /// app must validate it against its own route allowlist before navigating.
 /// [data] and [auth] are the payload's content fields.
 class DeepLink {
+  /// The full link, **including the query string**. The query carries the
+  /// payload (incl. `auth`), so do not log `uri` or forward it to analytics —
+  /// use [origin] for anything that gets written down.
   final Uri uri;
   final String? path;
   final Object? data;
