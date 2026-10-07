@@ -19,7 +19,8 @@ abstract class DynamicLinks {
   // Single-subscription on purpose: the initial cold-start link is emitted
   // before the app subscribes (post-`runApp`), and a non-broadcast controller
   // buffers that event until the first listener attaches instead of dropping it.
-  static final StreamController<DeepLink> _dynamicLinksStreamController =
+  // Not final so [dispose] can recreate it, keeping the service re-initializable.
+  static StreamController<DeepLink> _dynamicLinksStreamController =
       StreamController<DeepLink>();
 
   /// Links decoded by this service. The app listens to this and navigates.
@@ -28,8 +29,11 @@ abstract class DynamicLinks {
 
   /// Decodes the initial cold-start link (if any) and subscribes to incoming
   /// links. Both are emitted on [dynamicLinksStream]; this method never
-  /// navigates.
+  /// navigates. A no-op if already initialized.
   static Future<void> init() async {
+    // Guard against double-init (tests, hot restart): a second call would
+    // otherwise re-emit the initial link and leak a second subscription.
+    if (_linkSubscription != null) return;
     try {
       // 1. Emit the initial link if the app was opened from a cold start via a
       //    link. It is buffered on the stream until the app subscribes after
@@ -41,7 +45,7 @@ abstract class DynamicLinks {
 
       // 2. Listen for incoming links while the app is in the background or
       //    foreground.
-      _linkSubscription ??= _appLinks.uriLinkStream.listen(
+      _linkSubscription = _appLinks.uriLinkStream.listen(
         _emit,
         onError: (error, stackTrace) {
           Log.exception(
@@ -60,10 +64,14 @@ abstract class DynamicLinks {
     }
   }
 
+  /// Tears down the stream subscription and closes the link stream. Recreates
+  /// the controller so [init] can be called again (tests, hot restart) without
+  /// hitting a closed-controller StateError.
   static void dispose() {
     _linkSubscription?.cancel();
     _linkSubscription = null;
     _dynamicLinksStreamController.close();
+    _dynamicLinksStreamController = StreamController<DeepLink>();
   }
 
   /// Note: Firebase short link generation (`buildShortLink`) no longer works.
@@ -75,6 +83,15 @@ abstract class DynamicLinks {
   /// JSON-encoded and then percent-encoded via [Uri.queryParameters] so it
   /// round-trips correctly through [Uri.queryParameters] on the receiving side
   /// (see [_decodePayload]).
+  ///
+  /// **Threat model — treat `auth` as untrusted.** The payload (including
+  /// `auth`) is carried in the URL's query string, so it is persisted in OS
+  /// link logs, browser history, analytics, and referrer headers, and is
+  /// trivially shareable. Do not put long-lived credentials or tokens in
+  /// `auth`; pass an opaque, short-lived, server-issued routing token instead,
+  /// and have the target page exchange it for real credentials over TLS via
+  /// `Api`. The consuming page must validate the token and never treat `auth`
+  /// as an authenticated identity.
   static Future<String?> createLink({
     required String domain,
     required String? path,
