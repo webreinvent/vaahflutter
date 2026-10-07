@@ -5,6 +5,12 @@ import 'package:app_links/app_links.dart';
 
 import 'logging_library/logging_library.dart';
 
+/// The link origin (`scheme://host/path`), used only in log lines. Defined once
+/// so the format can't drift between the service and the app-layer handler.
+/// Never includes the query string — it carries the payload (incl. `auth`),
+/// which must not be written to logs.
+String _linkOrigin(Uri uri) => '${uri.scheme}://${uri.host}${uri.path}';
+
 /// Decodes app links (via [AppLinks]) and exposes them to the app.
 ///
 /// This service is deliberately navigation-free: it only decodes a link into a
@@ -100,9 +106,9 @@ abstract class DynamicLinks {
   /// as an authenticated identity.
   static Future<String?> createLink({
     required String domain,
-    required String? path,
-    required dynamic data,
-    required dynamic auth,
+    String? path,
+    dynamic data,
+    dynamic auth,
   }) async {
     try {
       final String parameters = jsonEncode({
@@ -120,7 +126,7 @@ abstract class DynamicLinks {
 
       // Log the link origin only — the query carries the payload (incl.
       // `auth`), which must not be written to console/Sentry/Firebase.
-      Log.info("Generated Link: ${uri.scheme}://${uri.host}${uri.path}");
+      Log.info("Generated Link: ${_linkOrigin(uri)}");
       return generatedUrl;
     } catch (error, stackTrace) {
       Log.exception(
@@ -145,7 +151,7 @@ abstract class DynamicLinks {
         if (uri.queryParameters.containsKey('payload')) {
           Log.warning(
             "Deep link payload is not a JSON object; ignoring",
-            data: {"origin": "${uri.scheme}://${uri.host}${uri.path}"},
+            data: {"origin": _linkOrigin(uri)},
           );
         }
         return;
@@ -166,7 +172,7 @@ abstract class DynamicLinks {
       // `auth`), which must not be written to console/Sentry/Firebase.
       Log.success(
         "Dynamic link received",
-        data: {"origin": "${uri.scheme}://${uri.host}${uri.path}"},
+        data: {"origin": _linkOrigin(uri)},
       );
     } catch (error, stackTrace) {
       Log.exception(
@@ -206,4 +212,8 @@ class DeepLink {
   final dynamic auth;
 
   const DeepLink({required this.uri, this.path, this.data, this.auth});
+
+  /// The link origin (`scheme://host/path`), for logging. Never includes the
+  /// query string, which carries the payload (incl. `auth`).
+  String get origin => _linkOrigin(uri);
 }

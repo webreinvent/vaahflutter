@@ -36,9 +36,12 @@ class BaseController extends GetxController {
       }
 
       // Dynamic links use app_links and are independent of Firebase.
+      // Gated on the env flag so apps that don't use deep links can opt out.
       // Awaited so the cold-start initial link is handled in a defined order
       // before runApp, rather than racing it as a fire-and-forget.
-      await DynamicLinks.init();
+      if (config.dynamicLinksEnabled) {
+        await DynamicLinks.init();
+      }
 
       // Other Local Initializations (Depends on your app)
       AppTheme.init();

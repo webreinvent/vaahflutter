@@ -84,7 +84,7 @@ abstract class DeepLinkNavigator {
       Log.warning(
         "Deep link rejected: unknown route",
         data: {
-          "origin": "${link.uri.scheme}://${link.uri.host}${link.uri.path}",
+          "origin": link.origin,
         },
       );
       return;
