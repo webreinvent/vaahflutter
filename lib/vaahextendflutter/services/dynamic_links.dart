@@ -40,17 +40,30 @@ abstract class DynamicLinks {
     // Guard against double-init (tests, hot restart): a second call would
     // otherwise re-emit the initial link and leak a second subscription.
     if (_linkSubscription != null) return;
-    try {
-      // 1. Emit the initial link if the app was opened from a cold start via a
-      //    link. It is buffered on the stream until the app subscribes after
-      //    `runApp`, so it is not lost.
-      final Uri? initialUri = await _appLinks.getInitialLink();
-      if (initialUri != null) {
-        _emit(initialUri);
-      }
 
-      // 2. Listen for incoming links while the app is in the background or
-      //    foreground.
+    // 1. Read the initial cold-start link (if any) and emit it. It is buffered
+    //    on the stream until the app subscribes after `runApp`, so it is not
+    //    lost. Kept in its own try/catch: a failure here (e.g. a
+    //    platform-channel error) must not prevent the live-link subscription
+    //    below from being established, or live deep links would be silently
+    //    dead for the app's lifetime.
+    Uri? initialUri;
+    try {
+      initialUri = await _appLinks.getInitialLink();
+    } catch (error, stackTrace) {
+      Log.exception(
+        "Error reading initial link",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
+    }
+    if (initialUri != null) {
+      _emit(initialUri);
+    }
+
+    // 2. Listen for incoming links while the app is in the background or
+    //    foreground.
+    try {
       _linkSubscription = _appLinks.uriLinkStream.listen(
         _emit,
         onError: (error, stackTrace) {
@@ -107,8 +120,8 @@ abstract class DynamicLinks {
   static Future<String?> createLink({
     required String domain,
     String? path,
-    dynamic data,
-    dynamic auth,
+    Object? data,
+    Object? auth,
   }) async {
     try {
       final String parameters = jsonEncode({
@@ -208,8 +221,8 @@ abstract class DynamicLinks {
 class DeepLink {
   final Uri uri;
   final String? path;
-  final dynamic data;
-  final dynamic auth;
+  final Object? data;
+  final Object? auth;
 
   const DeepLink({required this.uri, this.path, this.data, this.auth});
 

@@ -46,6 +46,10 @@ android {
 
     buildTypes {
         release {
+            // Demo/template: release builds sign with the debug key so
+            // `flutter build apk --release` works out of the box. Consumers
+            // must replace this with their own release signing config before
+            // shipping.
             signingConfig signingConfigs.debug
         }
     }
