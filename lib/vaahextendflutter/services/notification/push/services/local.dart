@@ -51,7 +51,17 @@ abstract class LocalNotifications {
         id: notification.id,
         title: notification.heading,
         body: notification.content,
-        scheduledDate: TZDateTime.from(scheduledDate, local),
+        scheduledDate: TZDateTime(
+          getLocation('Asia/Kolkata'),
+          scheduledDate.year,
+          scheduledDate.month,
+          scheduledDate.day,
+          scheduledDate.hour,
+          scheduledDate.minute,
+          scheduledDate.second,
+          scheduledDate.millisecond,
+          scheduledDate.microsecond,
+        ),
         notificationDetails: const NotificationDetails(
           android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
         ),
