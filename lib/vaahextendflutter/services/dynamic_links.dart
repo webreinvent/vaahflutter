@@ -39,6 +39,11 @@ abstract class DynamicLinks {
   // keeping the service re-initializable.
   static Future<void>? _initFuture;
 
+  // Bumped by [dispose] so an in-flight [_doInit] that is still awaiting
+  // getInitialLink() bails out instead of emitting onto the fresh controller
+  // and leaking a stale live-link subscription.
+  static int _generation = 0;
+
   /// Decodes the initial cold-start link (if any) and subscribes to incoming
   /// links. Both are emitted on [dynamicLinksStream]; this method never
   /// navigates. A no-op if already initialized: repeated or concurrent calls
@@ -49,6 +54,8 @@ abstract class DynamicLinks {
   }
 
   static Future<void> _doInit() async {
+    final int generation = _generation;
+
     // 1. Read the initial cold-start link (if any) and emit it. It is buffered
     //    on the stream until the app subscribes after `runApp`, so it is not
     //    lost. Kept in its own try/catch: a failure here (e.g. a
@@ -65,6 +72,9 @@ abstract class DynamicLinks {
         stackTrace: stackTrace,
       );
     }
+    // dispose() may have run while we were awaiting: bail out so we don't emit
+    // onto the fresh controller or leak a stale live-link subscription.
+    if (generation != _generation) return;
     if (initialUri != null) {
       _emit(initialUri);
     }
@@ -101,6 +111,7 @@ abstract class DynamicLinks {
   /// consumer-side: stop the old listener, call [dispose], call [init], then
   /// subscribe to the fresh [dynamicLinksStream] again.
   static void dispose() {
+    _generation++;
     _linkSubscription?.cancel();
     _linkSubscription = null;
     _initFuture = null;

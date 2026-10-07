@@ -22,6 +22,12 @@ abstract class RemoteNotifications {
   StreamController<String>.broadcast();
   static final Stream<String> userIdStream = _userIdStreamController.stream;
 
+  // Stable observer reference (a single tear-off of [_onUserChanged]) so
+  // [dispose] can remove the exact callback [init] registered — OneSignal
+  // matches observers by identity, and a leaked observer would fire into the
+  // closed [userIdStream] controller after teardown (StateError).
+  static final void Function(OSUserChangedState) _userObserver = _onUserChanged;
+
   static String? get userId => _storage.read(_userIdKey);
 
   static Future<void> init() async {
@@ -38,19 +44,22 @@ abstract class RemoteNotifications {
 
     // Listen to the OneSignal user so `userId` holds the user-level ID
     // (state.current.onesignalId), not the device push-subscription token.
-    OneSignal.User.addObserver((state) {
-      final String? oneSignalId = state.current.onesignalId;
-      if (oneSignalId != null && oneSignalId.isNotEmpty) {
-        _storage.write(_userIdKey, oneSignalId);
-        _userIdStreamController.add(oneSignalId);
-      }
-    });
+    OneSignal.User.addObserver(_userObserver);
 
     // Listen to notification click events
     OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
+  static void _onUserChanged(OSUserChangedState state) {
+    final String? oneSignalId = state.current.onesignalId;
+    if (oneSignalId != null && oneSignalId.isNotEmpty) {
+      _storage.write(_userIdKey, oneSignalId);
+      _userIdStreamController.add(oneSignalId);
+    }
+  }
+
   static void dispose() {
+    OneSignal.User.removeObserver(_userObserver);
     _userIdStreamController.close();
   }
 
@@ -91,11 +100,13 @@ abstract class RemoteNotifications {
   }
 
   static void _handleNotificationClick(OSNotificationClickEvent event) {
+    // Log only the safe display fields. `additionalData` carries the deep-link
+    // payload (incl. `auth`), which must never be written to logs — the same
+    // no-auth-in-logs policy the DynamicLinks service enforces.
     Log.success('Notification Opened', data: {
       "actionId": event.result.actionId,
       "title": event.notification.title,
       "body": event.notification.body,
-      "additionalData": event.notification.additionalData,
       "timestamp": DateTime.now().millisecondsSinceEpoch,
     });
 

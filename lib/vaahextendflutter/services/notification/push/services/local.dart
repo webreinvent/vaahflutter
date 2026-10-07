@@ -47,26 +47,13 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    // JSON (not `Map.toString`) so the payload round-trips when the
-    // notification is tapped and decoded on the app side. jsonEncode can throw
-    // if a payload field is not JSON-encodable (e.g. a DateTime or custom
-    // object), so encode inside the error boundary rather than letting it
-    // escape as an unhandled async error.
-    final String payload;
-    try {
-      payload = jsonEncode({
-        'path': notification.payloadPath,
-        'data': notification.payloadData,
-        'auth': notification.payloadAuth,
-      });
-    } catch (error, errorStackTrace) {
-      Log.exception(
-        'Invalid notification payload',
-        throwable: error,
-        stackTrace: errorStackTrace,
-      );
-      return;
-    }
+
+    // JSON (not `Map.toString`) so the payload round-trips when the notification
+    // is tapped and decoded on the app side. push() may no-op for a payload that
+    // is not JSON-encodable (e.g. a DateTime or custom object) — see [_encodePayload].
+    final String? payload = _encodePayload(notification);
+    if (payload == null) return;
+
     try {
       await _schedule(notification, scheduledDate, payload,
           AndroidScheduleMode.exactAllowWhileIdle);
@@ -89,6 +76,26 @@ abstract class LocalNotifications {
           stackTrace: errorStackTrace,
         );
       }
+    }
+  }
+
+  /// Encodes [notification]'s payload as JSON, or returns null (logging the
+  /// failure) if a field is not JSON-encodable. Keeping the encode in its own
+  /// error boundary means [push] can early-return on a single clear check.
+  static String? _encodePayload(PushNotification notification) {
+    try {
+      return jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'Invalid notification payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return null;
     }
   }
 

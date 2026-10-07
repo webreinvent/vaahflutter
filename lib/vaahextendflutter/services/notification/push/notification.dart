@@ -123,6 +123,12 @@ abstract class PushNotifications {
     }
   }
 
+  /// Schedules/sends [notification] on the configured service.
+  ///
+  /// Note: for [PushNotificationsServiceType.remote] / `.both`, the remote
+  /// component is a no-op in OneSignal v5 (client-side postNotification was
+  /// removed); pushes must be dispatched server-side via the OneSignal REST
+  /// API. Only the local component (`.local` / `.both`) actually schedules.
   static Future<void> push({
     required PushNotification notification,
     String? channel,
