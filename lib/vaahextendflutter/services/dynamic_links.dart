@@ -232,7 +232,9 @@ abstract class DynamicLinks {
   }
 }
 
-/// A decoded deep link, emitted on [DynamicLinks.dynamicLinksStream].
+/// A decoded deep link, emitted on [DynamicLinks.dynamicLinksStream] (app
+/// links) and [RemoteNotifications.notificationDeepLinkStream] (OneSignal
+/// notification clicks).
 ///
 /// The service decodes a link into these fields; the app decides what to do
 /// with them. [path] is the requested route name and is untrusted input — the
@@ -241,15 +243,21 @@ abstract class DynamicLinks {
 class DeepLink {
   /// The full link, **including the query string**. The query carries the
   /// payload (incl. `auth`), so do not log `uri` or forward it to analytics —
-  /// use [origin] for anything that gets written down.
-  final Uri uri;
+  /// use [origin] for anything that gets written down. Null when the deep link
+  /// has no originating URL (an OneSignal notification click carries only the
+  /// payload, not a link).
+  final Uri? uri;
   final String? path;
   final Object? data;
   final Object? auth;
 
-  const DeepLink({required this.uri, this.path, this.data, this.auth});
+  const DeepLink({this.uri, this.path, this.data, this.auth});
 
   /// The link origin (`scheme://host/path`), for logging. Never includes the
-  /// query string, which carries the payload (incl. `auth`).
-  String get origin => _linkOrigin(uri);
+  /// query string, which carries the payload (incl. `auth`). Null when [uri]
+  /// is null.
+  String? get origin {
+    final Uri? linkUri = uri;
+    return linkUri == null ? null : _linkOrigin(linkUri);
+  }
 }

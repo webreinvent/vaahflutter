@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
+import '../../../dynamic_links.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
@@ -18,15 +19,36 @@ abstract class RemoteNotifications {
   static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
   static final GetStorage _storage = GetStorage();
 
-  static final StreamController<String> _userIdStreamController =
-  StreamController<String>.broadcast();
-  static final Stream<String> userIdStream = _userIdStreamController.stream;
+  // Not final so [dispose] can close + recreate it, keeping the service
+  // re-initializable (tests, hot restart) — same pattern as [DynamicLinks].
+  // A subsequent init() would otherwise add to a closed controller (StateError).
+  static StreamController<String> _userIdStreamController =
+      StreamController<String>.broadcast();
+
+  /// Emits the OneSignal user-level ID (`onesignalId`) when it changes.
+  ///
+  /// This is a broadcast stream and does not buffer: an ID set before a
+  /// listener attaches is not replayed to it. Read [userId] for the current
+  /// value, then listen here for subsequent changes.
+  static Stream<String> get userIdStream => _userIdStreamController.stream;
 
   // Stable observer reference (a single tear-off of [_onUserChanged]) so
   // [dispose] can remove the exact callback [init] registered — OneSignal
   // matches observers by identity, and a leaked observer would fire into the
   // closed [userIdStream] controller after teardown (StateError).
   static final void Function(OSUserChangedState) _userObserver = _onUserChanged;
+
+  // Not final so [dispose] can close + recreate it (see [_userIdStreamController]).
+  static StreamController<DeepLink> _notificationDeepLinkController =
+      StreamController<DeepLink>();
+
+  /// Decoded deep-link payloads from OneSignal notification clicks.
+  ///
+  /// This service only decodes + emits — it never navigates. The app listens
+  /// and validates [DeepLink.path] against its route allowlist (the same
+  /// contract as [DynamicLinks.dynamicLinksStream]).
+  static Stream<DeepLink> get notificationDeepLinkStream =>
+      _notificationDeepLinkController.stream;
 
   static String? get userId => _storage.read(_userIdKey);
 
@@ -61,6 +83,9 @@ abstract class RemoteNotifications {
   static void dispose() {
     OneSignal.User.removeObserver(_userObserver);
     _userIdStreamController.close();
+    _userIdStreamController = StreamController<String>.broadcast();
+    _notificationDeepLinkController.close();
+    _notificationDeepLinkController = StreamController<DeepLink>();
   }
 
   static Future<bool?> askPermission() async {
@@ -110,15 +135,46 @@ abstract class RemoteNotifications {
       "timestamp": DateTime.now().millisecondsSinceEpoch,
     });
 
-    final dynamic payload = event.notification.additionalData?['payload'];
-    if (payload != null && payload['path'] != null) {
-      Get.to(
-        payload['path'],
-        arguments: <String, dynamic>{
-          'data': payload['data'],
-          'auth': payload['auth'],
-        },
-      );
+    // Decode the payload and emit it; the app validates `path` against its
+    // route allowlist and navigates. This service never navigates — the same
+    // contract as [DynamicLinks] — so an untrusted `path` can't reach GetX.
+    final DeepLink? link = _decodePayload(event.notification.additionalData);
+    if (link != null) {
+      _notificationDeepLinkController.add(link);
     }
+  }
+
+  /// Decodes OneSignal's `additionalData['payload']` (a JSON object with
+  /// `path`/`data`/`auth`) into a [DeepLink], or null if there is no payload
+  /// or it is malformed. An OneSignal click has no originating URL, so
+  /// [DeepLink.uri] is null.
+  static DeepLink? _decodePayload(Map<String, dynamic>? additionalData) {
+    final dynamic raw = additionalData?['payload'];
+    if (raw == null) return null;
+
+    // OneSignal delivers additionalData values as strings, so the payload is a
+    // JSON string; tolerate an already-decoded map too.
+    dynamic payload = raw;
+    if (raw is String) {
+      try {
+        payload = jsonDecode(raw);
+      } catch (error, stackTrace) {
+        Log.exception(
+          'Error decoding notification payload',
+          throwable: error,
+          stackTrace: stackTrace,
+        );
+        return null;
+      }
+    }
+    if (payload is! Map) return null;
+
+    final dynamic path = payload['path'];
+    if (path is! String || path.isEmpty) return null;
+    return DeepLink(
+      path: path,
+      data: payload['data'],
+      auth: payload['auth'],
+    );
   }
 }
