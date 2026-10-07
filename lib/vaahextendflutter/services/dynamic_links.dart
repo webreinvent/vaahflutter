@@ -12,7 +12,7 @@ abstract class DynamicLinks {
   StreamController<DeepLink>.broadcast();
   static final Stream<DeepLink> dynamicLinksStream = _dynamicLinksStreamController.stream;
 
-  static void init() async {
+  static Future<void> init() async {
     try {
       // 1. Handle the initial link if the app was opened from a cold start via a link
       final Uri? initialUri = await _appLinks.getInitialLink();
@@ -64,7 +64,9 @@ abstract class DynamicLinks {
       );
       final String generatedUrl = uri.toString();
 
-      Log.info("Generated Link: $generatedUrl");
+      // Log the link origin only — the query carries the payload (incl. `auth`),
+      // which must not be written to console/Sentry/Firebase.
+      Log.info("Generated Link: ${uri.scheme}://${uri.host}${uri.path}");
       return generatedUrl;
     } catch (error, stackTrace) {
       Log.exception("Error creating link!", throwable: error, stackTrace: stackTrace);
@@ -91,12 +93,15 @@ abstract class DynamicLinks {
         },
       );
 
-      if (payload != null && payload['path'] != null) {
-        Get.to(
-          payload['path'],
+      final dynamic path = payload?['path'];
+      if (path is String && path.isNotEmpty) {
+        // `path` is a named route, so navigate by name — `Get.to` expects a
+        // page (Widget) and would throw on a String.
+        Get.toNamed(
+          path,
           arguments: <String, dynamic>{
-            'data': payload['data'],
-            'auth': payload['auth'],
+            'data': payload?['data'],
+            'auth': payload?['auth'],
           },
         );
       }
