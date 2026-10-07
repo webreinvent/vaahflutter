@@ -16,6 +16,12 @@ Project requires Dart and flutter versions:
 ```
 
 To change minimum requirement of dart and flutter change the `sdk and flutter` versions under `environment` in the `pubspec.yaml` file.
+
+### Platform requirements
+
+- **Android:** minimum SDK `24` (Android 7.0) — driven by `flutter.minSdkVersion` in `android/app/build.gradle`.
+- **iOS:** minimum deployment target `15.0` — set in `ios/Podfile` and `Runner.xcodeproj` (Flutter 3.47 template default).
+
 <hr />
 
 ## How to run app in different environments:
