@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.webreinvent.vaahflutter"
-    compileSdk 36
+    compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -39,10 +39,9 @@ android {
     defaultConfig {
         applicationId "com.webreinvent.vaahflutter"
         minSdkVersion flutter.minSdkVersion
-        targetSdk 36
+        targetSdk flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
     }
 
     buildTypes {
