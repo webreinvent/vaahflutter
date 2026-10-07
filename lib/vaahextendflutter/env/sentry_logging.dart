@@ -5,7 +5,6 @@ part 'sentry_logging.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class SentryConfig {
   final String dsn;
-  final bool autoAppStart; // To record cold and warm start up time
   final double tracesSampleRate;
   final bool enableAutoPerformanceTracing;
   final bool enableUserInteractionTracing;
@@ -13,7 +12,6 @@ class SentryConfig {
 
   const SentryConfig({
     required this.dsn,
-    this.autoAppStart = true,
     this.tracesSampleRate = 0.6,
     this.enableAutoPerformanceTracing = true,
     this.enableUserInteractionTracing = true,
