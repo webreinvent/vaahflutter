@@ -67,6 +67,12 @@ abstract class DynamicLinks {
   /// Tears down the stream subscription and closes the link stream. Recreates
   /// the controller so [init] can be called again (tests, hot restart) without
   /// hitting a closed-controller StateError.
+  ///
+  /// Note: this replaces [dynamicLinksStream] with a brand-new controller, so
+  /// any listener still holding the previous stream is orphaned and must
+  /// cancel + re-subscribe to keep receiving links. A full re-init is therefore
+  /// consumer-side: stop the old listener, call [dispose], call [init], then
+  /// subscribe to the fresh [dynamicLinksStream] again.
   static void dispose() {
     _linkSubscription?.cancel();
     _linkSubscription = null;
@@ -131,7 +137,19 @@ abstract class DynamicLinks {
   static void _emit(Uri uri) {
     try {
       final dynamic payload = _decodePayload(uri);
-      if (payload is! Map) return;
+      if (payload is! Map) {
+        // A link with no `payload` query param is a plain (non-deep) link —
+        // expected, not an error. Only warn when a payload is present but
+        // isn't a JSON object (e.g. a bare string or number): a malformed
+        // deep link. Log the origin only — never the payload (incl. `auth`).
+        if (uri.queryParameters.containsKey('payload')) {
+          Log.warning(
+            "Deep link payload is not a JSON object; ignoring",
+            data: {"origin": "${uri.scheme}://${uri.host}${uri.path}"},
+          );
+        }
+        return;
+      }
 
       final dynamic rawPath = payload['path'];
 
