@@ -18,9 +18,14 @@ class InputFilePicker extends StatefulWidget {
   final AutovalidateMode? autoValidateMode;
   final Function(List<PlatformFile>?)? callback;
   final String? dialogTitle;
-  /// Retained for API compatibility. file_picker >= 11 removed the `withData`
-  /// pick option; bytes are now read on demand via `PlatformFile.readAsBytes()`,
-  /// so this flag no longer changes behavior.
+  /// Retained for API compatibility only. `file_picker >= 11` removed the
+  /// `withData` pick option; bytes are now read on demand via
+  /// `PlatformFile.readAsBytes()`, so this flag has no effect.
+  @Deprecated(
+    'No effect since the file_picker >= 11 migration. Read bytes on demand '
+    'via PlatformFile.readAsBytes() instead; will be removed in a future '
+    'major version.',
+  )
   final bool withData;
   final bool allowMultiple;
   final FileType fileType;
