@@ -14,7 +14,7 @@ abstract class LocalNotifications {
   static Future<void> init() async {
     tz.initializeTimeZones();
     await _flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings(
           'ic_stat_onesignal_default',
         ),
@@ -27,7 +27,6 @@ abstract class LocalNotifications {
         );
       },
     );
-    // _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   }
 
   static void dispose() {}
@@ -47,32 +46,42 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    _flutterLocalNotificationsPlugin.zonedSchedule(
-      notification.id,
-      notification.heading,
-      notification.content,
-      TZDateTime(
-        getLocation('Asia/Kolkata'),
-        scheduledDate.year,
-        scheduledDate.month,
-        scheduledDate.day,
-        scheduledDate.hour,
-        scheduledDate.minute,
-        scheduledDate.second,
-        scheduledDate.millisecond,
-        scheduledDate.microsecond,
-      ),
-      const NotificationDetails(
-        android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
-      ),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: {
-        'path': notification.payloadPath,
-        'data': notification.payloadData,
-        'auth': notification.payloadAuth,
-      }.toString(),
-    );
+    try {
+      await _flutterLocalNotificationsPlugin.zonedSchedule(
+        id: notification.id,
+        title: notification.heading,
+        body: notification.content,
+        scheduledDate: TZDateTime(
+          getLocation('Asia/Kolkata'),
+          scheduledDate.year,
+          scheduledDate.month,
+          scheduledDate.day,
+          scheduledDate.hour,
+          scheduledDate.minute,
+          scheduledDate.second,
+          scheduledDate.millisecond,
+          scheduledDate.microsecond,
+        ),
+        notificationDetails: const NotificationDetails(
+          android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        payload: {
+          'path': notification.payloadPath,
+          'data': notification.payloadData,
+          'auth': notification.payloadAuth,
+        }.toString(),
+      );
+    } catch (e, stackTrace) {
+      // On Android 12+ (API 31+) with targetSdk >= 31, exact alarms require the
+      // USE_EXACT_ALARM (or user-granted SCHEDULE_EXACT_ALARM) permission;
+      // zonedSchedule throws otherwise.
+      Log.exception(
+        'Failed to schedule local notification',
+        throwable: e,
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   // static Future<void> _handleSubscriptionStateChanges() async {}

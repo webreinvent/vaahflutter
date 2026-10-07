@@ -10,7 +10,7 @@ enum EventType {
 extension EventTypeExtension on EventType {
   String get toStr => toString().split('.')[1];
 
-  SentryLevel? get toSentryLevel {
+  SentryLevel get toSentryLevel {
     switch (this) {
       case EventType.log:
         return SentryLevel.debug;
@@ -20,8 +20,6 @@ extension EventTypeExtension on EventType {
         return SentryLevel.info;
       case EventType.warning:
         return SentryLevel.warning;
-      default:
-        return null;
     }
   }
 }
