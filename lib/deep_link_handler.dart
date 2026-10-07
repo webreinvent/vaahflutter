@@ -18,7 +18,7 @@ import 'vaahextendflutter/services/logging_library/logging_library.dart';
 /// the app's route table itself: it stays a pure navigation policy, and the
 /// navigation + allowlist logic can be exercised in tests without the platform
 /// link channel or the rest of the app.
-class DeepLinkNavigator {
+abstract class DeepLinkNavigator {
   static StreamSubscription<DeepLink>? _sub;
   static Map<String, Route<dynamic> Function()> _allowedRoutes = const {};
 
@@ -55,6 +55,11 @@ class DeepLinkNavigator {
 
   /// Cancel the active subscription, if any. Call before re-subscribing to a
   /// different [source] (e.g. on hot restart) or to stop reacting to links.
+  ///
+  /// `DynamicLinks.dispose()` replaces the stream controller, so a full
+  /// re-init is: [dispose] → `DynamicLinks.dispose()` → `DynamicLinks.init()`
+  /// → [listen]. Skipping [dispose] leaves [listen] on the old (closed)
+  /// stream, and the navigator silently stops reacting to new links.
   static void dispose() {
     _sub?.cancel();
     _sub = null;
