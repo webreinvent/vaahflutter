@@ -37,11 +37,12 @@ class BaseController extends GetxController {
 
       // Dynamic links use app_links and are independent of Firebase.
       // Gated on the env flag so apps that don't use deep links can opt out.
-      // Awaited so the cold-start initial link is decoded and buffered on the
-      // stream before the app subscribes post-runApp; navigation itself
+      // Not awaited: the cold-start initial link is buffered on the
+      // single-subscription stream until the app subscribes post-runApp, so
+      // awaiting getInitialLink() here would only delay launch. Navigation
       // happens later, in a post-frame callback, not here.
       if (config.dynamicLinksEnabled) {
-        await DynamicLinks.init();
+        unawaited(DynamicLinks.init());
       }
 
       // Other Local Initializations (Depends on your app)

@@ -33,14 +33,22 @@ abstract class DynamicLinks {
   static Stream<DeepLink> get dynamicLinksStream =>
       _dynamicLinksStreamController.stream;
 
+  // Coalesces concurrent init() calls: a second call while the first is in
+  // flight returns the same future instead of re-reading the initial link and
+  // leaking a second subscription. Not final so [dispose] can clear it,
+  // keeping the service re-initializable.
+  static Future<void>? _initFuture;
+
   /// Decodes the initial cold-start link (if any) and subscribes to incoming
   /// links. Both are emitted on [dynamicLinksStream]; this method never
-  /// navigates. A no-op if already initialized.
-  static Future<void> init() async {
-    // Guard against double-init (tests, hot restart): a second call would
-    // otherwise re-emit the initial link and leak a second subscription.
-    if (_linkSubscription != null) return;
+  /// navigates. A no-op if already initialized: repeated or concurrent calls
+  /// before [dispose] return the same in-flight/finished future instead of
+  /// re-emitting the initial link and leaking a second subscription.
+  static Future<void> init() {
+    return _initFuture ??= _doInit();
+  }
 
+  static Future<void> _doInit() async {
     // 1. Read the initial cold-start link (if any) and emit it. It is buffered
     //    on the stream until the app subscribes after `runApp`, so it is not
     //    lost. Kept in its own try/catch: a failure here (e.g. a
@@ -95,6 +103,7 @@ abstract class DynamicLinks {
   static void dispose() {
     _linkSubscription?.cancel();
     _linkSubscription = null;
+    _initFuture = null;
     _dynamicLinksStreamController.close();
     _dynamicLinksStreamController = StreamController<DeepLink>();
   }
