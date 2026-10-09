@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -14,7 +15,7 @@ abstract class LocalNotifications {
   static Future<void> init() async {
     tz.initializeTimeZones();
     await _flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
+      settings: const InitializationSettings(
         android: AndroidInitializationSettings(
           'ic_stat_onesignal_default',
         ),
@@ -27,7 +28,6 @@ abstract class LocalNotifications {
         );
       },
     );
-    // _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
   }
 
   static void dispose() {}
@@ -47,11 +47,62 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    _flutterLocalNotificationsPlugin.zonedSchedule(
-      notification.id,
-      notification.heading,
-      notification.content,
-      TZDateTime(
+    // JSON (not `Map.toString`) so the payload round-trips when the
+    // notification is tapped and decoded on the app side. jsonEncode can throw
+    // if a payload field is not JSON-encodable (e.g. a DateTime or custom
+    // object), so encode inside the error boundary rather than letting it
+    // escape as an unhandled async error.
+    final String payload;
+    try {
+      payload = jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'Invalid notification payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return;
+    }
+    try {
+      await _schedule(notification, scheduledDate, payload,
+          AndroidScheduleMode.exactAllowWhileIdle);
+    } catch (e) {
+      // The exact attempt can fail for reasons other than the missing
+      // SCHEDULE_EXACT_ALARM permission (invalid date, channel error, plugin
+      // misconfiguration), so log the actual reason and fall back to inexact
+      // rather than assuming it is the permission.
+      Log.warning(
+        'Exact schedule failed; retrying inexact',
+        data: {'id': notification.id, 'reason': '$e'},
+      );
+      try {
+        await _schedule(notification, scheduledDate, payload,
+            AndroidScheduleMode.inexactAllowWhileIdle);
+      } catch (error, errorStackTrace) {
+        Log.exception(
+          'Failed to schedule local notification',
+          throwable: error,
+          stackTrace: errorStackTrace,
+        );
+      }
+    }
+  }
+
+  static Future<void> _schedule(
+    PushNotification notification,
+    DateTime scheduledDate,
+    String payload,
+    AndroidScheduleMode mode,
+  ) async {
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id: notification.id,
+      title: notification.heading,
+      body: notification.content,
+      scheduledDate: TZDateTime(
         getLocation('Asia/Kolkata'),
         scheduledDate.year,
         scheduledDate.month,
@@ -62,16 +113,11 @@ abstract class LocalNotifications {
         scheduledDate.millisecond,
         scheduledDate.microsecond,
       ),
-      const NotificationDetails(
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
       ),
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      payload: {
-        'path': notification.payloadPath,
-        'data': notification.payloadData,
-        'auth': notification.payloadAuth,
-      }.toString(),
+      androidScheduleMode: mode,
+      payload: payload,
     );
   }
 

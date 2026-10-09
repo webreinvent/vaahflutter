@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import '../app_theme.dart';
 import '../env/env.dart';
 import '../services/api.dart';
+import '../services/dynamic_links.dart';
 import '../services/logging_library/logging_library.dart';
 import '../services/notification/internal/notification.dart';
 import '../services/notification/push/notification.dart';
@@ -34,6 +35,16 @@ class BaseController extends GetxController {
         );
       }
 
+      // Dynamic links use app_links and are independent of Firebase.
+      // Gated on the env flag so apps that don't use deep links can opt out.
+      // Awaited so the cold-start initial link is decoded and buffered on the
+      // stream before the app subscribes post-runApp; navigation itself
+      // happens later, in a post-frame callback, not here.
+      if (config.dynamicLinksEnabled) {
+        await DynamicLinks.init();
+      }
+
+      // Other Local Initializations (Depends on your app)
       AppTheme.init();
       Api.init();
 
