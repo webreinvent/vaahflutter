@@ -11,7 +11,7 @@ For More Info Please Check: [docs.vaah.dev/vaahflutter](https://docs.vaah.dev/va
 Project requires Dart and flutter versions:
 
 ```yaml
-  sdk: ">=3.13.0"
+  sdk: ">=3.13.4"
   flutter: ">=3.47.5"
 ```
 
