@@ -21,11 +21,9 @@ extension InternalNotificationsServiceTypeExtension on InternalNotificationsServ
 @JsonSerializable(fieldRename: FieldRename.snake)
 class OneSignalConfig {
   final String appId;
-  final String? apiKey;
 
   const OneSignalConfig({
     required this.appId,
-    this.apiKey,
   });
 
   factory OneSignalConfig.fromJson(Map<String, dynamic> json) => _$OneSignalConfigFromJson(json);
