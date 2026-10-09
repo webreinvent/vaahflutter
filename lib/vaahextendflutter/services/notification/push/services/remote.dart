@@ -10,10 +10,6 @@ import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
 const String _userIdKey = 'remote_notification_user_id';
-const Map<String, String> channels = {
-  // Create a channel on One Signal and add id here
-  'Primary': 'channel_id'
-};
 
 abstract class RemoteNotifications {
   static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
@@ -82,6 +78,7 @@ abstract class RemoteNotifications {
 
   static void dispose() {
     OneSignal.User.removeObserver(_userObserver);
+    OneSignal.Notifications.removeClickListener(_handleNotificationClick);
     _userIdStreamController.close();
     _userIdStreamController = StreamController<String>.broadcast();
     _notificationDeepLinkController.close();
