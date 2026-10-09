@@ -95,18 +95,10 @@ abstract class PushNotifications {
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.remote:
-        await RemoteNotifications.subscribe(
-          userid: userid,
-          email: email,
-          phone: phone,
-        );
+        await RemoteNotifications.subscribe(userid: userid, email: email, phone: phone);
         return;
       case PushNotificationsServiceType.both:
-        await RemoteNotifications.subscribe(
-          userid: userid,
-          email: email,
-          phone: phone,
-        );
+        await RemoteNotifications.subscribe(userid: userid, email: email, phone: phone);
         await LocalNotifications.subscribe();
         return;
       case PushNotificationsServiceType.none:
@@ -131,6 +123,12 @@ abstract class PushNotifications {
     }
   }
 
+  /// Schedules/sends [notification] on the configured service.
+  ///
+  /// Note: for [PushNotificationsServiceType.remote] / `.both`, the remote
+  /// component is a no-op in OneSignal v5 (client-side postNotification was
+  /// removed); pushes must be dispatched server-side via the OneSignal REST
+  /// API. Only the local component (`.local` / `.both`) actually schedules.
   static Future<void> push({
     required PushNotification notification,
     String? channel,

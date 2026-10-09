@@ -58,6 +58,7 @@ class EnvironmentConfig {
     required this.enableLocalLogs,
     required this.enableCloudLogs,
     required this.enableApiLogInterceptor,
+    this.dynamicLinksEnabled = true,
     this.cloudLoggingService = CloudLoggingService.noService,
     this.sentryConfig,
     this.datadogConfig,
@@ -79,6 +80,7 @@ class EnvironmentConfig {
   final bool enableLocalLogs;
   final bool enableCloudLogs;
   final bool enableApiLogInterceptor;
+  final bool dynamicLinksEnabled;
   final CloudLoggingService cloudLoggingService;
   final SentryConfig? sentryConfig;
   final DatadogConfig? datadogConfig;
@@ -130,6 +132,7 @@ class EnvironmentConfig {
       oneSignalConfig: null,
       pusherConfig: null,
       enableApiLogInterceptor: false,
+      dynamicLinksEnabled: true,
       pushNotificationsServiceType: PushNotificationsServiceType.none,
       internalNotificationsServiceType: InternalNotificationsServiceType.none,
       showDebugPanel: true,
