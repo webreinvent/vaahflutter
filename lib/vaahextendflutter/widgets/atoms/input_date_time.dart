@@ -5,7 +5,6 @@ import '../../app_theme.dart';
 import '../../helpers/constants.dart';
 import '../../helpers/date_time.dart';
 import '../../helpers/enums.dart';
-import '../../services/logging_library/logging_library.dart';
 
 enum PickerType { dateOnly, timeOnly, dateAndTime }
 
@@ -142,8 +141,6 @@ class _InputDateTimeState extends State<InputDateTime> {
         return FontAwesomeIcons.clock;
       case PickerType.dateAndTime:
         return FontAwesomeIcons.calendarXmark;
-      default:
-        return FontAwesomeIcons.circleExclamation;
     }
   }
 
@@ -182,8 +179,6 @@ class _InputDateTimeState extends State<InputDateTime> {
           if (widget.callback != null) widget.callback!(datetime);
         }
         break;
-      default:
-        Log.exception('Error in date time input', disableCloudLogging: true);
     }
   }
 
