@@ -82,7 +82,7 @@ class ButtonElevated extends StatelessWidget {
 class ButtonElevatedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final Widget leading;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? backgroundColor;
@@ -96,7 +96,7 @@ class ButtonElevatedWithIcon extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.text,
-    required this.leading,
+    required this.iconData,
     this.style,
     this.buttonType,
     this.backgroundColor,
@@ -129,7 +129,10 @@ class ButtonElevatedWithIcon extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: leading,
+      icon: FaIcon(
+        iconData,
+        size: iconSize,
+      ),
     );
   }
 }
@@ -188,7 +191,7 @@ class ButtonOutlined extends StatelessWidget {
 class ButtonOutlinedWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -298,7 +301,7 @@ class ButtonText extends StatelessWidget {
 class ButtonTextWithIcon extends StatelessWidget {
   final OnPressed onPressed;
   final String text;
-  final Widget leading;
+  final FaIconData? iconData;
   final ButtonStyle? style;
   final ButtonType? buttonType;
   final Color? foregroundColor;
@@ -311,7 +314,7 @@ class ButtonTextWithIcon extends StatelessWidget {
     super.key,
     required this.onPressed,
     required this.text,
-    required this.leading,
+    required this.iconData,
     this.style,
     this.buttonType,
     this.foregroundColor,
@@ -342,14 +345,17 @@ class ButtonTextWithIcon extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
-      icon: leading,
+      icon: FaIcon(
+        iconData,
+        size: iconSize,
+      ),
     );
   }
 }
 
 class ButtonIcon extends StatelessWidget {
   final OnPressed onPressed;
-  final IconData? iconData;
+  final FaIconData? iconData;
   final ButtonType? buttonType;
   final Color? color;
   final double? iconSize;
