@@ -47,11 +47,21 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    final String payload = jsonEncode({
-      'path': notification.payloadPath,
-      'data': notification.payloadData,
-      'auth': notification.payloadAuth,
-    });
+    final String payload;
+    try {
+      payload = jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'Invalid notification payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return;
+    }
     try {
       await _schedule(notification, scheduledDate, payload,
           AndroidScheduleMode.exactAllowWhileIdle);
