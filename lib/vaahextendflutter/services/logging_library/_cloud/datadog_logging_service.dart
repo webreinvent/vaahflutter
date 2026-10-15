@@ -110,6 +110,7 @@ class DataDogLoggingService implements LoggingService {
     String? email,
     Map<String, dynamic>? metaData,
   }) {
+    if (id == null) return;
     datadogSdk?.setUserInfo(
       id: id,
       name: name,
@@ -120,11 +121,6 @@ class DataDogLoggingService implements LoggingService {
 
   @override
   void unsetUserInfo() async {
-    datadogSdk?.setUserInfo(
-      id: null,
-      name: null,
-      email: null,
-      extraInfo: {},
-    );
+    datadogSdk?.clearUserInfo();
   }
 }

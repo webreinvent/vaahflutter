@@ -245,18 +245,18 @@ packages:
     dependency: "direct main"
     description:
       name: datadog_flutter_plugin
-      sha256: e5e17fcfc82b95b35e701a58eb89c9df0250a8c64c3c0021b992e53ad450fb67
+      sha256: "6b1863d70241d8f42c0eba910ce8cccea24502d4ebd5c45169f58f8d7308b3d2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.0"
+    version: "3.7.0"
   datadog_tracking_http_client:
     dependency: "direct main"
     description:
       name: datadog_tracking_http_client
-      sha256: "4fd525bd1da68601d4afbd7ef02f5b30cae0196485338b67b48372ce9ef72835"
+      sha256: "9b6930c25c923bba4e78a5045e604fc227ae4b8f1801f322e4ccfbfff349ba02"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.3.0"
   dbus:
     dependency: transitive
     description:
@@ -496,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: d2c361082d554d4593c3012e26f6b188f902acd291330f13d6427641a92b3da1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   js:
     dependency: transitive
     description:
@@ -914,10 +922,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   web_socket:
     dependency: transitive
     description:
