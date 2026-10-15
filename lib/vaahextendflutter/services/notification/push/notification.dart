@@ -123,6 +123,8 @@ abstract class PushNotifications {
     }
   }
 
+  /// Schedules/sends [notification] on the configured service. For `.remote` / `.both` the
+  /// remote component is a no-op; pushes must be sent via the OneSignal backend REST API.
   static Future<void> push({
     required PushNotification notification,
     String? channel,

@@ -22,6 +22,9 @@ abstract class RemoteNotifications {
   StreamController<String>.broadcast();
   static final Stream<String> userIdStream = _userIdStreamController.stream;
 
+  // Stable tear-off so [dispose] can remove the exact observer [init] registered.
+  static final void Function(OSUserChangedState) _userObserver = _onUserChanged;
+
   static String? get userId => _storage.read(_userIdKey);
 
   static Future<void> init() async {
@@ -35,19 +38,22 @@ abstract class RemoteNotifications {
     OneSignal.initialize(_env.oneSignalConfig!.appId);
 
     // Observe the OneSignal user so userId holds the user-level ID, not the push token.
-    OneSignal.User.addObserver((state) {
-      final String? oneSignalId = state.current.onesignalId;
-      if (oneSignalId != null && oneSignalId.isNotEmpty) {
-        _storage.write(_userIdKey, oneSignalId);
-        _userIdStreamController.add(oneSignalId);
-      }
-    });
+    OneSignal.User.addObserver(_userObserver);
 
     // Listen to notification click events
     OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
+  static void _onUserChanged(OSUserChangedState state) {
+    final String? oneSignalId = state.current.onesignalId;
+    if (oneSignalId != null && oneSignalId.isNotEmpty) {
+      _storage.write(_userIdKey, oneSignalId);
+      _userIdStreamController.add(oneSignalId);
+    }
+  }
+
   static void dispose() {
+    OneSignal.User.removeObserver(_userObserver);
     _userIdStreamController.close();
   }
 
@@ -85,11 +91,11 @@ abstract class RemoteNotifications {
   }
 
   static void _handleNotificationClick(OSNotificationClickEvent event) {
+    // Log only display fields; additionalData carries the payload (incl. auth) and must not be logged.
     Log.success('Notification Opened', data: {
       "actionId": event.result.actionId,
       "title": event.notification.title,
       "body": event.notification.body,
-      "additionalData": event.notification.additionalData,
       "timestamp": DateTime.now().millisecondsSinceEpoch,
     });
 
