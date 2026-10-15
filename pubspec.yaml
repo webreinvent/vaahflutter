@@ -35,10 +35,7 @@ dependencies:
   # Notifications
   onesignal_flutter: ^5.7.0
   flutter_local_notifications: ^17.2.3
-  pusher_channels_flutter:
-    git:
-      url: https://github.com/kishormainali/pusher-channels-flutter.git
-      ref: master
+  vs_pusher_channels_flutter: ^2.9.0
   timezone: ^0.9.4
   # Storage
   get_storage: ^2.1.1
