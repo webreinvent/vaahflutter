@@ -47,21 +47,10 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
-    final String payload;
-    try {
-      payload = jsonEncode({
-        'path': notification.payloadPath,
-        'data': notification.payloadData,
-        'auth': notification.payloadAuth,
-      });
-    } catch (error, errorStackTrace) {
-      Log.exception(
-        'Invalid notification payload',
-        throwable: error,
-        stackTrace: errorStackTrace,
-      );
-      return;
-    }
+
+    final String? payload = _encodePayload(notification);
+    if (payload == null) return;
+
     try {
       await _schedule(notification, scheduledDate, payload,
           AndroidScheduleMode.exactAllowWhileIdle);
@@ -81,6 +70,24 @@ abstract class LocalNotifications {
           stackTrace: errorStackTrace,
         );
       }
+    }
+  }
+
+  /// Encodes the payload as JSON, or null (logging the failure) if a field is not JSON-encodable.
+  static String? _encodePayload(PushNotification notification) {
+    try {
+      return jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'Invalid notification payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return null;
     }
   }
 
