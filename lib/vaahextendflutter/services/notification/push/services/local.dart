@@ -58,12 +58,12 @@ abstract class LocalNotifications {
       await _schedule(notification, scheduledDate, payload,
           AndroidScheduleMode.exactAllowWhileIdle);
     } catch (e) {
-      // On Android 12+ (API 31+) exact alarms require the user-grantable
-      // SCHEDULE_EXACT_ALARM permission; zonedSchedule throws when it isn't
-      // available. Fall back to inexact so the notification still fires
-      // (approximately on time) instead of being dropped.
+      // The exact attempt can fail for reasons other than the missing
+      // SCHEDULE_EXACT_ALARM permission (invalid date, channel error, plugin
+      // misconfiguration), so log the actual reason and fall back to inexact
+      // rather than assuming it is the permission.
       Log.warning(
-        'Exact alarm unavailable; rescheduling inexact',
+        'Exact schedule failed; retrying inexact',
         data: {'id': notification.id, 'reason': '$e'},
       );
       try {
