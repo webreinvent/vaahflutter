@@ -48,12 +48,25 @@ abstract class LocalNotifications {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
     // JSON (not `Map.toString`) so the payload round-trips when the
-    // notification is tapped and decoded on the app side.
-    final String payload = jsonEncode({
-      'path': notification.payloadPath,
-      'data': notification.payloadData,
-      'auth': notification.payloadAuth,
-    });
+    // notification is tapped and decoded on the app side. jsonEncode can throw
+    // if a payload field is not JSON-encodable (e.g. a DateTime or custom
+    // object), so encode inside the error boundary rather than letting it
+    // escape as an unhandled async error.
+    final String payload;
+    try {
+      payload = jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'Invalid notification payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return;
+    }
     try {
       await _schedule(notification, scheduledDate, payload,
           AndroidScheduleMode.exactAllowWhileIdle);
