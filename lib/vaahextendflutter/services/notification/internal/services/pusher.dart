@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
+import 'package:vs_pusher_channels_flutter/vs_pusher_channels_flutter.dart';
 
 import '../../../../env/env.dart';
 import '../../../logging_library/logging_library.dart';
