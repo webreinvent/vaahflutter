@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -46,40 +47,60 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
+    final String payload = jsonEncode({
+      'path': notification.payloadPath,
+      'data': notification.payloadData,
+      'auth': notification.payloadAuth,
+    });
     try {
-      await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id: notification.id,
-        title: notification.heading,
-        body: notification.content,
-        scheduledDate: TZDateTime(
-          getLocation('Asia/Kolkata'),
-          scheduledDate.year,
-          scheduledDate.month,
-          scheduledDate.day,
-          scheduledDate.hour,
-          scheduledDate.minute,
-          scheduledDate.second,
-          scheduledDate.millisecond,
-          scheduledDate.microsecond,
-        ),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: {
-          'path': notification.payloadPath,
-          'data': notification.payloadData,
-          'auth': notification.payloadAuth,
-        }.toString(),
+      await _schedule(notification, scheduledDate, payload,
+          AndroidScheduleMode.exactAllowWhileIdle);
+    } catch (e) {
+      // Exact alarms can fail for reasons other than the missing permission; fall back to inexact.
+      Log.warning(
+        'Exact alarm unavailable; rescheduling inexact',
+        data: {'id': notification.id, 'reason': '$e'},
       );
-    } catch (e, stackTrace) {
-      // zonedSchedule throws without the exact-alarm permission on Android 12+.
-      Log.exception(
-        'Failed to schedule local notification',
-        throwable: e,
-        stackTrace: stackTrace,
-      );
+      try {
+        await _schedule(notification, scheduledDate, payload,
+            AndroidScheduleMode.inexactAllowWhileIdle);
+      } catch (error, errorStackTrace) {
+        Log.exception(
+          'Failed to schedule local notification',
+          throwable: error,
+          stackTrace: errorStackTrace,
+        );
+      }
     }
+  }
+
+  static Future<void> _schedule(
+    PushNotification notification,
+    DateTime scheduledDate,
+    String payload,
+    AndroidScheduleMode mode,
+  ) async {
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id: notification.id,
+      title: notification.heading,
+      body: notification.content,
+      scheduledDate: TZDateTime(
+        getLocation('Asia/Kolkata'),
+        scheduledDate.year,
+        scheduledDate.month,
+        scheduledDate.day,
+        scheduledDate.hour,
+        scheduledDate.minute,
+        scheduledDate.second,
+        scheduledDate.millisecond,
+        scheduledDate.microsecond,
+      ),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
+      ),
+      androidScheduleMode: mode,
+      payload: payload,
+    );
   }
 
   // static Future<void> _handleSubscriptionStateChanges() async {}
