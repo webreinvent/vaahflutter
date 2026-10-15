@@ -18,6 +18,7 @@ EnvironmentConfig _$EnvironmentConfigFromJson(Map<String, dynamic> json) =>
       enableLocalLogs: json['enable_local_logs'] as bool,
       enableCloudLogs: json['enable_cloud_logs'] as bool,
       enableApiLogInterceptor: json['enable_api_log_interceptor'] as bool,
+      dynamicLinksEnabled: json['dynamic_links_enabled'] as bool? ?? true,
       cloudLoggingService: $enumDecodeNullable(
               _$CloudLoggingServiceEnumMap, json['cloud_logging_service']) ??
           CloudLoggingService.noService,
@@ -60,6 +61,7 @@ Map<String, dynamic> _$EnvironmentConfigToJson(EnvironmentConfig instance) =>
       'enable_local_logs': instance.enableLocalLogs,
       'enable_cloud_logs': instance.enableCloudLogs,
       'enable_api_log_interceptor': instance.enableApiLogInterceptor,
+      'dynamic_links_enabled': instance.dynamicLinksEnabled,
       'cloud_logging_service':
           _$CloudLoggingServiceEnumMap[instance.cloudLoggingService]!,
       'sentry_config': instance.sentryConfig,
