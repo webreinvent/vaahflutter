@@ -37,4 +37,10 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Exact local notifications on Android 12+ (API 31+) require this
+         user-grantable permission. Unlike USE_EXACT_ALARM it is not
+         auto-granted and is friendlier to Play's API-34+ policy; when the
+         user has not granted it, LocalNotifications.push falls back to an
+         inexact schedule so the notification still fires. -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 </manifest>
