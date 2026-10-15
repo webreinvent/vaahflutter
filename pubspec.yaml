@@ -33,7 +33,7 @@ dependencies:
   firebase_core: ^4.15.0
   cloud_firestore: ^6.10.0
   # Notifications
-  onesignal_flutter: ^5.2.6
+  onesignal_flutter: ^5.7.0
   flutter_local_notifications: ^17.2.3
   pusher_channels_flutter:
     git:
