@@ -9,3 +9,22 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+// AGP 9 requires an explicit compileSdk in every Android module. Some legacy
+// pub plugins (e.g. datadog_flutter_plugin 2.x, package_info_plus 8.x) still
+// ship plugin build files without one; mirror :app's flutter.compileSdkVersion
+// for any module that doesn't set it, until those plugins release AGP 9-compatible
+// versions.
+// :app is skipped: it already sets compileSdk from flutter.compileSdkVersion,
+// and the Flutter plugin loader evaluates it before this script body runs, so
+// afterEvaluate() throws on it.
+subprojects {
+    if (path == ':app') return
+    afterEvaluate {
+        if (it.hasProperty("android")) {
+            it.android {
+                compileSdkVersion project(':app').extensions.getByName('flutter').compileSdkVersion
+            }
+        }
+    }
+}
