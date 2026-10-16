@@ -123,10 +123,10 @@ abstract class LocalNotifications {
   // static Future<void> _handleSubscriptionStateChanges() async {}
 
   static void _handleNotification({required String? payload, String? actionId}) {
+    // The payload carries the routing token (auth); log the tap, not the payload.
     Log.info(
-      "local-notification-payload",
+      "local-notification-tapped",
       data: {
-        "payload": payload,
         "actionId": actionId,
       },
     );
