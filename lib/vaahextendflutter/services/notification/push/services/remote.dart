@@ -136,12 +136,10 @@ abstract class RemoteNotifications {
     if (raw is String) {
       try {
         payload = jsonDecode(raw);
-      } catch (error, stackTrace) {
-        Log.exception(
-          'Error decoding notification payload',
-          throwable: error,
-          stackTrace: stackTrace,
-        );
+      } catch (_) {
+        // Do not log the raw throwable: a jsonDecode FormatException embeds the full
+        // payload string (incl. auth), which must never reach logs.
+        Log.warning('Notification payload is not valid JSON; ignoring deep link');
         return null;
       }
     }
