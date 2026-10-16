@@ -222,12 +222,10 @@ abstract class DynamicLinks {
       final String? payloadParam = link.queryParameters['payload'];
       if (payloadParam == null) return null;
       return jsonDecode(payloadParam);
-    } catch (error, stackTrace) {
-      Log.exception(
-        "Error decoding payload!",
-        throwable: error,
-        stackTrace: stackTrace,
-      );
+    } catch (_) {
+      // Do not log the raw throwable: a jsonDecode FormatException embeds the full
+      // payload string (incl. auth), which must never reach logs.
+      Log.warning('Deep link payload is not valid JSON; ignoring');
       return null;
     }
   }
