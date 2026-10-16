@@ -26,7 +26,7 @@ class ButtonIconLabelPreview extends StatelessWidget {
             ButtonElevatedWithIcon(
               onPressed: () {},
               text: "Icon Button",
-              leading: const Icon(FontAwesomeIcons.user),
+              leading: const FaIcon(FontAwesomeIcons.user),
             ),
             ButtonOutlinedWithIcon(
               onPressed: () {},
@@ -36,7 +36,7 @@ class ButtonIconLabelPreview extends StatelessWidget {
             ButtonTextWithIcon(
               onPressed: () {},
               text: "Icon Button",
-              leading: const Icon(FontAwesomeIcons.user),
+              leading: const FaIcon(FontAwesomeIcons.user),
             ),
             ButtonOutlinedWithIcon(
               onPressed: () {},
@@ -69,7 +69,7 @@ class ButtonIconLabelCode extends StatelessWidget {
             'ButtonElevatedWithIcon(',
             '    onPressed: () {},',
             '    text: "Icon Button",',
-            '    iconData: FontAwesomeIcons.user,',
+            '    leading: const FaIcon(FontAwesomeIcons.user),',
             '),',
           ],
         ),
@@ -93,7 +93,7 @@ class ButtonIconLabelCode extends StatelessWidget {
             'ButtonTextWithIcon(',
             '    onPressed: () {},',
             '    text: "Icon Button",',
-            '    iconData: FontAwesomeIcons.user,',
+            '    leading: const FaIcon(FontAwesomeIcons.user),',
             '),',
           ],
         ),
