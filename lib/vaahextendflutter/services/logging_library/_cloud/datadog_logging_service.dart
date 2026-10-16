@@ -5,6 +5,7 @@ import 'package:datadog_tracking_http_client/datadog_tracking_http_client.dart';
 import 'package:flutter/material.dart';
 
 import '../../../env/env.dart';
+import '../logging_library.dart';
 import '../models/log.dart';
 import 'logging_service.dart';
 
@@ -110,6 +111,10 @@ class DataDogLoggingService implements LoggingService {
     String? email,
     Map<String, dynamic>? metaData,
   }) {
+    if (id == null) {
+      Log.warning('setUserInfo skipped: DataDog 3.x requires a non-null id');
+      return;
+    }
     datadogSdk?.setUserInfo(
       id: id,
       name: name,
@@ -120,11 +125,6 @@ class DataDogLoggingService implements LoggingService {
 
   @override
   void unsetUserInfo() async {
-    datadogSdk?.setUserInfo(
-      id: null,
-      name: null,
-      email: null,
-      extraInfo: {},
-    );
+    datadogSdk?.clearUserInfo();
   }
 }
