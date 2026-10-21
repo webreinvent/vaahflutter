@@ -56,7 +56,7 @@ abstract class LocalNotifications {
       });
     } catch (error, errorStackTrace) {
       Log.exception(
-        'Invalid notification payload',
+        'invalid-notification-payload',
         throwable: error,
         stackTrace: errorStackTrace,
       );
@@ -68,7 +68,7 @@ abstract class LocalNotifications {
     } catch (e) {
       // Exact alarms can fail for reasons other than the missing permission; fall back to inexact.
       Log.warning(
-        'Exact alarm unavailable; rescheduling inexact',
+        'exact-alarm-unavailable-rescheduling-inexact',
         data: {'id': notification.id, 'reason': '$e'},
       );
       try {
@@ -76,7 +76,7 @@ abstract class LocalNotifications {
             AndroidScheduleMode.inexactAllowWhileIdle);
       } catch (error, errorStackTrace) {
         Log.exception(
-          'Failed to schedule local notification',
+          'failed-to-schedule-local-notification',
           throwable: error,
           stackTrace: errorStackTrace,
         );
