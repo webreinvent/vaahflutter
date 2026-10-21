@@ -112,7 +112,10 @@ class DataDogLoggingService implements LoggingService {
     Map<String, dynamic>? metaData,
   }) {
     if (id == null) {
-      Log.warning('setUserInfo skipped: DataDog 3.x requires a non-null id');
+      Log.warning(
+        'set-user-info-skipped',
+        data: {'reason': 'datadog-requires-non-null-id'},
+      );
       return;
     }
     datadogSdk?.setUserInfo(
