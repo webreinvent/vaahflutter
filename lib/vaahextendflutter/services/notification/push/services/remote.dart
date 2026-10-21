@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
+import '../../../../extensions/string_extensions.dart';
 import '../../../deep_link.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
@@ -45,11 +47,17 @@ abstract class RemoteNotifications {
 
   static Future<void> init() async {
     if (_env.oneSignalConfig == null) return;
-    if (_storage.read(_userIdKey) != null) {
-      _userIdStreamController.add(_storage.read(_userIdKey));
+    if (userId.isNotNullAndNotEmpty) {
+      _userIdStreamController.add(userId!);
     }
 
-    OneSignal.Debug.setLogLevel(OSLogLevel.warn);
+    if (kDebugMode) {
+      await OneSignal.Debug.setLogLevel(OSLogLevel.info);
+    } else {
+      await OneSignal.Debug.setLogLevel(
+        OSLogLevel.none,
+      );
+    }
 
     OneSignal.initialize(_env.oneSignalConfig!.appId);
 
@@ -62,9 +70,9 @@ abstract class RemoteNotifications {
 
   static void _onUserChanged(OSUserChangedState state) {
     final String? oneSignalId = state.current.onesignalId;
-    if (oneSignalId != null && oneSignalId.isNotEmpty) {
+    if (oneSignalId.isNotNullAndNotEmpty) {
       _storage.write(_userIdKey, oneSignalId);
-      _userIdStreamController.add(oneSignalId);
+      _userIdStreamController.add(oneSignalId!);
     }
   }
 
@@ -105,8 +113,12 @@ abstract class RemoteNotifications {
     String? channel,
   }) async {
     Log.warning(
-      'Remote push unavailable client-side (OneSignal v5); send via backend REST API',
-      data: {'heading': notification.heading, 'channel': channel},
+      'remote-push-unavailable-client-side-onesignal-v5',
+      data: {
+        'reason': 'send-via-backend-rest-api',
+        'heading': notification.heading,
+        'channel': channel,
+      },
     );
   }
 
