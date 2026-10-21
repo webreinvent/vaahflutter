@@ -37,4 +37,6 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- User-grantable exact-alarm permission; push falls back to inexact when not granted -->
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 </manifest>
