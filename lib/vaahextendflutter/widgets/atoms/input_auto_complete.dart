@@ -16,7 +16,7 @@ class InputAutoComplete extends StatefulWidget {
   final double height;
   final Color? optionsBackgroundColor;
   final bool isShadowEnabled;
-  final IconData? icon;
+  final FaIconData? icon;
   final Color? iconBackgroundColor;
   final Color? iconColor;
   final List<String> hints;
