@@ -75,7 +75,7 @@ abstract class LocalNotifications {
     } catch (e, stackTrace) {
       // zonedSchedule throws without the exact-alarm permission on Android 12+.
       Log.exception(
-        'Failed to schedule local notification',
+        'failed-to-schedule-local-notification',
         throwable: e,
         stackTrace: stackTrace,
       );
