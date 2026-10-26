@@ -2,85 +2,42 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
-import '../../../../extensions/string_extensions.dart';
 import '../../../deep_link.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
-const String _userIdKey = 'remote_notification_user_id';
-
 abstract class RemoteNotifications {
   static final EnvironmentConfig _env = EnvironmentConfig.getConfig;
-  static final GetStorage _storage = GetStorage();
 
   // Not final so [dispose] can close + recreate it, keeping the service re-initializable.
-  static StreamController<String> _userIdStreamController =
-      StreamController<String>.broadcast();
-
-  /// Emits the OneSignal user-level ID (`onesignalId`) when it changes.
-  ///
-  /// This is a broadcast stream and does not buffer: an ID set before a
-  /// listener attaches is not replayed to it. Read [userId] for the current
-  /// value, then listen here for subsequent changes.
-  static Stream<String> get userIdStream => _userIdStreamController.stream;
-
-  // Stable tear-off so [dispose] can remove the exact observer [init] registered.
-  static final void Function(OSUserChangedState) _userObserver = _onUserChanged;
-
-  // Not final so [dispose] can close + recreate it (see [_userIdStreamController]).
   static StreamController<DeepLink> _notificationDeepLinkController =
       StreamController<DeepLink>();
 
-  /// Decoded deep-link payloads from OneSignal notification clicks.
-  ///
-  /// This service only decodes + emits — it never navigates. The app listens
-  /// and validates [DeepLink.path] against its route allowlist (the same
-  /// contract as [DynamicLinks.dynamicLinksStream]).
+  /// Decoded deep links from notification clicks; the app validates the path and navigates.
   static Stream<DeepLink> get notificationDeepLinkStream =>
       _notificationDeepLinkController.stream;
 
-  static String? get userId => _storage.read(_userIdKey);
-
   static Future<void> init() async {
     if (_env.oneSignalConfig == null) return;
-    if (userId.isNotNullAndNotEmpty) {
-      _userIdStreamController.add(userId!);
-    }
 
     if (kDebugMode) {
       await OneSignal.Debug.setLogLevel(OSLogLevel.info);
     } else {
-      await OneSignal.Debug.setLogLevel(
-        OSLogLevel.none,
-      );
+      await OneSignal.Debug.setLogLevel(OSLogLevel.none);
     }
 
     OneSignal.initialize(_env.oneSignalConfig!.appId);
 
-    // Observe the OneSignal user so userId holds the user-level ID, not the push token.
-    OneSignal.User.addObserver(_userObserver);
-
-    // Listen to notification click events
+    OneSignal.Notifications.addForegroundWillDisplayListener(_handleWillDisplayNotification);
     OneSignal.Notifications.addClickListener(_handleNotificationClick);
   }
 
-  static void _onUserChanged(OSUserChangedState state) {
-    final String? oneSignalId = state.current.onesignalId;
-    if (oneSignalId.isNotNullAndNotEmpty) {
-      _storage.write(_userIdKey, oneSignalId);
-      _userIdStreamController.add(oneSignalId!);
-    }
-  }
-
   static void dispose() {
-    OneSignal.User.removeObserver(_userObserver);
+    OneSignal.Notifications.removeForegroundWillDisplayListener(_handleWillDisplayNotification);
     OneSignal.Notifications.removeClickListener(_handleNotificationClick);
-    _userIdStreamController.close();
-    _userIdStreamController = StreamController<String>.broadcast();
     _notificationDeepLinkController.close();
     _notificationDeepLinkController = StreamController<DeepLink>();
   }
@@ -112,15 +69,17 @@ abstract class RemoteNotifications {
     required PushNotification notification,
     String? channel,
   }) async {
-    Log.warning(
+    Log.exception(
       'remote-push-unavailable-client-side-onesignal-v5',
-      data: {
+      hint: {
         'reason': 'send-via-backend-rest-api',
         'heading': notification.heading,
         'channel': channel,
       },
     );
   }
+
+  static void _handleWillDisplayNotification(OSNotificationWillDisplayEvent event) {}
 
   static void _handleNotificationClick(OSNotificationClickEvent event) {
     // Log only display fields; additionalData carries the payload (incl. auth) and must not be logged.
@@ -131,7 +90,6 @@ abstract class RemoteNotifications {
       "timestamp": DateTime.now().millisecondsSinceEpoch,
     });
 
-    // Emit the decoded payload; the app validates path against its route allowlist and navigates.
     final DeepLink? link = _decodePayload(event.notification.additionalData);
     if (link != null) {
       _notificationDeepLinkController.add(link);
