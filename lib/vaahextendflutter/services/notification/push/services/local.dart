@@ -22,10 +22,7 @@ abstract class LocalNotifications {
         iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
-        _handleNotification(
-          payload: notificationResponse.payload,
-          actionId: notificationResponse.actionId,
-        );
+        _handleNotification(actionId: notificationResponse.actionId);
       },
     );
   }
@@ -120,9 +117,7 @@ abstract class LocalNotifications {
     );
   }
 
-  // static Future<void> _handleSubscriptionStateChanges() async {}
-
-  static void _handleNotification({required String? payload, String? actionId}) {
+  static void _handleNotification({required String? actionId}) {
     // The payload carries the routing token (auth); log the tap, not the payload.
     Log.info(
       "local-notification-tapped",
