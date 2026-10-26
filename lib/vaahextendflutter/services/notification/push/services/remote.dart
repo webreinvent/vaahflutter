@@ -7,7 +7,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import '../../../../env/env.dart';
 import '../../../../extensions/string_extensions.dart';
-import '../../../deep_link.dart';
+import '../../../deep_links/deep_link.dart';
 import '../../../logging_library/logging_library.dart';
 import '../../models/notification.dart';
 
@@ -39,7 +39,7 @@ abstract class RemoteNotifications {
   ///
   /// This service only decodes + emits — it never navigates. The app listens
   /// and validates [DeepLink.path] against its route allowlist (the same
-  /// contract as [DynamicLinks.dynamicLinksStream]).
+  /// contract as [DeepLinks.deepLinksStream]).
   static Stream<DeepLink> get notificationDeepLinkStream =>
       _notificationDeepLinkController.stream;
 

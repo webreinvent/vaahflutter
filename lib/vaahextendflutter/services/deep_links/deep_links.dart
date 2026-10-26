@@ -4,22 +4,21 @@ import 'dart:convert';
 import 'package:app_links/app_links.dart';
 
 import 'deep_link.dart';
-import 'logging_library/logging_library.dart';
+import '../logging_library/logging_library.dart';
 
-/// The link origin (`scheme://host/path`), used only in log lines. Defined once
-/// so the format can't drift between the service and the app-layer handler.
-/// Never includes the query string — it carries the payload (incl. `auth`),
-/// which must not be written to logs.
+/// The link origin (`scheme://host/path`), used only in log lines. Never
+/// includes the query string — it carries the payload (incl. `auth`), which
+/// must not be written to logs.
 String _linkOrigin(Uri uri) => '${uri.scheme}://${uri.host}${uri.path}';
 
 /// Decodes app links (via [AppLinks]) and exposes them to the app.
 ///
 /// This service is deliberately navigation-free: it only decodes a link into a
-/// [DeepLink] and emits it on [dynamicLinksStream]. Deciding what to do with a
+/// [DeepLink] and emits it on [deepLinksStream]. Deciding what to do with a
 /// link (which route to open, with which arguments) is the app's job — so it
 /// can run after `runApp`, when the router exists, and so the app owns its own
-/// route allowlist. See the app's deep-link handler for the consuming side.
-abstract class DynamicLinks {
+/// route allowlist.
+abstract class DeepLinks {
   static final AppLinks _appLinks = AppLinks();
   static StreamSubscription<Uri>? _linkSubscription;
 
@@ -27,12 +26,12 @@ abstract class DynamicLinks {
   // before the app subscribes (post-`runApp`), and a non-broadcast controller
   // buffers that event until the first listener attaches instead of dropping it.
   // Not final so [dispose] can recreate it, keeping the service re-initializable.
-  static StreamController<DeepLink> _dynamicLinksStreamController =
+  static StreamController<DeepLink> _deepLinksStreamController =
       StreamController<DeepLink>();
 
   /// Links decoded by this service. The app listens to this and navigates.
-  static Stream<DeepLink> get dynamicLinksStream =>
-      _dynamicLinksStreamController.stream;
+  static Stream<DeepLink> get deepLinksStream =>
+      _deepLinksStreamController.stream;
 
   // Coalesces concurrent init() calls: a second call while the first is in
   // flight returns the same future instead of re-reading the initial link and
@@ -46,7 +45,7 @@ abstract class DynamicLinks {
   static int _generation = 0;
 
   /// Decodes the initial cold-start link (if any) and subscribes to incoming
-  /// links. Both are emitted on [dynamicLinksStream]; this method never
+  /// links. Both are emitted on [deepLinksStream]; this method never
   /// navigates. A no-op if already initialized: repeated or concurrent calls
   /// before [dispose] return the same in-flight/finished future instead of
   /// re-emitting the initial link and leaking a second subscription.
@@ -95,7 +94,7 @@ abstract class DynamicLinks {
       );
     } catch (error, stackTrace) {
       Log.exception(
-        "Error initializing DynamicLinks",
+        "Error initializing DeepLinks",
         throwable: error,
         stackTrace: stackTrace,
       );
@@ -106,18 +105,18 @@ abstract class DynamicLinks {
   /// the controller so [init] can be called again (tests, hot restart) without
   /// hitting a closed-controller StateError.
   ///
-  /// Note: this replaces [dynamicLinksStream] with a brand-new controller, so
+  /// Note: this replaces [deepLinksStream] with a brand-new controller, so
   /// any listener still holding the previous stream is orphaned and must
   /// cancel + re-subscribe to keep receiving links. A full re-init is therefore
   /// consumer-side: stop the old listener, call [dispose], call [init], then
-  /// subscribe to the fresh [dynamicLinksStream] again.
+  /// subscribe to the fresh [deepLinksStream] again.
   static void dispose() {
     _generation++;
     _linkSubscription?.cancel();
     _linkSubscription = null;
     _initFuture = null;
-    _dynamicLinksStreamController.close();
-    _dynamicLinksStreamController = StreamController<DeepLink>();
+    _deepLinksStreamController.close();
+    _deepLinksStreamController = StreamController<DeepLink>();
   }
 
   /// Note: Firebase short link generation (`buildShortLink`) no longer works.
@@ -172,7 +171,7 @@ abstract class DynamicLinks {
     }
   }
 
-  /// Decodes [uri] and emits it on [dynamicLinksStream]. Never navigates — the
+  /// Decodes [uri] and emits it on [deepLinksStream]. Never navigates — the
   /// app decides what to do with the link.
   static void _emit(Uri uri) {
     try {
@@ -193,7 +192,7 @@ abstract class DynamicLinks {
 
       final dynamic rawPath = payload['path'];
 
-      _dynamicLinksStreamController.add(
+      _deepLinksStreamController.add(
         DeepLink(
           uri: uri,
           path: rawPath is String ? rawPath : null,
@@ -205,7 +204,7 @@ abstract class DynamicLinks {
       // Log the link origin only — the query carries the payload (incl.
       // `auth`), which must not be written to console/Sentry/Firebase.
       Log.success(
-        "Dynamic link received",
+        "Deep link received",
         data: {"origin": _linkOrigin(uri)},
       );
     } catch (error, stackTrace) {
