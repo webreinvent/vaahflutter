@@ -1,8 +1,8 @@
 /// A decoded deep link payload.
 ///
-/// Emitted on `RemoteNotifications.notificationDeepLinkStream` when an
-/// OneSignal notification click carries a deep-link payload (`path`/`data`/
-/// `auth` in the notification's additional data).
+/// Emitted on `RemoteNotifications.notificationDeepLinkStream` (OneSignal
+/// notification click) and `DeepLinks.deepLinksStream` (app link) when a
+/// deep-link payload (`path`/`data`/`auth`) is received.
 ///
 /// The consuming app decides what to do with these fields. [path] is the
 /// requested route name and is untrusted input — the app must validate it
