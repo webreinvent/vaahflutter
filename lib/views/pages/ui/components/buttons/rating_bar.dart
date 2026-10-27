@@ -22,8 +22,8 @@ class RatingBarPreview extends StatelessWidget {
         RatingBar(
           unratedColor: Colors.amber.withOpacity(0.3),
           ratedColor: Colors.amber,
-          onRatingUpdate: (value) {
-            Log.info(value.toString(), disableCloudLogging: true);
+          onRatingUpdate: (_) {
+            // Log.info(_.toString(), disableCloudLogging: true);
           },
         ),
       ],
@@ -47,8 +47,8 @@ class RatingBarCode extends StatelessWidget {
             "RatingBar(",
             "    unratedColor: Colors.amber.withOpacity(0.3),",
             "    ratedColor: Colors.amber,",
-            "    onRatingUpdate: (value) {",
-            "        Log.info(value.toString(), disableCloudLogging: true);",
+            "    onRatingUpdate: (_) {",
+            "        Log.info(_.toString(), disableCloudLogging: true);",
             "    },",
             "),",
           ],
