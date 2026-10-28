@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "5534e701a2c505fed1f0799e652dd6ae23bd4d2c4cf797220e5ced5764a7c1c2"
+      sha256: f6966125633a34f82d9be2ee895b755cff3554087b1d00a9eb884e5947f4bca9
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.44"
+    version: "1.3.77"
   analyzer:
     dependency: transitive
     description:
@@ -141,26 +141,26 @@ packages:
     dependency: "direct main"
     description:
       name: cloud_firestore
-      sha256: bdc7607e9169ee3ce736bbbe6a81c2a6cb15c41379346b74f77f8e641211a17f
+      sha256: db785e4d0a995654781835b78a30b8bb203d967e123843bb918df0cdb6a7ec69
       url: "https://pub.dev"
     source: hosted
-    version: "5.4.4"
+    version: "6.10.0"
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
-      sha256: "884fa34c6be2d9c7c1f4af86f90f36c0a3b3afef585a12b350a5d15368e7ec7a"
+      sha256: ef985a8239846187de0eccce2092a940eaf281a1357c6325e1739ec0b6c230e2
       url: "https://pub.dev"
     source: hosted
-    version: "6.4.3"
+    version: "8.0.7"
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
-      sha256: "6e621bbcc999f32db0bc6bfcb18d9991617ec20f8d6bf51b6a1571f5c324fafd"
+      sha256: b30b3b44937345d50b195f85ef328f1d71c2a79965cb1645a479d029d45f636a
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.2"
+    version: "5.7.3"
   code_builder:
     dependency: transitive
     description:
@@ -245,18 +245,18 @@ packages:
     dependency: "direct main"
     description:
       name: datadog_flutter_plugin
-      sha256: e5e17fcfc82b95b35e701a58eb89c9df0250a8c64c3c0021b992e53ad450fb67
+      sha256: "6b1863d70241d8f42c0eba910ce8cccea24502d4ebd5c45169f58f8d7308b3d2"
       url: "https://pub.dev"
     source: hosted
-    version: "2.8.0"
+    version: "3.7.0"
   datadog_tracking_http_client:
     dependency: "direct main"
     description:
       name: datadog_tracking_http_client
-      sha256: "4fd525bd1da68601d4afbd7ef02f5b30cae0196485338b67b48372ce9ef72835"
+      sha256: "9b6930c25c923bba4e78a5045e604fc227ae4b8f1801f322e4ccfbfff349ba02"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.3.0"
   dbus:
     dependency: transitive
     description:
@@ -317,42 +317,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: "51dfe2fbf3a984787a2e7b8592f2f05c986bfedd6fdacea3f9e0a7beb334de96"
+      sha256: "5fbbaa2aeb08a52feee559f92a62f5a6b04c9bdff81c8f608636771cf0d7b680"
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.0"
+    version: "4.15.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: e30da58198a6d4b49d5bce4e852f985c32cb10db329ebef9473db2b9f09ce810
+      sha256: "9bfbc85faca09346471ac56fbcee00757ebcfd85887c6f602764eff0001902d8"
       url: "https://pub.dev"
     source: hosted
-    version: "5.3.0"
+    version: "8.1.1"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
-      sha256: f967a7138f5d2ffb1ce15950e2a382924239eaa521150a8f144af34e68b3b3e5
+      sha256: "8ed84f5001dbd7a0390e2818d46bc858ceebb970edededdfc8d6552c76fc2f6e"
       url: "https://pub.dev"
     source: hosted
-    version: "2.18.1"
-  firebase_dynamic_links:
-    dependency: "direct main"
-    description:
-      name: firebase_dynamic_links
-      sha256: "090becd30b4cf2ba1d5d25d0162d60c32dc1a2390a0be7306e6104c3e36e1b39"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.0.8"
-  firebase_dynamic_links_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_dynamic_links_platform_interface
-      sha256: b802020cd5d3d6eed1182b743e55c3f47a11ebd57ad27adc0eb20f28375c7916
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.6+44"
+    version: "3.12.0"
   fixnum:
     dependency: transitive
     description:
@@ -512,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  jni:
+    dependency: transitive
+    description:
+      name: jni
+      sha256: d2c361082d554d4593c3012e26f6b188f902acd291330f13d6427641a92b3da1
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.14.2"
   js:
     dependency: transitive
     description:
@@ -612,10 +604,10 @@ packages:
     dependency: "direct main"
     description:
       name: onesignal_flutter
-      sha256: "28e8295c1e79b029d010c6af6459683b1e1485246d95d42f13bba15ca35a94ae"
+      sha256: "93f33118978a68ab3ee4df936e71fc08cda0a2cce56cc89d9a32bbd9692d71ca"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.6"
+    version: "5.7.0"
   package_config:
     dependency: transitive
     description:
@@ -757,18 +749,18 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "033287044a6644a93498969449d57c37907e56f5cedb17b88a3ff20a882261dd"
+      sha256: "40a247686af64e497df29ab0de1303a20ca55a2e3c7c7e39b989fac47dcadf84"
       url: "https://pub.dev"
     source: hosted
-    version: "8.9.0"
+    version: "9.30.1"
   sentry_flutter:
     dependency: "direct main"
     description:
       name: sentry_flutter
-      sha256: "3780b5a0bb6afd476857cfbc6c7444d969c29a4d9bd1aa5b6960aa76c65b737a"
+      sha256: bdd8897b38ce31185c42ed910628059c4eccbc0b0641213e8d1c63e2fda3f5a3
       url: "https://pub.dev"
     source: hosted
-    version: "8.9.0"
+    version: "9.30.1"
   shelf:
     dependency: transitive
     description:
@@ -930,10 +922,10 @@ packages:
     dependency: transitive
     description:
       name: web
-      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
+      sha256: "868d88a33d8a87b18ffc05f9f030ba328ffefba92d6c127917a2ba740f9cfe4a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   web_socket:
     dependency: transitive
     description:

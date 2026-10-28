@@ -16,7 +16,6 @@ class SentryLoggingService implements LoggingService {
     await SentryFlutter.init(
       (options) => options
         ..dsn = _config.sentryConfig!.dsn
-        ..autoAppStart = _config.sentryConfig!.autoAppStart
         ..tracesSampleRate = _config.sentryConfig!.tracesSampleRate
         ..enableAutoPerformanceTracing = _config.sentryConfig!.enableAutoPerformanceTracing
         ..enableUserInteractionTracing = _config.sentryConfig!.enableUserInteractionTracing
