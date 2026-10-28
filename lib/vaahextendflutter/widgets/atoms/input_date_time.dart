@@ -133,7 +133,7 @@ class _InputDateTimeState extends State<InputDateTime> {
     }
   }
 
-  IconData asset() {
+  FaIconData asset() {
     switch (widget.pickerType) {
       case PickerType.dateOnly:
         return FontAwesomeIcons.calendarDay;

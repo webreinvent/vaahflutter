@@ -52,7 +52,7 @@ class ButtonExtrasPreview extends StatelessWidget {
             ButtonElevatedWithIcon(
               onPressed: () {},
               text: "Size",
-              leading: const Icon(FontAwesomeIcons.user),
+              leading: const FaIcon(FontAwesomeIcons.user),
               fontSize: 22,
               iconSize: 21,
               padding: horizontalPadding32 + verticalPadding12,
@@ -135,7 +135,7 @@ class ButtonExtrasCode extends StatelessWidget {
             'ButtonElevatedWithIcon(',
             '    onPressed: () {},',
             '    text: "Size",',
-            '    iconData: FontAwesomeIcons.user,',
+            '    leading: const FaIcon(FontAwesomeIcons.user),',
             '    fontSize: 22,',
             '    iconSize: 21,',
             '    padding: horizontalPadding32 + verticalPadding12,',

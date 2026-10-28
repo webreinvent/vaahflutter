@@ -18,7 +18,6 @@ class InputFilePicker extends StatefulWidget {
   final AutovalidateMode? autoValidateMode;
   final Function(List<PlatformFile>?)? callback;
   final String? dialogTitle;
-  final bool withData;
   final bool allowMultiple;
   final FileType fileType;
   final List<String>? allowedExtensions;
@@ -36,7 +35,6 @@ class InputFilePicker extends StatefulWidget {
     this.autoValidateMode,
     this.callback,
     this.dialogTitle,
-    this.withData = false,
     this.allowMultiple = false,
     this.fileType = FileType.any,
     this.allowedExtensions,
@@ -105,23 +103,36 @@ class _InputFilePickerState extends State<InputFilePicker> {
   }
 
   void _onTap() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      allowedExtensions: widget.allowedExtensions,
-      dialogTitle: widget.dialogTitle,
-      type: widget.fileType,
-      allowMultiple: widget.allowMultiple,
-      withData: widget.withData,
-    );
-
-    if (result != null) {
-      List<PlatformFile> files = result.files;
-      setState(() {
-        _controller.text = files.map((element) => element.name).toList().join(', ');
-      });
-      if (widget.callback != null) widget.callback!(files);
+    // file_picker >= 11: `FilePicker` is now a static class (no `.platform`),
+    // and `pickFiles`/`pickFile` return the files directly instead of a
+    // `FilePickerResult`. `allowMultiple` and `withData` were removed: single vs.
+    // multi is now `pickFile` vs. `pickFiles`, and bytes are read on demand via
+    // `PlatformFile.readAsBytes()`.
+    final List<PlatformFile> files;
+    if (widget.allowMultiple) {
+      files = await FilePicker.pickFiles(
+        allowedExtensions: widget.allowedExtensions,
+        dialogTitle: widget.dialogTitle,
+        type: widget.fileType,
+      );
     } else {
-      // User canceled the picker
+      final PlatformFile? file = await FilePicker.pickFile(
+        allowedExtensions: widget.allowedExtensions,
+        dialogTitle: widget.dialogTitle,
+        type: widget.fileType,
+      );
+      files = file == null ? const <PlatformFile>[] : <PlatformFile>[file];
     }
+
+    if (files.isEmpty) {
+      // User canceled the picker
+      return;
+    }
+
+    setState(() {
+      _controller.text = files.map((element) => element.name).toList().join(', ');
+    });
+    if (widget.callback != null) widget.callback!(files);
   }
 
   OutlineInputBorder border(Color color) {
@@ -149,7 +160,7 @@ class _InputFilePickerState extends State<InputFilePicker> {
     }
   }
 
-  IconData asset() {
+  FaIconData asset() {
     return FontAwesomeIcons.file;
   }
 }
