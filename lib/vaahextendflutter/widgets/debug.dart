@@ -224,14 +224,8 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                         ),
                                                         'Sentry Auto App Start (Record Cold And Warm Start Time)':
                                                             Data(
-                                                          value: _environmentConfig
-                                                                  .sentryConfig!.autoAppStart
-                                                              ? 'enabled'
-                                                              : 'disabled',
-                                                          color: _environmentConfig
-                                                                  .sentryConfig!.autoAppStart
-                                                              ? AppTheme.colors['success']
-                                                              : AppTheme.colors['danger'],
+                                                          value: 'always on',
+                                                          color: AppTheme.colors['success'],
                                                         ),
                                                         'Sentry User Interaction Tracing': Data(
                                                           value: _environmentConfig.sentryConfig!
