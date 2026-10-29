@@ -1,0 +1,232 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:app_links/app_links.dart';
+
+import 'deep_link.dart';
+import '../logging_library/logging_library.dart';
+
+/// The link origin (`scheme://host/path`), used only in log lines. Never
+/// includes the query string — it carries the payload (incl. `auth`), which
+/// must not be written to logs.
+String _linkOrigin(Uri uri) => '${uri.scheme}://${uri.host}${uri.path}';
+
+/// Decodes app links (via [AppLinks]) and exposes them to the app.
+///
+/// This service is deliberately navigation-free: it only decodes a link into a
+/// [DeepLink] and emits it on [deepLinksStream]. Deciding what to do with a
+/// link (which route to open, with which arguments) is the app's job — so it
+/// can run after `runApp`, when the router exists, and so the app owns its own
+/// route allowlist.
+abstract class DeepLinks {
+  static final AppLinks _appLinks = AppLinks();
+  static StreamSubscription<Uri>? _linkSubscription;
+
+  // Single-subscription on purpose: the initial cold-start link is emitted
+  // before the app subscribes (post-`runApp`), and a non-broadcast controller
+  // buffers that event until the first listener attaches instead of dropping it.
+  // Not final so [dispose] can recreate it, keeping the service re-initializable.
+  static StreamController<DeepLink> _deepLinksStreamController =
+      StreamController<DeepLink>();
+
+  /// Links decoded by this service. The app listens to this and navigates.
+  static Stream<DeepLink> get deepLinksStream =>
+      _deepLinksStreamController.stream;
+
+  // Coalesces concurrent init() calls: a second call while the first is in
+  // flight returns the same future instead of re-reading the initial link and
+  // leaking a second subscription. Not final so [dispose] can clear it,
+  // keeping the service re-initializable.
+  static Future<void>? _initFuture;
+
+  // Bumped by [dispose] so an in-flight [_doInit] that is still awaiting
+  // getInitialLink() bails out instead of emitting onto the fresh controller
+  // and leaking a stale live-link subscription.
+  static int _generation = 0;
+
+  /// Decodes the initial cold-start link (if any) and subscribes to incoming
+  /// links. Both are emitted on [deepLinksStream]; this method never
+  /// navigates. A no-op if already initialized: repeated or concurrent calls
+  /// before [dispose] return the same in-flight/finished future instead of
+  /// re-emitting the initial link and leaking a second subscription.
+  static Future<void> init() {
+    return _initFuture ??= _doInit();
+  }
+
+  static Future<void> _doInit() async {
+    final int generation = _generation;
+
+    // 1. Read the initial cold-start link (if any) and emit it. It is buffered
+    //    on the stream until the app subscribes after `runApp`, so it is not
+    //    lost. Kept in its own try/catch: a failure here (e.g. a
+    //    platform-channel error) must not prevent the live-link subscription
+    //    below from being established, or live deep links would be silently
+    //    dead for the app's lifetime.
+    Uri? initialUri;
+    try {
+      initialUri = await _appLinks.getInitialLink();
+    } catch (error, stackTrace) {
+      Log.exception(
+        "Error reading initial link",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
+    }
+    // dispose() may have run while we were awaiting: bail out so we don't emit
+    // onto the fresh controller or leak a stale live-link subscription.
+    if (generation != _generation) return;
+    if (initialUri != null) {
+      _emit(initialUri);
+    }
+
+    // 2. Listen for incoming links while the app is in the background or
+    //    foreground.
+    try {
+      _linkSubscription = _appLinks.uriLinkStream.listen(
+        _emit,
+        onError: (error, stackTrace) {
+          Log.exception(
+            "Error in AppLinks stream",
+            throwable: error,
+            stackTrace: stackTrace,
+          );
+        },
+      );
+    } catch (error, stackTrace) {
+      Log.exception(
+        "Error initializing DeepLinks",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  /// Tears down the stream subscription and closes the link stream. Recreates
+  /// the controller so [init] can be called again (tests, hot restart) without
+  /// hitting a closed-controller StateError.
+  ///
+  /// Note: this replaces [deepLinksStream] with a brand-new controller, so
+  /// any listener still holding the previous stream is orphaned and must
+  /// cancel + re-subscribe to keep receiving links. A full re-init is therefore
+  /// consumer-side: stop the old listener, call [dispose], call [init], then
+  /// subscribe to the fresh [deepLinksStream] again.
+  static void dispose() {
+    _generation++;
+    _linkSubscription?.cancel();
+    _linkSubscription = null;
+    _initFuture = null;
+    _deepLinksStreamController.close();
+    _deepLinksStreamController = StreamController<DeepLink>();
+  }
+
+  /// Note: Firebase short link generation (`buildShortLink`) no longer works.
+  /// You can either generate standard web URLs pointing to your domain or use a
+  /// third-party link-shortening API provider.
+  ///
+  /// [domain] must be your real app-link host (the domain configured in your
+  /// Android/iOS app-link manifest, e.g. `app.example.com`). The payload is
+  /// JSON-encoded and then percent-encoded via [Uri.queryParameters] so it
+  /// round-trips correctly through [Uri.queryParameters] on the receiving side
+  /// (see [_decodePayload]).
+  ///
+  /// **Threat model — treat `auth` as untrusted.** The payload (including
+  /// `auth`) is carried in the URL's query string, so it is persisted in OS
+  /// link logs, browser history, analytics, and referrer headers, and is
+  /// trivially shareable. Do not put long-lived credentials or tokens in
+  /// `auth`; pass an opaque, short-lived, server-issued routing token instead,
+  /// and have the target page exchange it for real credentials over TLS via
+  /// `Api`. The consuming page must validate the token and never treat `auth`
+  /// as an authenticated identity.
+  static Future<String?> createLink({
+    required String domain,
+    String? path,
+    Object? data,
+    Object? auth,
+  }) async {
+    try {
+      final String parameters = jsonEncode({
+        "path": path,
+        "data": data,
+        "auth": auth,
+      });
+      final Uri uri = Uri(
+        scheme: 'https',
+        host: domain,
+        path: 'deep-link',
+        queryParameters: {'payload': parameters},
+      );
+      final String generatedUrl = uri.toString();
+
+      // Log the link origin only — the query carries the payload (incl.
+      // `auth`), which must not be written to console/Sentry/Firebase.
+      Log.info("Generated Link: ${_linkOrigin(uri)}");
+      return generatedUrl;
+    } catch (error, stackTrace) {
+      Log.exception(
+        "Error creating link!",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
+      return null;
+    }
+  }
+
+  /// Decodes [uri] and emits it on [deepLinksStream]. Never navigates — the
+  /// app decides what to do with the link.
+  static void _emit(Uri uri) {
+    try {
+      final dynamic payload = _decodePayload(uri);
+      if (payload is! Map) {
+        // A link with no `payload` query param is a plain (non-deep) link —
+        // expected, not an error. Only warn when a payload is present but
+        // isn't a JSON object (e.g. a bare string or number): a malformed
+        // deep link. Log the origin only — never the payload (incl. `auth`).
+        if (uri.queryParameters.containsKey('payload')) {
+          Log.warning(
+            "Deep link payload is not a JSON object; ignoring",
+            data: {"origin": _linkOrigin(uri)},
+          );
+        }
+        return;
+      }
+
+      final dynamic rawPath = payload['path'];
+
+      _deepLinksStreamController.add(
+        DeepLink(
+          uri: uri,
+          path: rawPath is String ? rawPath : null,
+          data: payload['data'],
+          auth: payload['auth'],
+        ),
+      );
+
+      // Log the link origin only — the query carries the payload (incl.
+      // `auth`), which must not be written to console/Sentry/Firebase.
+      Log.success(
+        "Deep link received",
+        data: {"origin": _linkOrigin(uri)},
+      );
+    } catch (error, stackTrace) {
+      Log.exception(
+        "Error handling link!",
+        throwable: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  static dynamic _decodePayload(Uri link) {
+    try {
+      final String? payloadParam = link.queryParameters['payload'];
+      if (payloadParam == null) return null;
+      return jsonDecode(payloadParam);
+    } catch (_) {
+      // Do not log the raw throwable: a jsonDecode FormatException embeds the full
+      // payload string (incl. auth), which must never reach logs.
+      Log.warning('Deep link payload is not valid JSON; ignoring');
+      return null;
+    }
+  }
+}
+
