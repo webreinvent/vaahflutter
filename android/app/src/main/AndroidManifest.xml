@@ -37,4 +37,6 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Exact local notifications on Android 12+ require this permission -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 </manifest>
