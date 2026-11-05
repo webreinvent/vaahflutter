@@ -222,9 +222,9 @@ class DebugWidgetState extends State<DebugWidget> with SingleTickerProviderState
                                                               .sentryConfig!.tracesSampleRate
                                                               .toString(),
                                                         ),
-                                                        'Sentry Auto App Start (Record Cold And Warm Start Time)':
+                                                        'Sentry Auto App Start (SDK default, on)':
                                                             Data(
-                                                          value: 'always on',
+                                                          value: 'enabled (SDK default)',
                                                           color: AppTheme.colors['success'],
                                                         ),
                                                         'Sentry User Interaction Tracing': Data(

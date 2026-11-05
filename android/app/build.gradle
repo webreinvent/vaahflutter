@@ -46,6 +46,7 @@ android {
 
     buildTypes {
         release {
+            // Demo/template: release builds sign with the debug key; replace with your own signing config before shipping.
             signingConfig signingConfigs.debug
         }
     }
