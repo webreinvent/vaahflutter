@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -21,10 +22,7 @@ abstract class LocalNotifications {
         iOS: DarwinInitializationSettings(),
       ),
       onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) {
-        _handleNotification(
-          payload: notificationResponse.payload,
-          actionId: notificationResponse.actionId,
-        );
+        _handleNotification(actionId: notificationResponse.actionId);
       },
     );
   }
@@ -46,49 +44,84 @@ abstract class LocalNotifications {
   }) async {
     final DateTime scheduledDate =
         notification.sendAfter ?? DateTime.now().add(const Duration(seconds: 5));
+
+    final String? payload = _encodePayload(notification);
+    if (payload == null) return;
+
     try {
-      await _flutterLocalNotificationsPlugin.zonedSchedule(
-        id: notification.id,
-        title: notification.heading,
-        body: notification.content,
-        scheduledDate: TZDateTime(
-          getLocation('Asia/Kolkata'),
-          scheduledDate.year,
-          scheduledDate.month,
-          scheduledDate.day,
-          scheduledDate.hour,
-          scheduledDate.minute,
-          scheduledDate.second,
-          scheduledDate.millisecond,
-          scheduledDate.microsecond,
-        ),
-        notificationDetails: const NotificationDetails(
-          android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        payload: {
-          'path': notification.payloadPath,
-          'data': notification.payloadData,
-          'auth': notification.payloadAuth,
-        }.toString(),
+      await _schedule(notification, scheduledDate, payload,
+          AndroidScheduleMode.exactAllowWhileIdle);
+    } catch (e) {
+      // Exact alarms can fail for reasons other than the missing permission; fall back to inexact.
+      Log.warning(
+        'exact-alarm-unavailable-rescheduling-inexact',
+        data: {'id': notification.id, 'reason': '$e'},
       );
-    } catch (e, stackTrace) {
-      // zonedSchedule throws without the exact-alarm permission on Android 12+.
-      Log.exception(
-        'failed-to-schedule-local-notification',
-        throwable: e,
-        stackTrace: stackTrace,
-      );
+      try {
+        await _schedule(notification, scheduledDate, payload,
+            AndroidScheduleMode.inexactAllowWhileIdle);
+      } catch (error, errorStackTrace) {
+        Log.exception(
+          'failed-to-schedule-local-notification',
+          throwable: error,
+          stackTrace: errorStackTrace,
+        );
+      }
     }
   }
 
-  // static Future<void> _handleSubscriptionStateChanges() async {}
+  /// Encodes the payload as JSON, or null (logging the failure) if a field is not JSON-encodable.
+  static String? _encodePayload(PushNotification notification) {
+    try {
+      return jsonEncode({
+        'path': notification.payloadPath,
+        'data': notification.payloadData,
+        'auth': notification.payloadAuth,
+      });
+    } catch (error, errorStackTrace) {
+      Log.exception(
+        'invalid-notification-payload',
+        throwable: error,
+        stackTrace: errorStackTrace,
+      );
+      return null;
+    }
+  }
 
-  static void _handleNotification({required String? payload, String? actionId}) {
+  static Future<void> _schedule(
+    PushNotification notification,
+    DateTime scheduledDate,
+    String payload,
+    AndroidScheduleMode mode,
+  ) async {
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id: notification.id,
+      title: notification.heading,
+      body: notification.content,
+      scheduledDate: TZDateTime(
+        getLocation('Asia/Kolkata'),
+        scheduledDate.year,
+        scheduledDate.month,
+        scheduledDate.day,
+        scheduledDate.hour,
+        scheduledDate.minute,
+        scheduledDate.second,
+        scheduledDate.millisecond,
+        scheduledDate.microsecond,
+      ),
+      notificationDetails: const NotificationDetails(
+        android: AndroidNotificationDetails('vaahflutter_local_notifications', 'App Notifications'),
+      ),
+      androidScheduleMode: mode,
+      payload: payload,
+    );
+  }
+
+  static void _handleNotification({required String? actionId}) {
+    // The payload carries the routing token (auth); log the tap, not the payload.
     Log.info(
-      "local-notification-payload",
+      "local-notification-tapped",
       data: {
-        "payload": payload,
         "actionId": actionId,
       },
     );
